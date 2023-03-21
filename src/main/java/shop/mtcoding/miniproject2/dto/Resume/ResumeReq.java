@@ -9,7 +9,7 @@ public class ResumeReq {
     @Getter
     @Setter
     public static class ResumeUpdateReqDto {
-        private MultipartFile profile;
+        private String profile;
         private String title;
         private String portfolio;
         private boolean publish;
