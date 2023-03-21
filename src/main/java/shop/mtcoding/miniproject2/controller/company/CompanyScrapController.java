@@ -59,6 +59,7 @@ public class CompanyScrapController {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
         companyScrapService.insert(id, principal.getCInfoId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", null), HttpStatus.OK);
+        List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", cScrapPS), HttpStatus.OK);
     }
 }
