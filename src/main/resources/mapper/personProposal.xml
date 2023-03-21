@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.PersonProposalRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.PersonProposal">
+        select * from person_proposal_tb
+    </select>
+
+    <select id="findAllWithPostAndCInfoByPInfoId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto">
+        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title, jpt.deadline, ct.name
+        FROM PERSON_PROPOSAL_TB ppt
+        INNER JOIN JOB_POST_TB jpt
+        ON ppt.post_id = jpt.id
+        INNER JOIN COMPANY_INFO_TB ct
+        ON jpt.c_info_id = ct.id
+        where ppt.p_info_id = #{pInfoId}
+        order by ppt.status desc;
+    </select>
+
+    <select id="findAllWithPostAndResumeAndPInfoByCInfoId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyProposalListRespDto">
+        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title ptitle, jpt.c_info_id, rt.title rtitle, pt.name
+        FROM PERSON_PROPOSAL_TB ppt
+        inner join job_post_tb jpt
+        on ppt.post_id = jpt.id
+        inner join resume_tb rt
+        on ppt.resume_id = rt.id
+        inner join person_info_tb pt
+        on ppt.p_info_id = pt.id
+        where jpt.c_info_id = #{cInfoId}
+    </select>
+
+    <select id="findAllWithPostByCInfoIdAndResumeId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalDetailRespDto">
+        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title, jpt.c_info_id
+        FROM PERSON_PROPOSAL_TB ppt
+        inner join job_post_tb  jpt
+        on ppt.post_id = jpt.id
+        where jpt.c_info_id= #{cInfoId} and resume_id= #{resumeId};
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.PersonProposal">
+        select * from person_proposal_tb where id = #{id}
+    </select> 
+
+    <insert id="insert">
+        insert into person_proposal_tb (p_info_id, post_id, resume_id, status, created_at) 
+            values(#{pInfoId}, #{postId}, #{resumeId}, #{status}, now())
+    </insert>    
+
+    <delete id="deleteById">
+        delete from person_proposal_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update person_proposal_tb set p_info_id = #{pInfoId},
+                                   post_id = #{postId},
+                                   resume_id = #{resumeId},
+                                   status = #{status},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+
+
+    <select id="findByPInfoIdAndPostId" resultType="shop.mtcoding.miniproject2.model.PersonProposal">
+          select * from person_proposal_tb where p_info_id = #{pInfoId} and post_id = #{postId}
+    </select>
+
+</mapper>

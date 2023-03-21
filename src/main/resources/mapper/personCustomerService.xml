@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.PersonCustomerService">
+        select * from person_customer_service_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.PersonCustomerService">
+        select * from person_customer_service_tb where id = #{id}
+    </select>
+
+    <insert id="insert">
+        insert into person_customer_service_tb (question, answer, created_at) 
+            values(#{question}, #{answer}, now())
+    </insert>
+
+    <update id="updateById">
+        update person_customer_service_tb set question = #{question},
+                                   answer = #{answer},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+
+    <delete id="deleteById">
+        delete from person_customer_service_tb where id = #{id} 
+    </delete>
+
+</mapper>

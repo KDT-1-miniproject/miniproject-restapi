@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.SkillRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Skill">
+        select * from skill_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.Skill">
+        select * from skill_tb where id = #{id}
+    </select>
+
+    <select id="findByPInfoId" resultType="shop.mtcoding.miniproject2.model.Skill">
+        select * from skill_tb where p_info_id = #{pInfoId}
+    </select>
+
+    <select id="findByPostId" resultType="shop.mtcoding.miniproject2.model.Skill">
+        select * from skill_tb where post_id = #{postId}
+    </select>
+
+    <select id="findByResumeId" resultType="shop.mtcoding.miniproject2.model.Skill">
+        select * from skill_tb where resume_id = #{resumeId}
+    </select>
+
+    <insert id="insert">
+        insert into skill_tb (p_info_id, post_id, resume_id, skills, created_at) 
+            values(#{pInfoId}, #{postId}, #{resumeId}, #{skills}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from skill_tb where id = #{id} 
+    </delete>
+
+    <delete id="deleteByPostId">
+        delete from skill_tb where post_id = #{postId} 
+    </delete>
+
+    <delete id="deleteByResumeId">
+        delete from skill_tb where resume_id = #{resumeId} 
+    </delete>
+
+    <update id="updateById">
+        update skill_tb set p_info_id = #{pInfoId},
+                                   post_id = #{postId},
+                                   resume_id = #{resumeId},
+                                   skills = #{skills},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+</mapper>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.ResumeRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Resume">
+        select * from resume_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.Resume">
+        select * from resume_tb where id = #{id}
+    </select>
+
+    <select id="findNameAndTitleAndSkills" resultType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
+        select rt.id,  rt.title,  ft.name, st.skills
+        from resume_tb rt
+        join skill_tb st
+        on rt.id = st.resume_id
+        join person_info_tb ft 
+        on rt.p_info_id = ft.id
+        where rt.id = #{resumeId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into resume_tb (p_info_id, profile, title, publish, portfolio, self_intro, created_at) 
+            values(#{pInfoId}, #{profile}, #{title},  #{publish}, #{portfolio}, #{selfIntro}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from resume_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update resume_tb set p_info_id = #{pInfoId},
+                                profile = #{profile},
+                                title = #{title},
+                                publish = #{publish},
+                                portfolio = #{portfolio},
+                                self_intro = #{selfIntro},
+                                created_at = #{createdAt}
+                                where id = #{id} 
+    </update>
+
+    <select id="findAllByPInfoId" resultType="shop.mtcoding.miniproject2.model.Resume">
+          select * from resume_tb where p_info_id = #{pInfoId}
+    </select>
+
+
+</mapper>

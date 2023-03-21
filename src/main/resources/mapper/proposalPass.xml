@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.ProposalPassRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.ProposalPass">
+        select * from proposal_pass_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.ProposalPass">
+        select * from proposal_pass_tb where id = #{id}
+    </select> 
+
+    <select id="findAllByPInfoId" resultType="shop.mtcoding.miniproject2.model.ProposalPass">
+        select * from proposal_pass_tb where p_info_id = #{pInfoId}
+    </select> 
+
+    <insert id="insert">
+        insert into proposal_pass_tb (p_info_id, p_proposal_id, comment, created_at) 
+            values(#{pInfoId}, #{pProposalId}, #{comment},now())
+    </insert>    
+
+    <delete id="deleteById">
+        delete from proposal_pass_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update proposal_pass_tb set p_info_id = {pInfoId},
+                                    p_proposal_id = #{pProposalId},
+                                   comment = #{comment},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+
+</mapper>

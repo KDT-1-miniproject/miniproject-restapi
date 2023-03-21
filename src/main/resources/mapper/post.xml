@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.PostRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Post">
+        select * from job_post_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.Post">
+        select * from job_post_tb where id = #{id}
+    </select>
+
+    <select id="findPostIdAndSkills" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$postIdAndSkillsDto">
+        select jt.id post_id, st.skills
+        from job_post_tb jt
+        join skill_tb st
+        on jt.id = st.post_id
+        where jt.c_info_id = #{cInfoId}
+    </select>
+
+    <select id="findAllWithCInfo" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto">
+        SELECT jpt.id post_id, jpt.title, jpt.c_info_id, jpt.deadline, cit.logo, cit.name, cit.address
+        FROM JOB_POST_TB jpt
+        INNER JOIN COMPANY_INFO_TB cit
+        ON jpt.c_info_id = cit.id
+        WHERE jpt.deadline >= now()-2
+        ORDER BY jpt.deadline
+    </select>
+
+    <select id="findByPostIdToRecmmend" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostRecommendTimeStampResDto">
+        SELECT jpt.id post_id, jpt.title, jpt.deadline, cit.logo, cit.name, cit.address
+        from job_post_tb jpt
+        inner join company_info_tb cit
+        on jpt.c_info_id = cit.id
+        where jpt.id = #{postId} and jpt.deadline > NOW()
+    </select>
+
+
+    <select id="findAllTitleByCInfoId" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostTitleRespDto">
+        select id, title, date(deadline) "deadline" from job_post_tb where c_info_id = #{cInfoId}
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into job_post_tb (title, c_info_id, career, pay, condition, start_hour, end_hour, deadline, c_intro, job_intro, created_at) 
+            values(#{title}, #{cInfoId}, #{career},  #{pay}, #{condition}, #{startHour}, #{endHour}, #{deadline}, #{cIntro}, #{jobIntro}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from job_post_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update job_post_tb set title = #{title},
+                                c_info_id = #{cInfoId},
+                                career = #{career},
+                                pay = #{pay},
+                                condition = #{condition},
+                                start_hour = #{startHour},
+                                end_hour = #{endHour},
+                                deadline = #{deadline},
+                                c_intro = #{cIntro},
+                                job_intro = #{jobIntro},
+                                created_at = #{createdAt}
+                                where id = #{id} 
+    </update>
+</mapper>

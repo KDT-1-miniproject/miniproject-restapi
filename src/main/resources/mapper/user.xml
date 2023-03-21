@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.UserRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb where id = #{id}
+    </select>
+
+    <select id="findByPersonId" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb where p_info_id = #{pInfoId}
+    </select>
+
+    <select id="findByEmail" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb where email = #{email}
+    </select>
+
+    <select id="findPersonByEmailAndPassword" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb where email = #{email} and password = #{password} and c_info_id = 0
+    </select>
+
+    <select id="findCompanyByEmailAndPassword" resultType="shop.mtcoding.miniproject2.model.User">
+        select * from user_tb where email = #{email} and password = #{password} and p_info_id = 0
+    </select>
+
+    <insert id="insert">
+        insert into user_tb (email, password, salt, p_info_id, c_info_id, created_at) values(#{email}, #{password}, #{salt}, #{pInfoId},  #{cInfoId}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from user_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update user_tb set email= #{email} ,password= #{password}
+            , p_info_id= #{pInfoId} ,c_info_id= #{cInfoId} ,created_at=#{createdAt} 
+            where id = #{id} 
+    </update>
+
+</mapper>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.PersonRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Person">
+        select * from person_info_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.Person">
+        select * from person_info_tb where id = #{id}
+    </select>
+
+    <!-- <insert id="insert">
+        insert into person_info_tb (name, created_at) 
+            values(#{name}, now())
+    </insert>     -->
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into person_info_tb (name, created_at) values (#{name}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from person_info_tb where id = #{id} 
+    </delete>
+
+
+    <update id="updateById">
+        update person_info_tb set name = #{name},
+                                   phone = #{phone},
+                                   address = #{address},
+                                   birthday = #{birthday},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+
+
+    <select id="findByPersonNameAndEmail" resultType="shop.mtcoding.miniproject2.model.Person">
+        SELECT user_tb.email, person_info_tb.name
+        FROM user_tb
+        LEFT JOIN person_info_tb
+        ON user_tb.p_info_id = person_info_tb.id
+        WHERE person_info_tb.name = #{name}
+        AND user_tb.email = #{email};
+    </select>
+
+</mapper>

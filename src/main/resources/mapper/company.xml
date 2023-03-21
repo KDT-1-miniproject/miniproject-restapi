@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.CompanyRepository">
+
+    <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Company">
+        select * from company_info_tb
+    </select>
+
+    <select id="findById" resultType="shop.mtcoding.miniproject2.model.Company">
+        select * from company_info_tb where id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into company_info_tb (name, number, address, manager_name, created_at) 
+            values(#{name}, #{number}, #{address}, #{managerName}, now())
+    </insert>
+
+    <delete id="deleteById">
+        delete from company_info_tb where id = #{id} 
+    </delete>
+
+    <update id="updateById">
+        update company_info_tb set logo = #{logo},
+                                   name = #{name},
+                                   number = #{number},
+                                   boss_name = #{bossName},
+                                   address = #{address},
+                                   manager_name = #{managerName},
+                                   manager_phone = #{managerPhone},
+                                   size = #{size},
+                                   cyear = #{cyear},
+                                   created_at = #{createdAt}
+                                   where id = #{id} 
+    </update>
+
+    <select id="findByCompanyNameAndNumber" resultType="shop.mtcoding.miniproject2.model.Company">
+        select * from company_info_tb where name = #{name} and number = #{number}
+    </select>
+
+
+</mapper>
+
