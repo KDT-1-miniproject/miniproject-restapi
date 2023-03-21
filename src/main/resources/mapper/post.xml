@@ -43,6 +43,51 @@
         select id, title, date(deadline) "deadline" from job_post_tb where c_info_id = #{cInfoId}
     </select>
 
+    <resultMap id ="companyPostDetail" type="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto">
+        <id property="id" column="id"/> 
+        <result property="title" column="title"/>
+        <result property="career" column="career"/>
+        <result property="pay" column="pay"/>
+        <result property="condition" column="condition"/>
+        <result property="startHour" column="start_hour"/>
+        <result property="endHour" column="end_hour"/>
+        <result property="deadline" column="deadline"/>
+        <result property="cIntro" column="c_intro"/>
+        <result property="jobIntro" column="job_intro"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="name" column="name"/>
+            <result property="bossName" column="boss_name"/>
+            <result property="address" column="address"/>
+            <result property="managerName" column="manager_name"/>
+            <result property="managerPhone" column="manager_phone"/>
+            <result property="size" column="size"/>
+            <result property="cyear" column="cyear"/>
+            <result property="createdAt" column="created_at"/>
+            <association property="user" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$CompanyDto$UserDto">
+                <id property="id" column="id"/>
+                <result property="email" column="email"/>
+            </association>
+        </association>
+        <association property="skills" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$SkillDto">
+            <id property="id" column="id"/>
+            <result property="skills" column="skills"/>
+        </association>
+    </resultMap>
+    <select id="findByPostInfoIdDetail" resultMap="companyPostDetail">
+        select *
+        from job_post_tb p
+        INNER JOIN COMPANY_INFO_TB c 
+        ON p.c_info_id = c.id
+        left join user_tb u
+        ON c.id=u.c_info_id
+        INNER JOIN skill_tb s
+        ON p.id = s.post_id
+        WHERE p.id = #{id};
+    </select>
+
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into job_post_tb (title, c_info_id, career, pay, condition, start_hour, end_hour, deadline, c_intro, job_intro, created_at) 

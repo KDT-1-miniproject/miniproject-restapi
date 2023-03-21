@@ -88,4 +88,51 @@ public class PostResp {
         private Integer scrap;
     }
 
+    @Getter
+    @Setter
+    public static class CompanyPostDetailRespDto {
+        private Integer id;
+        private String title;
+        private CompanyDto company;
+        private Integer career;
+        private String pay;
+        private String condition;
+        private String startHour;
+        private String endHour;
+        private Timestamp deadline;
+        private String cIntro;
+        private String jobIntro;
+        private Timestamp createdAt;
+        private SkillDto skills;
+
+        @Getter
+        @Setter
+        public static class CompanyDto {
+            private Integer id;
+            private String logo;
+            private String name;
+            private String bossName;
+            private String address;
+            private String managerName;
+            private String managerPhone;
+            private Integer size;
+            private Integer cyear;
+            private Timestamp createdAt;
+            private UserDto user;
+
+            @Getter
+            @Setter
+            public static class UserDto {
+                private Integer id;
+                private String email;
+            }
+        }
+
+        @Getter
+        @Setter
+        public static class SkillDto {
+            private Integer id;
+            private String skills;
+        }
+    }
 }

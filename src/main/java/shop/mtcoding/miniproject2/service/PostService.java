@@ -1,13 +1,18 @@
 package shop.mtcoding.miniproject2.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostSaveReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.Post;
 import shop.mtcoding.miniproject2.model.PostRepository;
 import shop.mtcoding.miniproject2.model.Skill;
@@ -16,13 +21,13 @@ import shop.mtcoding.miniproject2.model.SkillRepository;
 
 @Transactional // 여기 붙이면 모든 메서드에 다 붙음
 @Service
+@RequiredArgsConstructor
 public class PostService {
-    @Autowired
-    private PostRepository postRepository;
-    @Autowired
-    private SkillRepository skillRepository;
-    @Autowired
-    private SkillFilterRepository skillFilterRepository;
+
+    private final PostRepository postRepository;
+    private final CompanyRepository companyRepository;
+    private final SkillRepository skillRepository;
+    private final SkillFilterRepository skillFilterRepository;
 
     public int 공고등록(PostSaveReqDto postSaveReqDto, int cInfoId) {
         Post post = new Post(postSaveReqDto, cInfoId);
@@ -50,6 +55,29 @@ public class PostService {
         }
 
         return post.getId();
+    }
+
+    public List<PostTitleRespDto> 기업공고리스트(Integer cInfoId) {
+        List<PostTitleRespDto> postTitleList = postRepository.findAllTitleByCInfoId(cInfoId);
+        return postTitleList;
+    }
+
+    public CompanyPostDetailRespDto 공고디테일(int postId, int cInfoId) {
+
+        Post postPS = (Post) postRepository.findById(postId);
+        if (postPS == null) {
+            throw new CustomApiException("없는 공고 입니다.");
+        }
+        if (postPS.getCInfoId() != cInfoId) {
+            throw new CustomApiException("게시글을 볼 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
+        // Company companyPS = (Company) companyRepository.findById(cInfoId);
+        // Skill skillPS = (Skill) skillRepository.findByPostId(postId);
+        // StringTokenizer skills = new StringTokenizer(skillPS.getSkills(), ",");
+
+        CompanyPostDetailRespDto post = postRepository.findByPostInfoIdDetail(postId);
+        return post;
     }
 
     public void 공고수정하기(PostUpdateReqDto postUpdateReqDto, int postId, int cInfoId) {
