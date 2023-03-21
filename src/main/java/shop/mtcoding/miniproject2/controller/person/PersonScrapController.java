@@ -9,15 +9,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.model.PersonScrap;
 import shop.mtcoding.miniproject2.model.PersonScrapRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonScrapService;
@@ -46,7 +46,7 @@ public class PersonScrapController {
                 HttpStatus.OK);
     }
 
-    @PutMapping("/scrap/{id}")
+    @PostMapping("/scrap/{id}")
     public ResponseEntity<?> scrapInsert(@PathVariable int id) {
         // personMocLogin();
         User principal = (User) session.getAttribute("principal");
@@ -54,8 +54,9 @@ public class PersonScrapController {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
 
-        personScrapService.insert(id, principal.getPInfoId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", null), HttpStatus.OK);
+        PersonScrap scrap = personScrapService.insert(id, principal.getPInfoId());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", scrap), HttpStatus.OK);
     }
 
     @DeleteMapping("/scrap/{id}")

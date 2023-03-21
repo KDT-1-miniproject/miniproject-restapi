@@ -21,12 +21,11 @@ public interface PersonScrapRepository {
         public PersonScrap findByPInfoIdAndPostId(@Param("pInfoId") int pInfoId,
                         @Param("postId") int postId);
 
-        public int insert(@Param("pInfoId") int pInfoId,
-                        @Param("postId") int postId);
-
         public int updateById(@Param("id") int id,
                         @Param("pInfoId") int pInfoId,
                         @Param("postId") int postId);
 
         public int deleteById(int id);
+
+        public int insert(PersonScrap ps);
 }

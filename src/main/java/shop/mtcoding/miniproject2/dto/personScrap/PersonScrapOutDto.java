@@ -30,6 +30,5 @@ public class PersonScrapOutDto {
             private String name;
             private String address;
         }
-
     }
 }
