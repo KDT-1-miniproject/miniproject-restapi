@@ -13,7 +13,7 @@ public class CompanyScrap {
     private int id;
     private int cInfoId;
     private int resumeId;
-    private Timestamp created_at;
+    private Timestamp createdAt;
 
     public CompanyScrap(int cInfoId, int resumeId) {
         this.cInfoId = cInfoId;
