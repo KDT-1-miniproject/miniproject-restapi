@@ -5,6 +5,31 @@
 
 <mapper namespace="shop.mtcoding.miniproject2.model.PersonRepository">
 
+    <resultMap id ="PersonInfoOutDto" type="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="birthday" column="birthday"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="skill" javaType="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto$SkillDto">
+            <id property="id" column="id"/>
+            <result property="pInfoId" column="p_info_id"/>
+            <result property="postId" column="post_id"/>
+            <result property="resumeId" column="resume_id"/>
+            <result property="skills" column="skills"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+
+    <select id="findByIdWithSkills" resultMap="PersonInfoOutDto">
+        select * 
+        from person_info_tb p
+        join skill_tb s
+        on p.id = s.p_info_id
+        where p.id = #{id}
+    </select>
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Person">
         select * from person_info_tb
     </select>
@@ -12,6 +37,7 @@
     <select id="findById" resultType="shop.mtcoding.miniproject2.model.Person">
         select * from person_info_tb where id = #{id}
     </select>
+
 
     <!-- <insert id="insert">
         insert into person_info_tb (name, created_at) 

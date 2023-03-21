@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
-import shop.mtcoding.miniproject2.dto.person.PersonReqDto.PersonUpdateDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -86,20 +86,21 @@ public class PersonService {
     // }
 
     @Transactional
-    public void update(PersonUpdateDto personUpdateDto, int pInfoId) {
+    public void update(PersonInfoInDto personInfoInDto, int pInfoId) {
 
         User principal = (User) session.getAttribute("principal");
         Person personPS = personRepository.findById(pInfoId);
         String password;
 
-        if (personUpdateDto.getPassword() == null || personUpdateDto.getPassword().isEmpty()) {
+        if (personInfoInDto.getPassword() == null || personInfoInDto.getPassword().isEmpty()) {
             password = principal.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(personUpdateDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(personInfoInDto.getPassword(), principal.getSalt());
         }
-        Timestamp birthday = Timestamp.valueOf(personUpdateDto.getBirthday());
-        int result = personRepository.updateById(pInfoId, personUpdateDto.getName(), personUpdateDto.getPhone(),
-                personUpdateDto.getAddress(), birthday, personPS.getCreatedAt());
+
+        Timestamp birthday = Timestamp.valueOf(personInfoInDto.getBirthday());
+        int result = personRepository.updateById(pInfoId, personInfoInDto.getName(), personInfoInDto.getPhone(),
+                personInfoInDto.getAddress(), birthday, personPS.getCreatedAt());
 
         if (result != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -111,7 +112,7 @@ public class PersonService {
             throw new CustomApiException("정보를 찾을 수 없습니다");
         }
 
-        int result2 = skillRepository.updateById(skillPS.getId(), pInfoId, 0, 0, personUpdateDto.getSkills(),
+        int result2 = skillRepository.updateById(skillPS.getId(), pInfoId, 0, 0, personInfoInDto.getSkills(),
                 skillPS.getCreatedAt());
 
         if (result2 != 1) {

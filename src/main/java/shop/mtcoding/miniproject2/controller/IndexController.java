@@ -16,9 +16,11 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyCustomerServiceRepository;
 import shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository;
+import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.service.CompanyService;
@@ -28,7 +30,7 @@ import shop.mtcoding.miniproject2.util.EncryptionUtils;
 @RequiredArgsConstructor
 @RestController
 public class IndexController {
-
+    private final PersonRepository personRepository;
     private final PersonCustomerServiceRepository personCustomerServiceRepository;
     private final CompanyCustomerServiceRepository companyCustomerServiceRepository;
     private final UserRepository userRepository;
@@ -55,7 +57,7 @@ public class IndexController {
 
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
@@ -64,7 +66,7 @@ public class IndexController {
         User principal = userRepository.findCompanyByEmailAndPassword(loginCompanyReqDto.getEmail(),
                 loginCompanyReqDto.getPassword());
         if (principal == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
 
         session.setAttribute("principal", principal);
@@ -83,6 +85,24 @@ public class IndexController {
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
 
+        User userPS = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userPS == null) {
+            throw new CustomApiException("이메일이 잘못입력되었습니다.");
+        }
+
+        String salt = userPS.getSalt();
+
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
+
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+
+        if (principal == null) {
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
+
+        session.setAttribute("principal", principal);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
                 HttpStatus.OK);
     }
