@@ -1,6 +1,5 @@
 package shop.mtcoding.miniproject2.controller.person;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -17,13 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapResDto.PersonScrapIntegerResDto;
-import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapResDto.PersonScrapTimeStampResDto;
+import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.PersonScrapRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonScrapService;
-import shop.mtcoding.miniproject2.util.CvTimestamp;
 
 @RequestMapping("/person")
 @RequiredArgsConstructor
@@ -35,31 +32,17 @@ public class PersonScrapController {
     private final PersonScrapService personScrapService;
 
     @GetMapping("/scrap")
-    public @ResponseBody ResponseEntity<?> personScrap() {
-        // 수정 필요
-
+    public ResponseEntity<?> personScrap() {
         User principal = (User) session.getAttribute("principal");
-        List<PersonScrapTimeStampResDto> pScrapList = personScrapRepository.findByPInfoId(principal.getPInfoId());
-
-        List<PersonScrapIntegerResDto> pScrapList2 = new ArrayList<>();
-        for (PersonScrapTimeStampResDto p : pScrapList) {
-            Integer deadline = CvTimestamp.ChangeDDay(p.getDeadline());
-            PersonScrapIntegerResDto ps = new PersonScrapIntegerResDto();
-            ps.setId(p.getId());
-            ps.setPInfoId(p.getPInfoId());
-            ps.setPostId(p.getPostId());
-            ps.setAddress(p.getAddress());
-            ps.setDeadline(deadline);
-            ps.setLogo(p.getLogo());
-            ps.setName(p.getName());
-            ps.setTitle(p.getTitle());
-            pScrapList2.add(ps);
+        if (principal == null) {
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
+        List<PersonScrapOutDto> pScrapPS = personScrapRepository.findByIdWithPostAndCompany(principal.getPInfoId());
 
         // model.addAttribute("pScrapList", pScrapList2);
         // model.addAttribute("count", pScrapList.size());
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null),
+        return new ResponseEntity<>(new ResponseDto<>(1, "", pScrapPS),
                 HttpStatus.OK);
     }
 

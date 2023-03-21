@@ -5,6 +5,36 @@
 
 <mapper namespace="shop.mtcoding.miniproject2.model.PersonScrapRepository">
 
+    <resultMap id ="PersonScrapOutDto" type="shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto">
+        <id property="id" column="id"/>
+        <result property="pInfoId" column="p_info_id"/>
+        <result property="postId" column="post_id"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="post" javaType="shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto$JobPostDto">
+            <id property="id" column="id"/>
+            <result property="title" column="title"/>
+            <result property="deadline" column="deadline"/>
+            <result property="email" column="email"/>
+            <association property="company" javaType="shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto$JobPostDto$CompanyDto">
+                <id property="id" column="id"/>
+                <result property="logo" column="logo"/>
+                <result property="name" column="name"/>
+                <result property="address" column="address"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="findByIdWithPostAndCompany" resultMap="PersonScrapOutDto">
+        select * 
+        from person_scrap_tb pst
+        join job_post_tb jpt
+        on pst.post_id = jpt.id
+        join company_info_tb ct
+        on jpt.c_info_id = ct.id
+        where pst.p_info_id = #{id}
+    </select>
+
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.PersonScrap">
         select * from person_scrap_tb
     </select>

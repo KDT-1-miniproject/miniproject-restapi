@@ -5,11 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto;
 import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapResDto.PersonScrapTimeStampResDto;
 
 @Mapper
 public interface PersonScrapRepository {
         public List<PersonScrap> findAll();
+
+        public List<PersonScrapOutDto> findByIdWithPostAndCompany(int id);
 
         public PersonScrap findById(int id);
 
