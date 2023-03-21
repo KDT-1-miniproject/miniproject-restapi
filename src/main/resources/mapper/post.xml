@@ -107,7 +107,7 @@
                                 start_hour = #{startHour},
                                 end_hour = #{endHour},
                                 deadline = #{deadline},
-                                c_intro = #{cIntro},
+                                c_intro = #{comIntro},
                                 job_intro = #{jobIntro},
                                 created_at = #{createdAt}
                                 where id = #{id} 

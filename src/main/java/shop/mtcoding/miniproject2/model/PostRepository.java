@@ -45,7 +45,7 @@ public interface PostRepository {
                         @Param("pay") String pay, @Param("condition") String condition,
                         @Param("startHour") String startHour,
                         @Param("endHour") String endHour, @Param("deadline") Timestamp deadline,
-                        @Param("cIntro") String cIntro,
+                        @Param("comIntro") String comIntro,
                         @Param("jobIntro") String jobIntro,
                         @Param("createdAt") Timestamp createdAt);
 

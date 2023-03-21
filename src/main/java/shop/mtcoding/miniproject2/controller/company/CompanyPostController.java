@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
+import shop.mtcoding.miniproject2.dto.post.PostReq.PostSaveDto;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostSaveReqDto;
+import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateDto;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
@@ -60,8 +62,6 @@ public class CompanyPostController {
             throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        // 유효성
-
         CompanyPostDetailRespDto post = postService.공고디테일(id, userPS.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 디테일 보기", post), HttpStatus.OK);
@@ -74,10 +74,9 @@ public class CompanyPostController {
 
         // 유효성 테스트
 
-        postService.공고수정하기(postUpdateReqDto, id, userPS.getCInfoId());
+        PostUpdateDto post = postService.공고수정하기(postUpdateReqDto, id, userPS.getCInfoId());
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "공고 수정 성공", null), HttpStatus.CREATED);
-        // return "redirect:/company/postDetail/1"; // +id
+        return new ResponseEntity<>(new ResponseDto<>(1, "공고 수정 성공", post), HttpStatus.CREATED);
     }
 
     @PostMapping("/posts")
@@ -86,12 +85,12 @@ public class CompanyPostController {
         if (userPS == null) {
             throw new CustomException("인증이 필요합니다");
         }
-        // 유효성 테스트
-        int id = postService.공고등록(postSaveReqDto, userPS.getCInfoId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+
+        PostSaveDto post = postService.공고등록(postSaveReqDto, userPS.getCInfoId());
+        return new ResponseEntity<>(new ResponseDto<>(1, "공고 등록 완료", post), HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/company/deletePost/{id}")
+    @DeleteMapping("/posts/{id}")
     public @ResponseBody ResponseEntity<?> companyDeletePost(@PathVariable int id) {
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
