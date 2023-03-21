@@ -9,7 +9,7 @@ public class CompanyReqDto {
 
     @Setter
     @Getter
-    public static class CompanyUpdateInfoDto {
+    public static class CompanyUpdateInfoInDto {
         private MultipartFile logo;
         private String bossName;
         private Integer size;

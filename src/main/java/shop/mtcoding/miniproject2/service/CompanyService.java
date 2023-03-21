@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
-import shop.mtcoding.miniproject2.dto.company.CompanyReqDto.CompanyUpdateInfoDto;
+import shop.mtcoding.miniproject2.dto.company.CompanyReqDto.CompanyUpdateInfoInDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Company;
@@ -61,7 +61,8 @@ public class CompanyService {
     }
 
     @Transactional
-    public void updateInfo(CompanyUpdateInfoDto companyUpdateInfoDto) {
+    public void updateInfo(CompanyUpdateInfoInDto companyUpdateInfoDto) {
+
         User principal = (User) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
@@ -74,12 +75,9 @@ public class CompanyService {
             password = EncryptionUtils.encrypt(companyUpdateInfoDto.getPassword(), principal.getSalt());
         }
 
-        if (companyUpdateInfoDto.getLogo() == null || companyUpdateInfoDto.getLogo().isEmpty())
-
-        {
+        if (companyUpdateInfoDto.getLogo() == null || companyUpdateInfoDto.getLogo().isEmpty()) {
             companyPS.setLogo(companyPS.getLogo());
         } else {
-
             String uuidComapnyLogo = PathUtil.writeImageFile(companyUpdateInfoDto.getLogo());
             companyPS.setLogo(uuidComapnyLogo);
         }

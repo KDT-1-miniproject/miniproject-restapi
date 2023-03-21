@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.company.CompanyReqDto.CompanyUpdateInfoDto;
+import shop.mtcoding.miniproject2.dto.company.CompanyReqDto.CompanyUpdateInfoInDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Company;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.User;
@@ -37,21 +38,19 @@ public class CompanyController {
         User principal = (User) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         // model.addAttribute("companyPS", companyPS);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "company info", companyPS), HttpStatus.OK);
     }
 
-    @PostMapping("/company/updateInfo")
-    public ResponseEntity<?> companyUpdateInfo(@ModelAttribute CompanyUpdateInfoDto companyUpdateInfoDto)
+    @PostMapping("/company/info")
+    public ResponseEntity<?> companyUpdateInfo(@ModelAttribute CompanyUpdateInfoInDto companyUpdateInfoDto)
             throws IOException {
-        User principal = (User) session.getAttribute("principal");
 
+        User principal = (User) session.getAttribute("principal");
         // 유효성
 
         companyService.updateInfo(companyUpdateInfoDto);
-        User principalPS = (User) userRepository.findById(principal.getId());
 
-        session.setAttribute("principal", principalPS);
+        // post라서 data 필요 없는 거 맞겠지?!
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 정보 수정 완료", null), HttpStatus.OK);
     }
 
