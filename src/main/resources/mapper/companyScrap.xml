@@ -5,6 +5,40 @@
 
 <mapper namespace="shop.mtcoding.miniproject2.model.CompanyScrapRepository">
 
+    <resultMap id ="CompanyScrapOutDto" type="shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto">
+        <id property="id" column="id"/>
+        <result property="cInfoId" column="c_info_id"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="resume" javaType="shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto$ResumeDto">
+            <id property="id" column="id"/>
+            <result property="pInfoId" column="p_info_id"/>
+            <result property="profile" column="profile"/>
+            <result property="title" column="title"/>
+            <result property="publish" column="publish"/>
+            <result property="portfolio" column="portfolio"/>
+            <result property="selfIntro" column="self_intro"/>
+            <result property="createdAt" column="created_at"/>
+            <association property="skill" javaType="shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto$ResumeDto$SkillDto">
+                <id property="id" column="id"/>
+                <result property="skills" column="skills"/>
+                <result property="postId" column="post_id"/>
+                <result property="resumeId" column="resume_id"/>
+                <result property="pInfoId" column="p_info_id"/>
+                <result property="createdAt" column="created_at"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="findByIdResumeAndSkillFilter" resultMap="CompanyScrapOutDto">
+        select * 
+        from company_scrap_tb ct
+        inner join resume_tb rt
+        on ct.resume_id = rt.id
+        inner join skill_tb st
+        on rt.id = st.resume_id
+        where ct.c_info_id = #{id}
+    </select>
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.CompanyScrap">
         select * from company_scrap_tb
     </select>
@@ -22,10 +56,13 @@
         from company_scrap_tb cst
         join resume_tb rt
         on cst.resume_id = rt.id
+
         join person_info_tb pit
         on rt.p_info_id = pit.id
+
         join skill_tb st
         on st.resume_id = rt.id
+
         where cst.c_info_id = #{cInfoId}
     </select>
 

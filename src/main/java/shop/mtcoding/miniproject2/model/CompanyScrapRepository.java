@@ -5,11 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto;
 import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapResDto.CompanyScrapWithResumeInfoResDto;
 
 @Mapper
 public interface CompanyScrapRepository {
         public List<CompanyScrap> findAll();
+
+        public List<CompanyScrapOutDto> findByIdResumeAndSkillFilter(int id);
 
         public CompanyScrap findById(int id);
 
