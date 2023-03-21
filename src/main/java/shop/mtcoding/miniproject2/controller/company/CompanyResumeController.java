@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeRecommendArrDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeRecommendDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeWithPostInfoRecommendDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendArrDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyProposalListDateRespDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyProposalListRespDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalDetailRespDto;
@@ -137,6 +137,7 @@ public class CompanyResumeController {
         if (principal == null) {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
+
         // 공고 + 스킬 찾기
         List<postIdAndSkillsDto> postAndSkillsList = postRepository.findPostIdAndSkills(principal.getCInfoId());
 
@@ -181,14 +182,8 @@ public class CompanyResumeController {
             List<ResumeRecommendArrDto> resumeList = new ArrayList<>();
             for (Entry<Integer, Integer> entry : resumeIdList) {
                 ResumeRecommendDto resumePS = resumeRepository.findNameAndTitleAndSkills(entry.getKey());
-                // System.out.println(entry.getKey());
-                // System.out.println("테스트: " + resumePS.getName());
-                String[] skill = resumePS.getSkills().split(",");
-                ResumeRecommendArrDto dto = new ResumeRecommendArrDto();
-                dto.setId(resumePS.getId());
-                dto.setName(resumePS.getName());
-                dto.setSkills(skill);
-                dto.setTitle(resumePS.getTitle());
+
+                ResumeRecommendArrDto dto = new ResumeRecommendArrDto(resumePS);
 
                 CompanyScrap cs = companyScrapRepository.findByCInfoIdAndResumeId(principal.getCInfoId(),
                         dto.getId());
@@ -200,12 +195,11 @@ public class CompanyResumeController {
 
                 resumeList.add(dto);
             }
+
             String title = postRepository.findById(p.getPostId()).getTitle();
 
-            ResumeWithPostInfoRecommendDto resumeAndPost = new ResumeWithPostInfoRecommendDto();
-            resumeAndPost.setPostId(p.getPostId());
-            resumeAndPost.setTitle(title);
-            resumeAndPost.setResumes(resumeList);
+            ResumeWithPostInfoRecommendDto resumeAndPost = new ResumeWithPostInfoRecommendDto(
+                    p.getPostId(), title, resumeList);
 
             resumeAndPostInfo.add(resumeAndPost);
             // postTitle.add(title);
@@ -213,7 +207,7 @@ public class CompanyResumeController {
         // 스킬 이력서 매칭
         // model.addAttribute("postInfoAndResumes", resumeAndPostInfo);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "", resumeAndPostInfo), HttpStatus.OK);
     }
 
 }

@@ -13,7 +13,7 @@
         select * from resume_tb where id = #{id}
     </select>
 
-    <select id="findNameAndTitleAndSkills" resultType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
+    <select id="findNameAndTitleAndSkills" resultType="shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto$ResumeRecommendDto">
         select rt.id,  rt.title,  ft.name, st.skills
         from resume_tb rt
         join skill_tb st
