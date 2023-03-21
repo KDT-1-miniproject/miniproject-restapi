@@ -3,8 +3,10 @@ package shop.mtcoding.miniproject2.model;
 import java.sql.Timestamp;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
 @Setter
 public class CompanyScrap {
@@ -12,4 +14,9 @@ public class CompanyScrap {
     private int cInfoId;
     private int resumeId;
     private Timestamp created_at;
+
+    public CompanyScrap(int cInfoId, int resumeId) {
+        this.cInfoId = cInfoId;
+        this.resumeId = resumeId;
+    }
 }
