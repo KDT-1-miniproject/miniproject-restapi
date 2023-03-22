@@ -4,14 +4,17 @@ import java.sql.Timestamp;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.SkillDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.UserDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -22,24 +25,17 @@ import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
 
+@RequiredArgsConstructor
 @Service
 public class PersonService {
 
-    @Autowired
-    private SkillRepository skillRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-
-    private HttpSession session;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final SkillRepository skillRepository;
+    private final PersonRepository personRepository;
+    private final HttpSession session;
+    private final UserRepository userRepository;
 
     @Transactional
-    public int join(JoinPersonReqDto joinPersonReqDto) {
+    public JoinPersonRespDto 개인회원가입(JoinPersonReqDto joinPersonReqDto) {
         // System.out.println(salt);
         Person samePerson = personRepository.findByPersonNameAndEmail(joinPersonReqDto.getName(),
                 joinPersonReqDto.getEmail());
@@ -65,15 +61,19 @@ public class PersonService {
             throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return person.getId();
-    }
-
-    @Transactional
-    public void join2(String skills, int pInfoId) {
-        int result = skillRepository.insert(pInfoId, 0, 0, skills);
-        if (result != 1) {
+        int result3 = skillRepository.insert(person.getId(), 0, 0, joinPersonReqDto.getSkills());
+        if (result3 != 1) {
             throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        Person personPS = personRepository.findById(person.getId());
+        User userPS = userRepository.findById(user.getId());
+        Skill skillPS = skillRepository.findByPInfoId(person.getId());
+        JoinPersonRespDto dto = new JoinPersonRespDto(personPS.getId(), personPS.getName(),
+                new UserDto(userPS.getId(), userPS.getEmail(), userPS.getCreatedAt()),
+                new SkillDto(skillPS.getId(), skillPS.getSkills()));
+
+        return dto;
     }
 
     @Transactional

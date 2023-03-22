@@ -2,6 +2,7 @@ package shop.mtcoding.miniproject2.controller;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonService;
@@ -48,14 +50,14 @@ public class IndexController {
 
         User principal = companyService.기업로그인(loginCompanyReqDto);
         session.setAttribute("principal", principal);
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", principal),
+        return new ResponseEntity<>(new ResponseDto<>(1, "기업 로그인 완료", principal),
                 HttpStatus.OK);
     }
 
     @PostMapping("/companyJoin")
     public @ResponseBody ResponseEntity<?> companyJoin(JoinCompanyReqDto joinCompanyReqDto) {
         JoinCompanyRespDto dto = companyService.기업회원가입(joinCompanyReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", dto),
+        return new ResponseEntity<>(new ResponseDto<>(1, "기업 회원가입 완료", dto),
                 HttpStatus.OK);
     }
 
@@ -65,22 +67,16 @@ public class IndexController {
         User principal = personService.개인로그인(loginPersonReqDto);
 
         session.setAttribute("principal", principal);
-        return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", principal),
+        return new ResponseEntity<>(new ResponseDto<>(1, "개인 로그인 완료", principal),
                 HttpStatus.OK);
     }
 
     @PostMapping("/personJoin")
-    public @ResponseBody ResponseEntity<?> personJoin(JoinPersonReqDto joinPersonReqDto,
-            RedirectAttributes redirectAttributes) {
+    public @ResponseBody ResponseEntity<?> personJoin(JoinPersonReqDto joinPersonReqDto) {
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null),
-                HttpStatus.OK);
-    }
+        JoinPersonRespDto dto = personService.개인회원가입(joinPersonReqDto);
 
-    @PostMapping("/personJoin2")
-    public @ResponseBody ResponseEntity<?> personJoin2(String[] skills, Integer pInfoId) {
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", null),
+        return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", dto),
                 HttpStatus.OK);
     }
 
