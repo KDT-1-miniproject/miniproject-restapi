@@ -15,6 +15,15 @@ public class PersonInfoOutDto {
     private Timestamp birthday;
     private Timestamp createdAt;
     private SkillDto skill;
+    private UserDto user;
+
+    @Getter
+    @Setter
+    public static class UserDto {
+        private Integer id;
+        private String email;
+        private String password;
+    }
 
     @Getter
     @Setter

@@ -20,6 +20,11 @@
             <result property="skills" column="skills"/>
             <result property="createdAt" column="created_at"/>
         </association>
+        <association property="user" javaType="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+        </association>
     </resultMap>
 
     <select id="findByIdWithSkills" resultMap="PersonInfoOutDto">
@@ -27,6 +32,8 @@
         from person_info_tb p
         join skill_tb s
         on p.id = s.p_info_id
+        join user_tb ut
+        on p.id = ut.p_info_id
         where p.id = #{id}
     </select>
 
