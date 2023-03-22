@@ -16,6 +16,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyCustomerServiceRepository;
 import shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository;
@@ -82,7 +83,24 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
+        User userPS = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userPS == null) {
+            throw new CustomApiException("이메일이 잘못입력되었습니다.");
+        }
 
+        String salt = userPS.getSalt();
+
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
+
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+
+        if (principal == null) {
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
+
+        session.setAttribute("principal", principal);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
                 HttpStatus.OK);
     }

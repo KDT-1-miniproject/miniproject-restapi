@@ -30,7 +30,7 @@
         ORDER BY jpt.deadline
     </select>
 
-    <select id="findByPostIdToRecmmend" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostRecommendTimeStampResDto">
+    <select id="findByPostIdToRecmmend" resultType="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto">
         SELECT jpt.id post_id, jpt.title, jpt.deadline, cit.logo, cit.name, cit.address
         from job_post_tb jpt
         inner join company_info_tb cit

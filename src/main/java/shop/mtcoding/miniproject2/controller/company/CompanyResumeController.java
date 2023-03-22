@@ -213,7 +213,7 @@ public class CompanyResumeController {
         // 스킬 이력서 매칭
         // model.addAttribute("postInfoAndResumes", resumeAndPostInfo);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "기업 인재 추천", null), HttpStatus.OK);
     }
 
 }
