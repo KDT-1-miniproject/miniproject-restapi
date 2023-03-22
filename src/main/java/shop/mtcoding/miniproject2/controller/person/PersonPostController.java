@@ -19,20 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendIntegerRespDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendTimeStampResDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostDtailResDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainWithScrapRespDto;
-
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.Company;
-
+import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.PersonScrap;
 import shop.mtcoding.miniproject2.model.PersonScrapRepository;

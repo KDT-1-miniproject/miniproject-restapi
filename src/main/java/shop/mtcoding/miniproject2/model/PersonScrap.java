@@ -17,10 +17,9 @@ public class PersonScrap {
     private int postId;
     private Timestamp createdAt;
 
-    public PersonScrap(int pInfoId, int postId) {
+    public PersonScrap(int postId, int pInfoId) {
         this.pInfoId = pInfoId;
         this.postId = postId;
     }
-
 
 }

@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class PersonScrapOutDto {
     private Integer id;
-    private Integer pInfoId;
+    private Integer perInfoId;
     private Integer postId;
     private Timestamp createdAt;
     private JobPostDto post;
