@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,7 +67,7 @@ public class CompanyScrapController {
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 취소", null), HttpStatus.OK);
     }
 
-    @PutMapping("/scrap/{id}")
+    @PostMapping("/scrap/{id}")
     public ResponseEntity<?> scrapInsert(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
