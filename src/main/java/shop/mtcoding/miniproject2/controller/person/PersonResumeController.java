@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTimestampDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
@@ -44,19 +46,14 @@ public class PersonResumeController {
 
     @GetMapping("/resumes")
     public ResponseEntity<?> resumes() {
-        // 수정
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
         int pInfoId = principal.getPInfoId();
         List<Resume> resumeAll = resumeRepository.findAllByPInfoId(pInfoId);
-        // model.addAttribute("resumes", resumeAll);
-        // model.addAttribute("count", resumeAll.size());
-        Person personPS = personRepository.findById(pInfoId);
-        // model.addAttribute("personPS", personPS);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 전체 불러오기 성공", resumeAll), HttpStatus.OK);
     }
 
     @DeleteMapping("/resumes/{id}")
@@ -69,6 +66,7 @@ public class PersonResumeController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
+    // 아직 안함
     @GetMapping("/resume/{id}")
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
 
@@ -87,36 +85,30 @@ public class PersonResumeController {
         Date date = new Date(personPS.getBirthday().getTime());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String formattedBirthday = sdf.format(date);
-        // model.addAttribute("resumeDetail", resumePS);
-        // model.addAttribute("personDetail", personPS);
-        // model.addAttribute("birthday", formattedBirthday);
-        // model.addAttribute("skillDetail", skillPS.getSkills()
 
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기", null), HttpStatus.OK);
     }
 
-    @PostMapping("/resume")
-    public ResponseEntity<?> resumeInsert(ResumeUpdateReqDto resumeUpdateReqDto) {
+    @PostMapping("/resumes")
+    public ResponseEntity<?> resumeInsert(ResumeInsertReqDto resumeInsertReqDto) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
         // 유효성 테스트
         int pInfoId = principal.getPInfoId();
-        resumeService.insertNewResume(pInfoId, resumeUpdateReqDto);
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        Resume dto = resumeService.insertNewResume(pInfoId, resumeInsertReqDto);
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 저장에 성공하였습니다!", dto), HttpStatus.OK);
     }
 
-    @PutMapping("/resume/{id}")
+    @PutMapping("/resumes/{id}")
     public ResponseEntity<?> resumeUpdate(@PathVariable int id, ResumeUpdateReqDto resumeUpdateReqDto) {
         User principal = (User) session.getAttribute("principal");
-        // 유효성
         int pInfoId = principal.getPInfoId();
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);
         Resume resumePS = resumeRepository.findById(id);
-        // model.addAttribute("resumePS", resumePS);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 수정에 성공하였습니다!", resumePS), HttpStatus.OK);
     }
 
 }

@@ -99,7 +99,7 @@ public class PersonService {
         }
         Timestamp birthday = Timestamp.valueOf(personUpdateDto.getBirthday());
         int result = personRepository.updateById(pInfoId, personUpdateDto.getName(), personUpdateDto.getPhone(),
-                personUpdateDto.getAddress(), birthday, personPS.getCreatedAt());
+                personUpdateDto.getAddress(), birthday);
 
         if (result != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);

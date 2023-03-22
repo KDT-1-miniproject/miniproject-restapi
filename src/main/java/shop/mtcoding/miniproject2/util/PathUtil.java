@@ -15,10 +15,10 @@ public class PathUtil {
         return System.getProperty("user.dir") + "\\src\\main\\resources\\static\\";
     }
 
-    public static String writeImageFile(MultipartFile profile) {
+    public static String writeImageFile(String profile) {
         UUID uuid = UUID.randomUUID();
-        String uuidImageDBName = "/images/" + uuid + "_" + profile.getOriginalFilename();
-        String uuidImageRealName = "images\\" + uuid + "_" + profile.getOriginalFilename();
+        String uuidImageDBName = "/images/" + uuid + "_" + profile;
+        String uuidImageRealName = "images\\" + uuid + "_" + profile;
         String staticFolder = getStaticFolder(); // 프로그램 혹은 환경에 따라서 이게 다 다를 수 있다.
 
         Path imageFilePath = Paths.get(staticFolder + uuidImageRealName);

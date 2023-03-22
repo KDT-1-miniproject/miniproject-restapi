@@ -22,8 +22,7 @@
         on rt.p_info_id = ft.id
         where rt.id = #{resumeId}
     </select>
-
-    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    <insert id="insert" parameterType="shop.mtcoding.miniproject2.dto.Resume.ResumeReq$ResumeInsertReqBirthdayTimestampDto" useGeneratedKeys="true" keyProperty="resumeId" keyColumn="id">
         insert into resume_tb (p_info_id, profile, title, publish, portfolio, self_intro, created_at) 
             values(#{pInfoId}, #{profile}, #{title},  #{publish}, #{portfolio}, #{selfIntro}, now())
     </insert>
@@ -38,8 +37,7 @@
                                 title = #{title},
                                 publish = #{publish},
                                 portfolio = #{portfolio},
-                                self_intro = #{selfIntro},
-                                created_at = #{createdAt}
+                                self_intro = #{selfIntro}
                                 where id = #{id} 
     </update>
 
