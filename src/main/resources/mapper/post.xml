@@ -30,12 +30,25 @@
         ORDER BY jpt.deadline
     </select>
 
-    <select id="findByPostIdToRecmmend" resultType="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto">
-        SELECT jpt.id post_id, jpt.title, jpt.deadline, cit.logo, cit.name, cit.address
+    <resultMap id ="PostRecommendTimeStampResDto" type="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="deadline" column="deadline"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="address" column="address"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+
+    <select id="findByPostIdToRecmmend" resultMap="PostRecommendTimeStampResDto">
+        select *
         from job_post_tb jpt
         inner join company_info_tb cit
         on jpt.c_info_id = cit.id
-        where jpt.id = #{postId} and jpt.deadline > NOW()
+        where jpt.id = #{id} 
+        and jpt.deadline > NOW()
     </select>
 
 

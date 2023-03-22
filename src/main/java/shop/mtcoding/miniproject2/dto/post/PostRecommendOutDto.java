@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto.CompanyDto;
 
 @Getter
 @Setter
@@ -14,33 +15,46 @@ public class PostRecommendOutDto {
     @Setter
     @ToString
     public static class PostRecommendTimeStampResDto {
-        private Integer postId;
+        private Integer id;
         private String title;
         private Timestamp deadline;
-        private String logo;
-        private String name;
-        private String address;
+        private CompanyDto company;
+
+        @Getter
+        @Setter
+        public static class CompanyDto {
+            private Integer id;
+            private String logo;
+            private String address;
+            private String name;
+        }
     }
 
     @Getter
     @Setter
     @ToString
     public static class PostRecommendIntegerRespDto {
-        private Integer postId;
+        private Integer id;
         private String title;
         private Integer deadline;
-        private String logo;
-        private String name;
-        private String address;
         private Integer scrap;
+        private CompanyDto company;
 
         public PostRecommendIntegerRespDto(PostRecommendTimeStampResDto recommendDto) {
-            this.postId = recommendDto.getPostId();
+            this.id = recommendDto.getId();
             this.title = recommendDto.getTitle();
-            this.logo = recommendDto.getLogo();
-            this.name = recommendDto.getName();
-            this.address = recommendDto.getAddress();
+            this.company = recommendDto.getCompany();
         }
+
+        @Getter
+        @Setter
+        public static class CompanyDto2 {
+            private Integer id;
+            private String logo;
+            private String address;
+            private String name;
+        }
+
     }
 
 }

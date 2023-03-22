@@ -192,14 +192,14 @@ public class PersonPostController {
             try {
                 // System.out.println("테스트: 1");
                 PostRecommendTimeStampResDto p = postRepository.findByPostIdToRecmmend(entry.getKey());
-                System.out.println("테스트: " + entry.getKey());
+                // System.out.println("테스트: " + entry.getKey());
                 if (p == null) {
                     continue;
                 }
                 PostRecommendIntegerRespDto p2 = new PostRecommendIntegerRespDto(p);
                 p2.setDeadline(CvTimestamp.ChangeDDay(p.getDeadline()));
 
-                PersonScrap ps = personScrapRepository.findByPInfoIdAndPostId(principal.getPInfoId(), p2.getPostId());
+                PersonScrap ps = personScrapRepository.findByPInfoIdAndPostId(principal.getPInfoId(), p2.getId());
 
                 if (ps == null) {
                     p2.setScrap(0);
