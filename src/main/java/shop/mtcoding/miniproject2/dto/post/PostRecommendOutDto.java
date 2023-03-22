@@ -45,16 +45,6 @@ public class PostRecommendOutDto {
             this.title = recommendDto.getTitle();
             this.company = recommendDto.getCompany();
         }
-
-        @Getter
-        @Setter
-        public static class CompanyDto2 {
-            private Integer id;
-            private String logo;
-            private String address;
-            private String name;
-        }
-
     }
 
 }
