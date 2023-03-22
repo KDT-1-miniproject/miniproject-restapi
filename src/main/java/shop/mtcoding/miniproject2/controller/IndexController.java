@@ -16,6 +16,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyCustomerServiceRepository;
 import shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository;
@@ -82,27 +83,22 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
-        if (loginPersonReqDto.getEmail() == null ||
-                loginPersonReqDto.getEmail().isEmpty()) {
-            throw new CustomException("이메일을 작성해주세요");
+        User userPS = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userPS == null) {
+            throw new CustomApiException("이메일이 잘못입력되었습니다.");
         }
-        if (loginPersonReqDto.getPassword() == null ||
-                loginPersonReqDto.getPassword().isEmpty()) {
-            throw new CustomException("패스워드를 작성해주세요");
-        }
-        // DB Salt 값
-        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
-        if (userCheck == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
-        }
-        String salt = userCheck.getSalt();
+
+        String salt = userPS.getSalt();
+
         // DB Salt + 입력된 password 해싱
         loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
 
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
                 loginPersonReqDto.getPassword());
+
         if (principal == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+
         }
 
         session.setAttribute("principal", principal);

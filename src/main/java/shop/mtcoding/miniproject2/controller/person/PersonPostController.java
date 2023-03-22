@@ -24,6 +24,14 @@ import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.PostDtailResDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
+import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainWithScrapRespDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.model.Company;
+
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.PersonScrap;
 import shop.mtcoding.miniproject2.model.PersonScrapRepository;
@@ -76,15 +84,18 @@ public class PersonPostController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<?> resumeDetail(@PathVariable int id) {
+    public ResponseEntity<?> recommend() {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
         }
         // person skill 찾기
         Skill principalSkills = skillRepository.findByPInfoId(principal.getPInfoId());
+
         String[] principalSKillArr = principalSkills.getSkills().split(",");
+
         List<SkillFilter> principalSkilFilters = new ArrayList<>();
+
         for (String principalSkill : principalSKillArr) {
             List<SkillFilter> s = skillFilterRepository.findSkillNameForPerson(principalSkill);
             principalSkilFilters.addAll(s);
@@ -120,33 +131,30 @@ public class PersonPostController {
             try {
                 // System.out.println("테스트: 1");
                 PostRecommendTimeStampResDto p = postRepository.findByPostIdToRecmmend(entry.getKey());
+                // System.out.println("테스트: " + entry.getKey());
                 if (p == null) {
                     continue;
                 }
-                PostRecommendIntegerRespDto p2 = new PostRecommendIntegerRespDto();
-                p2.setAddress(p.getAddress());
-                p2.setLogo(p.getLogo());
-                p2.setName(p.getName());
-                p2.setPostId(p.getPostId());
-                p2.setTitle(p.getTitle());
+                PostRecommendIntegerRespDto p2 = new PostRecommendIntegerRespDto(p);
                 p2.setDeadline(CvTimestamp.ChangeDDay(p.getDeadline()));
-                // System.out.println("테스트: 2");
 
-                PersonScrap ps = personScrapRepository.findByPInfoIdAndPostId(principal.getPInfoId(), p2.getPostId());
-                // System.out.println("테스트: 3");
+                PersonScrap ps = personScrapRepository.findByPInfoIdAndPostId(principal.getPInfoId(), p2.getId());
 
                 if (ps == null) {
                     p2.setScrap(0);
                 } else {
                     p2.setScrap(1);
                 }
+
+                // System.out.println("테스트 : " + p2);
+
                 postList.add(p2);
             } catch (Exception e) {
-                throw new CustomException("실패");
+                throw new CustomApiException("실패");
             }
         }
         // model.addAttribute("postList", postList);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "공고 추천", postList), HttpStatus.OK);
     }
 }

@@ -51,29 +51,6 @@ public class PostResp {
 
     @Getter
     @Setter
-    public static class PostRecommendTimeStampResDto {
-        private int postId;
-        private String title;
-        private Timestamp deadline;
-        private String logo;
-        private String name;
-        private String address;
-    }
-
-    @Getter
-    @Setter
-    public static class PostRecommendIntegerRespDto {
-        private int postId;
-        private String title;
-        private Integer deadline;
-        private String logo;
-        private String name;
-        private String address;
-        private Integer scrap;
-    }
-
-    @Getter
-    @Setter
     public static class postIdAndSkillsDto {
         private int postId;
         private String skills;
