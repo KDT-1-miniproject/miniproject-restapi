@@ -98,6 +98,7 @@ public class IndexController {
 
         if (principal == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+
         }
 
         session.setAttribute("principal", principal);

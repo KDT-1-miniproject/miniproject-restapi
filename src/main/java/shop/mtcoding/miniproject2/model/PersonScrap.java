@@ -22,4 +22,5 @@ public class PersonScrap {
         this.postId = postId;
     }
 
+
 }
