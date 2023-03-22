@@ -13,8 +13,21 @@
         select * from resume_tb where id = #{id}
     </select>
 
-    <select id="findNameAndTitleAndSkills" resultType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
-        select rt.id,  rt.title,  ft.name, st.skills
+    <resultMap id ="ResumeRecommendDto" type="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <association property="person" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto$PersonDto">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+        <association property="skill" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto$SkillDto">
+            <id property="id" column="id"/>
+            <result property="skills" column="skills"/>
+        </association>
+    </resultMap>
+
+    <select id="findNameAndTitleAndSkills" resultMap="ResumeRecommendDto">
+        select *
         from resume_tb rt
         join skill_tb st
         on rt.id = st.resume_id
