@@ -30,17 +30,105 @@
         ORDER BY jpt.deadline
     </select>
 
-    <select id="findByPostIdToRecmmend" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostRecommendTimeStampResDto">
-        SELECT jpt.id post_id, jpt.title, jpt.deadline, cit.logo, cit.name, cit.address
+    <resultMap id ="PostRecommendTimeStampResDto" type="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="deadline" column="deadline"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto$PostRecommendTimeStampResDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="address" column="address"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+
+    <select id="findByPostIdToRecmmend" resultMap="PostRecommendTimeStampResDto">
+        select *
         from job_post_tb jpt
         inner join company_info_tb cit
         on jpt.c_info_id = cit.id
-        where jpt.id = #{postId} and jpt.deadline > NOW()
+        where jpt.id = #{id} 
+        and jpt.deadline > NOW()
     </select>
 
 
     <select id="findAllTitleByCInfoId" resultType="shop.mtcoding.miniproject2.dto.post.PostResp$PostTitleRespDto">
         select id, title, date(deadline) "deadline" from job_post_tb where c_info_id = #{cInfoId}
+    </select>
+
+    <resultMap id ="companyPostDetail" type="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto">
+        <id property="id" column="id"/> 
+        <result property="title" column="title"/>
+        <result property="career" column="career"/>
+        <result property="pay" column="pay"/>
+        <result property="condition" column="condition"/>
+        <result property="startHour" column="start_hour"/>
+        <result property="endHour" column="end_hour"/>
+        <result property="deadline" column="deadline"/>
+        <result property="cIntro" column="c_intro"/>
+        <result property="jobIntro" column="job_intro"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="name" column="name"/>
+            <result property="bossName" column="boss_name"/>
+            <result property="address" column="address"/>
+            <result property="managerName" column="manager_name"/>
+            <result property="managerPhone" column="manager_phone"/>
+            <result property="size" column="size"/>
+            <result property="cyear" column="cyear"/>
+            <result property="createdAt" column="created_at"/>
+            <association property="user" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$CompanyDto$UserDto">
+                <id property="id" column="id"/>
+                <result property="email" column="email"/>
+            </association>
+        </association>
+        <association property="skills" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$SkillDto">
+            <id property="id" column="id"/>
+            <result property="skills" column="skills"/>
+        </association>
+    </resultMap>
+    <select id="findByPostInfoIdDetail" resultMap="companyPostDetail">
+        select *
+        from job_post_tb p
+        INNER JOIN COMPANY_INFO_TB c 
+        ON p.c_info_id = c.id
+        left join user_tb u
+        ON c.id=u.c_info_id
+        INNER JOIN skill_tb s
+        ON p.id = s.post_id
+        WHERE p.id = #{id};
+    </select>
+
+
+ <resultMap id ="postMainRespDto" type="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto">
+        <id property="id" column="id"/> 
+        <result property="title" column="title"/>
+        <result property="deadline" column="deadline"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="name" column="name"/>
+            <result property="address" column="address"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+        <association property="scrap" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto$ScrapPS">
+            <id property="id" column="id"/>
+            <result property="postId" column="post_id"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+    <select id = "findAllWithScrapAndCompany" resultMap="postMainRespDto">
+        select *
+        from job_post_tb p
+        inner join company_info_tb c
+        on p.c_info_id = c.id
+        left join (select id scrap_id, post_id, created_at scrap_created_at from person_scrap_tb where p_info_id= #{pInfoId}) s
+        on p.id = s.post_id 
+        WHERE p.deadline >= now()-2
+        ORDER BY p.deadline
     </select>
 
 
@@ -62,7 +150,7 @@
                                 start_hour = #{startHour},
                                 end_hour = #{endHour},
                                 deadline = #{deadline},
-                                c_intro = #{cIntro},
+                                c_intro = #{comIntro},
                                 job_intro = #{jobIntro},
                                 created_at = #{createdAt}
                                 where id = #{id} 

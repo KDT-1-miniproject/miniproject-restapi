@@ -84,7 +84,6 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
-
         User userPS = userRepository.findByEmail(loginPersonReqDto.getEmail());
         if (userPS == null) {
             throw new CustomApiException("이메일이 잘못입력되었습니다.");
@@ -97,6 +96,7 @@ public class IndexController {
 
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
                 loginPersonReqDto.getPassword());
+
 
         if (principal == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");

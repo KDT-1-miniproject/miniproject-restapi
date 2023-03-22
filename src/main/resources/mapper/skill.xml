@@ -30,6 +30,7 @@
             values(#{pInfoId}, #{postId}, #{resumeId}, #{skills}, now())
     </insert>
 
+
     <delete id="deleteById">
         delete from skill_tb where id = #{id} 
     </delete>
