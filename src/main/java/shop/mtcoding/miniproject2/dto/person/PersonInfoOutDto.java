@@ -2,6 +2,8 @@ package shop.mtcoding.miniproject2.dto.person;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +24,7 @@ public class PersonInfoOutDto {
     public static class UserDto {
         private Integer id;
         private String email;
+        @JsonIgnore
         private String password;
     }
 
