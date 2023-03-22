@@ -5,6 +5,38 @@
 
 <mapper namespace="shop.mtcoding.miniproject2.model.CompanyRepository">
 
+    <resultMap id ="CompanyInfoOutDto" type="shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto">
+        <id property="id" column="id"/>
+        <result property="logo" column="logo"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+        <result property="cyear" column="cyear"/>
+        <result property="bossName" column="boss_name"/>
+        <result property="address" column="address"/>
+        <result property="managerName" column="manager_name"/>
+        <result property="managerPhone" column="manager_phone"/>
+        <result property="size" column="size"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="user" javaType="shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="email" column="email"/>
+            <result property="salt" column="salt"/>
+            <result property="pInfoId" column="p_info_id"/>
+            <result property="cInfoId" column="c_info_id"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+
+    <select id="findByIdWithUser" resultMap="CompanyInfoOutDto">
+        select * 
+        from company_info_tb c
+        inner join user_tb u
+        on c.id = u.c_info_id 
+        where c.id = #{id}
+    </select>
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Company">
         select * from company_info_tb
     </select>

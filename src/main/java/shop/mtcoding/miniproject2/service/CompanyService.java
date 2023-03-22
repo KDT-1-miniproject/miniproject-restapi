@@ -7,8 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
-import shop.mtcoding.miniproject2.dto.company.CompanyReqDto.CompanyUpdateInfoDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Company;
@@ -61,37 +61,39 @@ public class CompanyService {
     }
 
     @Transactional
-    public void updateInfo(CompanyUpdateInfoDto companyUpdateInfoDto) {
+    public void updateInfo(CompanyInfoInDto companyInfoInDto) {
+
         User principal = (User) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
 
         String password;
 
-        if (companyUpdateInfoDto.getPassword() == null || companyUpdateInfoDto.getPassword().isEmpty()) {
+        if (companyInfoInDto.getPassword() == null || companyInfoInDto.getPassword().isEmpty()) {
             password = userPS.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(companyUpdateInfoDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(companyInfoInDto.getPassword(), principal.getSalt());
         }
 
-        if (companyUpdateInfoDto.getLogo() == null || companyUpdateInfoDto.getLogo().isEmpty())
-
-        {
-            companyPS.setLogo(companyPS.getLogo());
+        if (companyInfoInDto.getLogo() == null || companyInfoInDto.getLogo().isEmpty()) {
+            if (companyPS.getLogo() == null || companyPS.getLogo().isEmpty()) {
+                companyPS.setLogo("");
+            } else {
+                companyPS.setLogo(companyPS.getLogo());
+            }
         } else {
-
-            String uuidComapnyLogo = PathUtil.writeImageFile(companyUpdateInfoDto.getLogo());
+            String uuidComapnyLogo = PathUtil.writeImageFile(companyInfoInDto.getLogo());
             companyPS.setLogo(uuidComapnyLogo);
         }
 
-        String t = companyUpdateInfoDto.getCyear();
+        String t = companyInfoInDto.getCyear();
         String[] times = t.split("-");
         int cyear = Integer.parseInt(times[0]);
 
         int result = companyRepository.updateById(principal.getCInfoId(), companyPS.getLogo(), companyPS.getName(),
-                companyPS.getNumber(), companyUpdateInfoDto.getBossName(), companyUpdateInfoDto.getAddress(),
-                companyUpdateInfoDto.getManagerName(),
-                companyUpdateInfoDto.getManagerPhone(), companyUpdateInfoDto.getSize(), cyear,
+                companyPS.getNumber(), companyInfoInDto.getBossName(), companyInfoInDto.getAddress(),
+                companyInfoInDto.getManagerName(),
+                companyInfoInDto.getManagerPhone(), companyInfoInDto.getSize(), cyear,
                 companyPS.getCreatedAt());
 
         int result2 = userRepository.updateById(principal.getId(), principal.getEmail(), password,
