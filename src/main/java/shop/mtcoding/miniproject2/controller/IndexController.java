@@ -82,7 +82,30 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
+        if (loginPersonReqDto.getEmail() == null ||
+                loginPersonReqDto.getEmail().isEmpty()) {
+            throw new CustomException("이메일을 작성해주세요");
+        }
+        if (loginPersonReqDto.getPassword() == null ||
+                loginPersonReqDto.getPassword().isEmpty()) {
+            throw new CustomException("패스워드를 작성해주세요");
+        }
+        // DB Salt 값
+        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
+        }
+        String salt = userCheck.getSalt();
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
 
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
+        }
+
+        session.setAttribute("principal", principal);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
                 HttpStatus.OK);
     }

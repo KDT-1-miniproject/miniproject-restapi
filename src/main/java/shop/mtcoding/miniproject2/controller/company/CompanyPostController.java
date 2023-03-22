@@ -37,10 +37,7 @@ import shop.mtcoding.miniproject2.service.PostService;
 @RestController
 public class CompanyPostController {
 
-    private final PostRepository postRepository;
     private final PostService postService;
-    private final CompanyRepository companyRepository;
-    private final SkillRepository skillRepository;
     private final HttpSession session;
 
     @GetMapping("/posts")
@@ -62,7 +59,7 @@ public class CompanyPostController {
             throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        CompanyPostDetailRespDto post = postService.공고디테일(id, userPS.getCInfoId());
+        CompanyPostDetailRespDto post = postService.기업공고디테일(id, userPS.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 디테일 보기", post), HttpStatus.OK);
     }

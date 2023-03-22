@@ -11,5 +11,5 @@ public class PersonScrap {
     private int id;
     private int pInfoId;
     private int postId;
-    private Timestamp created_at;
+    private Timestamp createdAt;
 }

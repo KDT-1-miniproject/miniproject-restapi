@@ -89,6 +89,36 @@
     </select>
 
 
+ <resultMap id ="postMainRespDto" type="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto">
+        <id property="id" column="id"/> 
+        <result property="title" column="title"/>
+        <result property="deadline" column="deadline"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto$CompanyDto">
+            <id property="id" column="id"/>
+            <result property="logo" column="logo"/>
+            <result property="name" column="name"/>
+            <result property="address" column="address"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+        <association property="scrap" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$PostMainRespDto$ScrapPS">
+            <id property="id" column="id"/>
+            <result property="postId" column="post_id"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+    <select id = "findAllWithScrapAndCompany" resultMap="postMainRespDto">
+        select *
+        from job_post_tb p
+        inner join company_info_tb c
+        on p.c_info_id = c.id
+        left join (select id scrap_id, post_id, created_at scrap_created_at from person_scrap_tb where p_info_id= #{pInfoId}) s
+        on p.id = s.post_id 
+        WHERE p.deadline >= now()-2
+        ORDER BY p.deadline
+    </select>
+
+
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into job_post_tb (title, c_info_id, career, pay, condition, start_hour, end_hour, deadline, c_intro, job_intro, created_at) 
             values(#{title}, #{cInfoId}, #{career},  #{pay}, #{condition}, #{startHour}, #{endHour}, #{deadline}, #{cIntro}, #{jobIntro}, now())

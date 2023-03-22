@@ -22,7 +22,7 @@ public interface PostRepository {
 
         public List<postIdAndSkillsDto> findPostIdAndSkills(int cInfoid);
 
-        public List<PostMainRespDto> findAllWithCInfo();
+        public List<PostMainRespDto> findAllWithScrapAndCompany(int pInfoId);
 
         public PostRecommendTimeStampResDto findByPostIdToRecmmend(int postId);
 

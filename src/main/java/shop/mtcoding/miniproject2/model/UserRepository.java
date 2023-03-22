@@ -14,6 +14,8 @@ public interface UserRepository {
 
         public User findByPersonId(int pInfoId);
 
+        public User findByCInfoId(int cInfoId);
+
         public User findPersonByEmailAndPassword(@Param("email") String email, @Param("password") String password);
 
         public User findCompanyByEmailAndPassword(@Param("email") String email, @Param("password") String password);
