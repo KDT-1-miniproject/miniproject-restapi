@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendArrDto;
 
 public class ResumeRecommendOutDto {
 
