@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -74,16 +75,24 @@ public class PersonService {
         }
     }
 
-    // public User 로그인(LoginReqPersonDto loginReqPersonDto) {
-    // User principal =
-    // personRepository.findByEmailAndPassword(loginReqPersonDto.getEmail(),
-    // loginReqPersonDto.getPassword());
+    @Transactional
+    public User 개인로그인(LoginPersonReqDto loginPersonReqDto) {
+        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+        }
+        // DB Salt 값
+        String salt = userCheck.getSalt();
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
 
-    // if (principal == null) {
-    // throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
-    // }
-    // return principal;
-    // }
+        return principal;
+    }
 
     @Transactional
     public void update(PersonInfoInDto personInfoInDto, int pInfoId) {
