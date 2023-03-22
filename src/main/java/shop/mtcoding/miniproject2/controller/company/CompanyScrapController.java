@@ -1,6 +1,5 @@
 package shop.mtcoding.miniproject2.controller.company;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -16,10 +15,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapResDto.CompanyScrapWithResumeInfoResArrDto;
-import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapResDto.CompanyScrapWithResumeInfoResDto;
+import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.model.CompanyScrap;
 import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyScrapService;
@@ -38,23 +37,10 @@ public class CompanyScrapController {
         if (principal == null) {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-        List<CompanyScrapWithResumeInfoResDto> cScrapList = companyScrapRepository
-                .findresumeTitleAndNameByCInfoId(principal.getCInfoId());
-        List<CompanyScrapWithResumeInfoResArrDto> cScrapArrList = new ArrayList<>();
-
-        for (CompanyScrapWithResumeInfoResDto scrap : cScrapList) {
-            String[] skillArr = scrap.getSkills().split(",");
-            CompanyScrapWithResumeInfoResArrDto cs = new CompanyScrapWithResumeInfoResArrDto();
-            cs.setId(scrap.getId());
-            cs.setResumeId(scrap.getResumeId());
-            cs.setName(scrap.getName());
-            cs.setTitle(scrap.getTitle());
-            cs.setSkills(skillArr);
-            cScrapArrList.add(cs);
-        }
+        List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
 
         // model.addAttribute("scrapList", cScrapArrList);
-        return new ResponseEntity<>(new ResponseDto<>(1, "", cScrapArrList), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "", cScrapPS), HttpStatus.OK);
     }
 
     @DeleteMapping("/scrap/{id}")
@@ -73,7 +59,8 @@ public class CompanyScrapController {
         if (principal == null) {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-        companyScrapService.insert(id, principal.getCInfoId());
-        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", null), HttpStatus.OK);
+        CompanyScrap cScrapPS = companyScrapService.insert(id, principal.getCInfoId());
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", cScrapPS), HttpStatus.OK);
     }
 }
