@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTimestampDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeRecommendDto;
 
 @Mapper
@@ -17,6 +18,8 @@ public interface ResumeRepository {
         public ResumeRecommendDto findNameAndTitleAndSkills(int resumeId);
 
         public Resume findById(int id);
+
+        public ResumeDetailDto findDetailList(int id);
 
         public int insert(ResumeInsertReqBirthdayTimestampDto resumeInsertReqBirthdayTimestampDto);
 

@@ -11,9 +11,9 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTi
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
@@ -84,7 +84,8 @@ public class ResumeService {
             throw new CustomApiException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         Resume dto = resumeRepository.findById(resumeIdDb);
-
+        // String datacheck = skillRepository.findByResumeId(resumeIdDb).getSkills();
+        // System.out.println(datacheck);
         return dto;
     }
 

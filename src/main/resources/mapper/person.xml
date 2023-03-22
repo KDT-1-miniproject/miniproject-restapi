@@ -12,7 +12,7 @@
     <select id="findById" resultType="shop.mtcoding.miniproject2.model.Person">
         select * from person_info_tb where id = #{id}
     </select>
-
+    
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into person_info_tb (name, created_at) values (#{name}, now())
     </insert>

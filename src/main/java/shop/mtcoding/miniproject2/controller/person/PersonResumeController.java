@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -66,27 +66,19 @@ public class PersonResumeController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
-    // 아직 안함
-    @GetMapping("/resume/{id}")
+    @GetMapping("/resumes/{id}")
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
 
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-        Resume resumePS = resumeRepository.findById(id);
-        if (resumePS == null) {
-            throw new CustomException("없는 이력서를 수정할 수 없습니다");
+        ResumeDetailDto resumeDetailDto = resumeRepository.findDetailList(id);
+        if (resumeDetailDto == null) {
+            throw new CustomApiException("없는 이력서를 수정할 수 없습니다");
         }
-        Person personPS = personRepository.findById(resumePS.getPInfoId());
 
-        Skill skillPS = skillRepository.findByResumeId(resumePS.getId());
-
-        Date date = new Date(personPS.getBirthday().getTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedBirthday = sdf.format(date);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기", resumeDetailDto), HttpStatus.OK);
     }
 
     @PostMapping("/resumes")
@@ -98,7 +90,6 @@ public class PersonResumeController {
         // 유효성 테스트
         int pInfoId = principal.getPInfoId();
         Resume dto = resumeService.insertNewResume(pInfoId, resumeInsertReqDto);
-
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 저장에 성공하였습니다!", dto), HttpStatus.OK);
     }
 

@@ -13,6 +13,36 @@
         select * from resume_tb where id = #{id}
     </select>
 
+    <select id="findDetailList" resultMap="ResumeDetailDto">
+       select *
+        from resume_tb rt
+        inner join skill_tb st
+        on rt.id = st.resume_id
+        inner join person_info_tb pt 
+        on rt.p_info_id = pt.id
+        where rt.id = #{id}
+    </select>
+
+    <resultMap id="ResumeDetailDto" type="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto">
+		<id property="id" column="id"/>
+		<result property="profile" column="profile"/>
+		<result property="title" column="title"/>
+		<result property="publish" column="publish"/>
+		<result property="portfolio" column="portfolio"/>
+		<result property="selfIntro" column="selfIntro"/>
+	<association property="personDto" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto$PersonDto">
+			<id property="id" column="id"/>
+			<result property="name" column="name"/>
+			<result property="phone" column="phone"/>
+			<result property="address" column="address"/>
+			<result property="birthday" column="birthday"/>
+	</association>
+	<association property="skillDto" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto$SkillDto">
+			<id property="id" column="id"/>
+			<result property="skills" column="skills"/>
+	</association>
+    </resultMap>
+
     <select id="findNameAndTitleAndSkills" resultType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
         select rt.id,  rt.title,  ft.name, st.skills
         from resume_tb rt
