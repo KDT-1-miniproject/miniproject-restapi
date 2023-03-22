@@ -53,7 +53,7 @@ public class PersonScrapController {
         if (principal == null) {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-
+        System.out.println("테스트 : " + id);
         PersonScrap scrap = personScrapService.insert(id, principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", scrap), HttpStatus.OK);

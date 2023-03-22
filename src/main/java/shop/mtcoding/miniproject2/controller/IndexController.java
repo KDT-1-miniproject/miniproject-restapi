@@ -30,12 +30,8 @@ import shop.mtcoding.miniproject2.util.EncryptionUtils;
 @RequiredArgsConstructor
 @RestController
 public class IndexController {
-    private final PersonRepository personRepository;
-    private final PersonCustomerServiceRepository personCustomerServiceRepository;
-    private final CompanyCustomerServiceRepository companyCustomerServiceRepository;
+
     private final UserRepository userRepository;
-    private final CompanyService companyService;
-    private final PersonService personService;
     private final HttpSession session;
 
     @GetMapping("/")

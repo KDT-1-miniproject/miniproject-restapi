@@ -103,12 +103,12 @@ public class CompanyResumeController {
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
 
         Resume resumePS = resumeRepository.findById(id);
         if (resumePS == null) {
-            throw new CustomException("없는 이력서엔 접근할 수 없습니다.");
+            throw new CustomApiException("없는 이력서엔 접근할 수 없습니다.");
         }
         // 기업의 공고에 지원이력이 있는 이력서인지 확인
         // 기업의 공고에 없는 이력서라면 제안하기 버튼을 아니라면 합격 불합격 버튼을 두자

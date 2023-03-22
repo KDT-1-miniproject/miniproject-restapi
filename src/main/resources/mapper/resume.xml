@@ -13,16 +13,6 @@
         select * from resume_tb where id = #{id}
     </select>
 
-    <select id="findDetailList" resultMap="ResumeDetailDto">
-       select *
-        from resume_tb rt
-        inner join skill_tb st
-        on rt.id = st.resume_id
-        inner join person_info_tb pt 
-        on rt.p_info_id = pt.id
-        where rt.id = #{id}
-    </select>
-
     <resultMap id="ResumeDetailDto" type="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto">
 		<id property="id" column="id"/>
 		<result property="profile" column="profile"/>
@@ -42,15 +32,24 @@
 			<result property="skills" column="skills"/>
 	</association>
     </resultMap>
+    <select id="findDetailList" resultMap="ResumeDetailDto">
+       select *
+        from resume_tb rt
+        inner join skill_tb st
+        on rt.id = st.resume_id
+        inner join person_info_tb pt 
+        on rt.p_info_id = pt.id
+        where rt.id = #{id}
+    </select>
 
-    <resultMap id ="ResumeRecommendDto" type="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto">
+    <resultMap id ="ResumeRecommendDto" type="shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto$ResumeRecommendDto">
         <id property="id" column="id"/>
         <result property="title" column="title"/>
-        <association property="person" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto$PersonDto">
+        <association property="person" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto$ResumeRecommendDto$PersonDto">
             <id property="id" column="id"/>
             <result property="name" column="name"/>
         </association>
-        <association property="skill" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeRecommendDto$SkillDto">
+        <association property="skill" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto$ResumeRecommendDto$SkillDto">
             <id property="id" column="id"/>
             <result property="skills" column="skills"/>
         </association>
@@ -65,6 +64,7 @@
         on rt.p_info_id = ft.id
         where rt.id = #{resumeId}
     </select>
+
     <insert id="insert" parameterType="shop.mtcoding.miniproject2.dto.Resume.ResumeReq$ResumeInsertReqBirthdayTimestampDto" useGeneratedKeys="true" keyProperty="resumeId" keyColumn="id">
         insert into resume_tb (p_info_id, profile, title, publish, portfolio, self_intro, created_at) 
             values(#{pInfoId}, #{profile}, #{title},  #{publish}, #{portfolio}, #{selfIntro}, now())
