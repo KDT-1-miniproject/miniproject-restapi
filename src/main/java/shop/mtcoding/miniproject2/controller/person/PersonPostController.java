@@ -27,7 +27,7 @@ import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainWithScrapRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendTimeStampResDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Company;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.PersonScrap;
@@ -148,7 +148,7 @@ public class PersonPostController {
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
         }
         // person skill 찾기
         Skill principalSkills = skillRepository.findByPInfoId(principal.getPInfoId());
@@ -211,7 +211,7 @@ public class PersonPostController {
                 }
                 postList.add(p2);
             } catch (Exception e) {
-                throw new CustomException("실패");
+                throw new CustomApiException("실패");
             }
         }
         // model.addAttribute("postList", postList);
