@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 

@@ -2,55 +2,66 @@ package shop.mtcoding.miniproject2.dto.Resume;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto.PersonDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto.SkillDto;
 
 public class ResumeRecommendOutDto {
 
     @Getter
     @Setter
-    @ToString
     public static class ResumeRecommendDto {
         private Integer id;
-        private String name;
         private String title;
-        private String skills;
+        private PersonDto person;
+        private SkillDto skill;
+
+        @Getter
+        @Setter
+        public static class PersonDto {
+            private Integer id;
+            private String name;
+        }
+
+        @Getter
+        @Setter
+        public static class SkillDto {
+            private Integer id;
+            private String skills;
+        }
     }
 
     @NoArgsConstructor
     @Getter
     @Setter
-    @ToString
-    public static class ResumeRecommendArrDto {
+    public static class ResumeRecommendScrapDto {
         private Integer id;
-        private String name;
         private String title;
-        private String[] skills;
+        private PersonDto person;
+        private SkillDto skill;
         private Integer scrap;
 
-        public ResumeRecommendArrDto(ResumeRecommendDto resumeDto) {
-            this.id = resumeDto.getId();
-            this.name = resumeDto.getName();
-            this.title = resumeDto.getTitle();
-            this.skills = resumeDto.getSkills().split(",");
+        public ResumeRecommendScrapDto(ResumeRecommendDto rDto) {
+            this.id = rDto.getId();
+            this.title = rDto.getTitle();
+            this.person = rDto.getPerson();
+            this.skill = rDto.getSkill();
         }
+
     }
 
     @NoArgsConstructor
+    @AllArgsConstructor
     @Getter
     @Setter
     public static class ResumeWithPostInfoRecommendDto {
         private Integer postId;
         private String title;
-        private List<ResumeRecommendArrDto> resumes;
-
-        public ResumeWithPostInfoRecommendDto(Integer postId, String title, List<ResumeRecommendArrDto> resumes) {
-            this.postId = postId;
-            this.title = title;
-            this.resumes = resumes;
-        }
+        private List<ResumeRecommendScrapDto> resumes;
     }
 
 }
