@@ -84,22 +84,19 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
-        User userPS = userRepository.findByEmail(loginPersonReqDto.getEmail());
-        if (userPS == null) {
-            throw new CustomApiException("이메일이 잘못입력되었습니다.");
+        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
-
-        String salt = userPS.getSalt();
-
+        // DB Salt 값
+        String salt = userCheck.getSalt();
         // DB Salt + 입력된 password 해싱
         loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
-
+        // System.out.println(loginPersonReqDto.getPassword());
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
                 loginPersonReqDto.getPassword());
-
-
         if (principal == null) {
-            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
 
         session.setAttribute("principal", principal);
