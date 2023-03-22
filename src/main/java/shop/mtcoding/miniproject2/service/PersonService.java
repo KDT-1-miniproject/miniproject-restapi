@@ -57,9 +57,10 @@ public class PersonService {
         String salt = EncryptionUtils.getSalt();
         joinPersonReqDto
                 .setPassword(EncryptionUtils.encrypt(joinPersonReqDto.getPassword(), salt));
-        int result2 = userRepository.insert(joinPersonReqDto.getEmail(),
-                joinPersonReqDto.getPassword(), salt, person.getId(),
-                0);
+
+        User user = new User(joinPersonReqDto.getEmail(), joinPersonReqDto.getPassword(), salt, person.getId(), 0);
+
+        int result2 = userRepository.insert(user);
         if (result2 != 1) {
             throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }

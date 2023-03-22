@@ -23,9 +23,11 @@ public interface UserRepository {
         public User findByEmail(@Param("email") String email);
 
         // 먼저 Company나 Person 생성한 후, 그 id를 들고와서 insert 하면된다.
-        public int insert(@Param("email") String email, @Param("password") String password, @Param("salt") String salt,
-                        @Param("pInfoId") int pInfoId,
-                        @Param("cInfoId") int cInfoId);
+        // public int insert(@Param("email") String email, @Param("password") String
+        // password, @Param("salt") String salt,
+        // @Param("pInfoId") int pInfoId,
+        // @Param("cInfoId") int cInfoId);
+        public int insert(User user);
 
         public int updateById(@Param("id") int id,
                         @Param("email") String email,
