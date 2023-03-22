@@ -63,6 +63,7 @@ public class CompanyService {
     @Transactional
     public void updateInfo(CompanyInfoInDto companyInfoInDto) {
 
+        System.out.println("테스트 2: " + companyInfoInDto);
         User principal = (User) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
@@ -87,6 +88,7 @@ public class CompanyService {
         }
 
         String t = companyInfoInDto.getCyear();
+        System.out.println("테스트 3 : " + companyInfoInDto);
         String[] times = t.split("-");
         int cyear = Integer.parseInt(times[0]);
 

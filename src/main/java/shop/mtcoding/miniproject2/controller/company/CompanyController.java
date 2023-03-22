@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -39,11 +41,13 @@ public class CompanyController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> companyUpdateInfo(CompanyInfoInDto companyInfoInDto)
+    public @ResponseBody ResponseEntity<?> companyUpdateInfo(@RequestBody CompanyInfoInDto companyInfoInDto)
             throws IOException {
 
         User principal = (User) session.getAttribute("principal");
         // 유효성
+        System.out.println("테스트 1: ");
+        System.out.println("테스트 1: " + companyInfoInDto.getAddress());
 
         companyService.updateInfo(companyInfoInDto);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());

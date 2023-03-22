@@ -18,13 +18,8 @@ import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.CompanyCustomerServiceRepository;
-import shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository;
-import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
-import shop.mtcoding.miniproject2.service.CompanyService;
-import shop.mtcoding.miniproject2.service.PersonService;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
 
 @RequiredArgsConstructor
