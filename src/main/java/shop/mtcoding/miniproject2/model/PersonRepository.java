@@ -23,8 +23,7 @@ public interface PersonRepository {
                         @Param("name") String name,
                         @Param("phone") String phone,
                         @Param("address") String address,
-                        @Param("birthday") Timestamp birthday,
-                        @Param("createdAt") Timestamp createdAt);
+                        @Param("birthday") Timestamp birthday);
 
         public int deleteById(int id);
 
