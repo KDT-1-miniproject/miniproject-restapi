@@ -183,15 +183,22 @@ public class CompanyResumeController {
             for (Entry<Integer, Integer> entry : resumeIdList) {
                 ResumeRecommendDto resumePS = resumeRepository.findNameAndTitleAndSkills(entry.getKey());
 
+                // System.out.println("테스트 :" + resumePS);
+
                 ResumeRecommendArrDto dto = new ResumeRecommendArrDto(resumePS);
+
+                // System.out.println("테스트 :" + dto);
 
                 CompanyScrap cs = companyScrapRepository.findByCInfoIdAndResumeId(principal.getCInfoId(),
                         dto.getId());
+
                 if (cs == null) {
                     dto.setScrap(0);
                 } else {
                     dto.setScrap(1);
                 }
+
+                // System.out.println("테스트 :" + dto);
 
                 resumeList.add(dto);
             }
@@ -202,10 +209,7 @@ public class CompanyResumeController {
                     p.getPostId(), title, resumeList);
 
             resumeAndPostInfo.add(resumeAndPost);
-            // postTitle.add(title);
         }
-        // 스킬 이력서 매칭
-        // model.addAttribute("postInfoAndResumes", resumeAndPostInfo);
 
         return new ResponseEntity<>(new ResponseDto<>(1, "", resumeAndPostInfo), HttpStatus.OK);
     }
