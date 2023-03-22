@@ -20,6 +20,7 @@ import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyCustomerServiceRepository;
 import shop.mtcoding.miniproject2.model.PersonCustomerServiceRepository;
+import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.service.CompanyService;
@@ -29,7 +30,7 @@ import shop.mtcoding.miniproject2.util.EncryptionUtils;
 @RequiredArgsConstructor
 @RestController
 public class IndexController {
-
+    private final PersonRepository personRepository;
     private final PersonCustomerServiceRepository personCustomerServiceRepository;
     private final CompanyCustomerServiceRepository companyCustomerServiceRepository;
     private final UserRepository userRepository;
@@ -56,7 +57,7 @@ public class IndexController {
 
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
@@ -65,7 +66,7 @@ public class IndexController {
         User principal = userRepository.findCompanyByEmailAndPassword(loginCompanyReqDto.getEmail(),
                 loginCompanyReqDto.getPassword());
         if (principal == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
 
         session.setAttribute("principal", principal);
@@ -96,9 +97,9 @@ public class IndexController {
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
                 loginPersonReqDto.getPassword());
 
+
         if (principal == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
-
         }
 
         session.setAttribute("principal", principal);

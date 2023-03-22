@@ -29,6 +29,7 @@ import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTime
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostDtailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainWithScrapRespDto;
+
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Company;
 
