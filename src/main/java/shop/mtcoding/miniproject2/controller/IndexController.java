@@ -19,7 +19,13 @@ import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
-import shop.mtcoding.miniproject2.model.User;
+import shop.mtcoding.miniproject2.dto.customerService.CustomerServDto;
+import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.model.UserRepository;
+import shop.mtcoding.miniproject2.service.CSService;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonService;
 
@@ -27,6 +33,8 @@ import shop.mtcoding.miniproject2.service.PersonService;
 @RestController
 public class IndexController {
 
+    private final UserRepository userRepository;
+    private final CSService csService;
     private final HttpSession session;
     private final PersonService personService;
     private final CompanyService companyService;
@@ -92,7 +100,9 @@ public class IndexController {
     public @ResponseBody ResponseEntity<?> customerService() {
 
         // 고객센터
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null),
+        CustomerServDto scDto = csService.고객센터();
+
+        return new ResponseEntity<>(new ResponseDto<>(1, "고객센터", scDto),
                 HttpStatus.OK);
     }
 }

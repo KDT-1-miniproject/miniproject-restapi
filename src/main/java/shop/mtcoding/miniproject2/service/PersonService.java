@@ -1,6 +1,13 @@
 package shop.mtcoding.miniproject2.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -15,14 +22,22 @@ import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.SkillDto;
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.UserDto;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
+import shop.mtcoding.miniproject2.model.PersonScrap;
+import shop.mtcoding.miniproject2.model.PersonScrapRepository;
+import shop.mtcoding.miniproject2.model.PostRepository;
 import shop.mtcoding.miniproject2.model.Skill;
+import shop.mtcoding.miniproject2.model.SkillFilter;
+import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
+import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
 
 @RequiredArgsConstructor
@@ -33,6 +48,15 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final HttpSession session;
     private final UserRepository userRepository;
+
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private SkillFilterRepository skillFilterRepository;
+
+    @Autowired
+    private PersonScrapRepository personScrapRepository;
 
     @Transactional
     public JoinPersonRespDto 개인회원가입(JoinPersonReqDto joinPersonReqDto) {
@@ -96,11 +120,16 @@ public class PersonService {
     }
 
     @Transactional
-    public void update(PersonInfoInDto personInfoInDto, int pInfoId) {
+    public void update(PersonInfoInDto personInfoInDto) {
 
         User principal = (User) session.getAttribute("principal");
-        Person personPS = personRepository.findById(pInfoId);
+        Person personPS = personRepository.findById(principal.getPInfoId());
         String password;
+
+        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
+        if (!pw.equals(principal.getPassword())) {
+            throw new CustomApiException("비밀번호가 일치하지 않습니다!");
+        }
 
         if (personInfoInDto.getPassword() == null || personInfoInDto.getPassword().isEmpty()) {
             password = principal.getPassword();
@@ -109,20 +138,21 @@ public class PersonService {
         }
 
         Timestamp birthday = Timestamp.valueOf(personInfoInDto.getBirthday());
-        int result = personRepository.updateById(pInfoId, personInfoInDto.getName(), personInfoInDto.getPhone(),
+        int result = personRepository.updateById(personPS.getId(), personInfoInDto.getName(),
+                personInfoInDto.getPhone(),
                 personInfoInDto.getAddress(), birthday);
 
         if (result != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Skill skillPS = skillRepository.findByPInfoId(pInfoId);
+        Skill skillPS = skillRepository.findByPInfoId(personPS.getId());
 
         if (skillPS == null) {
             throw new CustomApiException("정보를 찾을 수 없습니다");
         }
 
-        int result2 = skillRepository.updateById(skillPS.getId(), pInfoId, 0, 0, personInfoInDto.getSkills(),
+        int result2 = skillRepository.updateById(skillPS.getId(), personPS.getId(), 0, 0, personInfoInDto.getSkills(),
                 skillPS.getCreatedAt());
 
         if (result2 != 1) {
@@ -136,6 +166,76 @@ public class PersonService {
         if (result3 != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    @Transactional(readOnly = true)
+    public List<PostRecommendIntegerRespDto> recommend() {
+        User principal = (User) session.getAttribute("principal");
+        Skill principalSkills = skillRepository.findByPInfoId(principal.getPInfoId());
+
+        String[] principalSKillArr = principalSkills.getSkills().split(",");
+
+        List<SkillFilter> principalSkilFilters = new ArrayList<>();
+
+        for (String principalSkill : principalSKillArr) {
+            List<SkillFilter> s = skillFilterRepository.findSkillNameForPerson(principalSkill);
+            principalSkilFilters.addAll(s);
+
+        }
+
+        // key : count 중복 포함하지 않고 map 저장
+        HashMap<Integer, Integer> postAndCount = new HashMap<>();
+        for (SkillFilter psf : principalSkilFilters) {
+            postAndCount.put(psf.getPostId(), postAndCount.getOrDefault(psf.getPostId(), 0) + 1);
+        }
+        Set<Integer> key = postAndCount.keySet();
+
+        HashMap<Integer, Integer> postAndCount2 = new HashMap<>();
+        for (Integer k : key) {
+            Integer count = postAndCount.getOrDefault(k, 0);
+            // System.out.println("테스트: " + k + "-" + count);
+            if (count >= 2) {
+                postAndCount2.put(k, count);
+            }
+        }
+
+        // 내림차순 정렬
+        List<Entry<Integer, Integer>> postIdList = new ArrayList<>(postAndCount2.entrySet());
+        Collections.sort(postIdList, new Comparator<Entry<Integer, Integer>>() {
+            public int compare(Entry<Integer, Integer> c1, Entry<Integer, Integer> c2) {
+                return c2.getValue().compareTo(c1.getValue());
+            }
+        });
+
+        List<PostRecommendIntegerRespDto> postList = new ArrayList<>();
+        for (Entry<Integer, Integer> entry : postIdList) {
+            try {
+                // System.out.println("테스트: 1");
+                PostRecommendTimeStampResDto p = postRepository.findByPostIdToRecmmend(entry.getKey());
+                // System.out.println("테스트: " + entry.getKey());
+                if (p == null) {
+                    continue;
+                }
+                PostRecommendIntegerRespDto p2 = new PostRecommendIntegerRespDto(p);
+                p2.setDeadline(CvTimestamp.ChangeDDay(p.getDeadline()));
+
+                PersonScrap ps = personScrapRepository.findByPInfoIdAndPostId(principal.getPInfoId(), p2.getId());
+
+                if (ps == null) {
+                    p2.setScrap(0);
+                } else {
+                    p2.setScrap(1);
+                }
+
+                // System.out.println("테스트 : " + p2);
+
+                postList.add(p2);
+            } catch (Exception e) {
+                throw new CustomApiException("실패");
+            }
+        }
+
+        return postList;
     }
 
 }
