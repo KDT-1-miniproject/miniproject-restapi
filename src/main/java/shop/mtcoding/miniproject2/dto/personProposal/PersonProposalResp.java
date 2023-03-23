@@ -11,15 +11,37 @@ public class PersonProposalResp {
     @Getter
     @Setter
     public static class PersonProposalListRespDto {
-        private int id;
-        private int pInfoId;
-        private int postId;
-        private int resumeId;
-        private int status;
+        private Integer id;
+        private Integer status;
+        private Integer resumeId;
+        private Integer pInfoId;
+        private PostDto post;
+        private CompanyDto company;
+        private ProposalPassDto proposalPass;
         private Timestamp createdAt;
-        private String title;
-        private Timestamp deadline;
-        private String name;
+
+        @Getter
+        @Setter
+        public static class PostDto {
+            private Integer id;
+            private String title;
+            private String deadline;
+        }
+
+        @Getter
+        @Setter
+        public static class CompanyDto {
+            private Integer id;
+            private String name;
+        }
+
+        @Getter
+        @Setter
+        public static class ProposalPassDto {
+            private Integer id;
+            private String message;
+        }
+
     }
 
     @Getter

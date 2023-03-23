@@ -9,13 +9,35 @@
         select * from person_proposal_tb
     </select>
 
-    <select id="findAllWithPostAndCInfoByPInfoId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto">
-        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title, jpt.deadline, ct.name
+    <resultMap id ="PersonProposalList" type="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto">
+        <id property="id" column="id"/> 
+        <result property="status" column="status"/>
+        <result property="resumeId" column="resume_id"/>
+        <result property="pInfoId" column="p_info_id"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="post" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$PostDto">
+            <id property="id" column="post_id"/>
+            <result property="title" column="title"/>
+            <result property="deadline" column="deadline"/>
+        </association>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$CompanyDto">
+            <id property="id" column="c_info_id"/>
+            <result property="name" column="name"/>
+        </association>
+        <association property="proposalPass" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$ProposalPassDto">
+            <id property="id" column="p_proposal_id"/>
+            <result property="message" column="COMMENT"/>
+        </association>
+    </resultMap>
+    <select id="findAllWithPostAndCInfoByPInfoId" resultMap="PersonProposalList">
+        SELECT *
         FROM PERSON_PROPOSAL_TB ppt
         INNER JOIN JOB_POST_TB jpt
         ON ppt.post_id = jpt.id
         INNER JOIN COMPANY_INFO_TB ct
         ON jpt.c_info_id = ct.id
+        left join proposal_pass_tb pass
+        on ppt.id = pass.p_proposal_id
         where ppt.p_info_id = #{pInfoId}
         order by ppt.status desc;
     </select>

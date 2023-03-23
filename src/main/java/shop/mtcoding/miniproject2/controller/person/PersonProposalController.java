@@ -55,37 +55,10 @@ public class PersonProposalController {
     public ResponseEntity<?> resumeDetail() {
 
         User principalPS = (User) session.getAttribute("principal");
-        List<PersonProposalListRespDto> personProposalList = personProposalRepository
-                .findAllWithPostAndCInfoByPInfoId(principalPS.getPInfoId());
 
-        List<ProposalPass> proposalPassList = proposalPassRepository.findAllByPInfoId(principalPS.getPInfoId());
-        if (proposalPassList.size() > 0) {
-            // model.addAttribute("proposalPassList", proposalPassList);
+        List<PersonProposalListRespDto> dto = personProposalService.지원이력보기(principalPS.getPInfoId());
 
-        }
-        List<PersonProposalStringListRespDto> personProposalList2 = new ArrayList<>();
-
-        for (PersonProposalListRespDto pp : personProposalList) {
-            Timestamp deadline = pp.getDeadline();
-            Date date = new Date(deadline.getTime());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String formattedDeadline = sdf.format(date);
-            PersonProposalStringListRespDto dto = new PersonProposalStringListRespDto();
-
-            dto.setId(pp.getId());
-            dto.setCreatedAt(pp.getCreatedAt());
-            dto.setDeadline(formattedDeadline);
-            dto.setName(pp.getName());
-            dto.setPInfoId(pp.getPInfoId());
-            dto.setPostId(pp.getPInfoId());
-            dto.setResumeId(pp.getResumeId());
-            dto.setStatus(pp.getStatus());
-            dto.setTitle(pp.getTitle());
-            personProposalList2.add(dto);
-        }
-        // model.addAttribute("personProposalList", personProposalList2);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "지원이력보기", dto), HttpStatus.OK);
     }
 
 }
