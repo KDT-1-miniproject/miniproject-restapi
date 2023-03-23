@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller.company;
+package shop.mtcoding.miniproject2.controller.person;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,28 +20,33 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import shop.mtcoding.miniproject2.model.User;
 
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class CompanyScrapControllerTest {
+public class PersonScrapControllerTest {
+
+    @Autowired
+    private MockMvc mvc;
 
     @Autowired
     private MockHttpSession mockSession;
 
     @Autowired
-    private MockMvc mvc;
+    private ObjectMapper om;
 
     @BeforeEach
     public void setUp() {
         User user = new User();
-        user.setId(3);
-        user.setPassword("ad38f305434fb803fbadb9cf57df1e822bff382352c19dc67b5b13055a049cd6");
-        user.setEmail("init@nate.com");
-        user.setSalt("cat");
-        user.setPInfoId(0);
-        user.setCInfoId(1);
+        user.setId(1);
+        user.setPassword("9d85d697da8136003c67ea366b8c6a0225cb0f3ff95aca3e4634f0e09a8e6723");
+        user.setEmail("ssar@nate.com");
+        user.setSalt("bear");
+        user.setPInfoId(1);
+        user.setCInfoId(0);
         user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         mockSession = new MockHttpSession();
@@ -50,20 +55,20 @@ public class CompanyScrapControllerTest {
 
     @Test
     public void scrapInsert_test() throws Exception {
-        int resumeId = 2;
+        int postId = 2;
 
         ResultActions resultActions = mvc
-                .perform(post("/company/scrap/" + resumeId).session(mockSession));
+                .perform(post("/person/scrap/" + postId).session(mockSession));
 
         resultActions.andExpect(status().isOk());
     }
 
     @Test
     public void scrapDelete_test() throws Exception {
-        int resumeId = 1;
+        int postId = 1;
 
         ResultActions resultActions = mvc
-                .perform(delete("/company/scrap/" + resumeId).session(mockSession));
+                .perform(delete("/person/scrap/" + postId).session(mockSession));
 
         resultActions.andExpect(status().isOk());
     }
@@ -72,9 +77,9 @@ public class CompanyScrapControllerTest {
     public void scrap_test() throws Exception {
 
         ResultActions resultActions = mvc
-                .perform(get("/company/scrap").session(mockSession));
+                .perform(get("/person/scrap").session(mockSession));
 
         resultActions.andExpect(jsonPath("$.data").exists());
-        resultActions.andExpect(jsonPath("$.msg").value("기업 스크랩 목록"));
+        resultActions.andExpect(jsonPath("$.msg").value("개인 스크랩 목록"));
     }
 }
