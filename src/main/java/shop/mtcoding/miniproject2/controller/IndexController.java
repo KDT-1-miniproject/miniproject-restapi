@@ -63,9 +63,9 @@ public class IndexController {
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
 
-        ResponseEntity<?> response = personService.개인로그인(loginPersonReqDto);
+        ResponseEntity<?> responseEntity = personService.개인로그인(loginPersonReqDto);
 
-        return new ResponseEntity<>(response.getBody(), response.getHeaders(), response.getStatusCode());
+        return responseEntity;
     }
 
     @PostMapping("/personJoin")
