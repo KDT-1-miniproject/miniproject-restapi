@@ -1,11 +1,8 @@
 package shop.mtcoding.miniproject2.controller.company;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
@@ -25,13 +22,10 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendScrapDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
-import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyProposalListDateRespDto;
-import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyProposalListRespDto;
+import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.Company;
-import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.CompanyScrap;
 import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
 import shop.mtcoding.miniproject2.model.Person;
@@ -46,6 +40,7 @@ import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
+import shop.mtcoding.miniproject2.service.PersonProposalService;
 
 @RequestMapping("/company")
 @RequiredArgsConstructor
@@ -54,49 +49,21 @@ public class CompanyResumeController {
     private final HttpSession session;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final CompanyRepository companyRepository;
     private final SkillRepository skillRepository;
     private final PersonProposalRepository personProposalRepository;
     private final ResumeRepository resumeRepository;
     private final PersonRepository personRepository;
     private final CompanyScrapRepository companyScrapRepository;
     private final SkillFilterRepository skillFilterRepository;
+    private final PersonProposalService personProposalService;
 
     @GetMapping("/resumes")
     public ResponseEntity<?> resume() {
         User userPS = (User) session.getAttribute("principal");
-        List<CompanyProposalListRespDto> companyProposalList = personProposalRepository
-                .findAllWithPostAndResumeAndPInfoByCInfoId(userPS.getCInfoId());
 
-        List<CompanyProposalListDateRespDto> companyProposalList2 = new ArrayList<>();
+        CompanyGetResumeDto dto = personProposalService.받은이력서보기(userPS.getCInfoId());
 
-        for (CompanyProposalListRespDto cpl : companyProposalList) {
-            CompanyProposalListDateRespDto dto = new CompanyProposalListDateRespDto();
-            dto.setCInfoId(cpl.getCInfoId());
-            dto.setId(cpl.getId());
-            dto.setName(cpl.getName());
-            dto.setPInfoId(cpl.getPInfoId());
-            dto.setPostId(cpl.getPostId());
-            dto.setPtitle(cpl.getPtitle());
-            dto.setRtitle(cpl.getRtitle());
-            dto.setResumeId(cpl.getResumeId());
-            dto.setStatus(cpl.getStatus());
-
-            Timestamp createdAt = cpl.getCreatedAt();
-            Date date = new Date(createdAt.getTime());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String proposaltime = sdf.format(date);
-
-            dto.setCreatedAt(proposaltime);
-
-            companyProposalList2.add(dto);
-        }
-
-        Company company = companyRepository.findById(userPS.getCInfoId());
-        // model.addAttribute("companyPS", company);
-        // model.addAttribute("companyProposalList", companyProposalList2);
-
-        return new ResponseEntity<>(new ResponseDto<>(1, "", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "받은 이력서 보기", dto), HttpStatus.OK);
     }
 
     @GetMapping("/resume/{id}")

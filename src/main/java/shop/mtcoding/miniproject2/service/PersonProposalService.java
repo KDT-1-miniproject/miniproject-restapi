@@ -1,12 +1,19 @@
 package shop.mtcoding.miniproject2.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto;
+import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto.CompanyDto;
+import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto.CompanyProposalListRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.model.Company;
+import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.PersonProposalRepository;
 import shop.mtcoding.miniproject2.model.Post;
@@ -14,16 +21,15 @@ import shop.mtcoding.miniproject2.model.PostRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class PersonProposalService {
-    @Autowired
-    private PersonProposalRepository personProposalRepository;
-    @Autowired
-    private PostRepository postRepository;
 
-    @Autowired
-    private ResumeRepository resumeRepository;
+    private final PersonProposalRepository personProposalRepository;
+    private final PostRepository postRepository;
+    private final ResumeRepository resumeRepository;
+    private final CompanyRepository companyRepository;
 
     public void 제안수정하기(int proposalId, int cInfoId, int status) {
 
@@ -75,5 +81,23 @@ public class PersonProposalService {
         } catch (Exception e) {
             throw new CustomException("지원에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public CompanyGetResumeDto 받은이력서보기(int cInfoId) {
+        List<CompanyProposalListRespDto> companyProposalList = personProposalRepository
+                .findAllWithPostAndResumeAndPInfoByCInfoId(cInfoId);
+
+        for (CompanyProposalListRespDto cpl : companyProposalList) {
+
+            String createdAt = cpl.getCreatedAt();
+            // System.out.println(createdAt);
+            cpl.setCreatedAt(createdAt.split(" ")[0]);
+        }
+
+        Company company = companyRepository.findById(cInfoId);
+        CompanyGetResumeDto dto = new CompanyGetResumeDto(companyProposalList,
+                new CompanyDto(company.getId(), company.getName()));
+
+        return dto;
     }
 }
