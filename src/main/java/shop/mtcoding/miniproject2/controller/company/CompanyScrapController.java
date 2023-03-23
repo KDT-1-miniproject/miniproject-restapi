@@ -40,7 +40,7 @@ public class CompanyScrapController {
         List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
 
         // model.addAttribute("scrapList", cScrapArrList);
-        return new ResponseEntity<>(new ResponseDto<>(1, "", cScrapPS), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 목록", cScrapPS), HttpStatus.OK);
     }
 
     @DeleteMapping("/scrap/{id}")
