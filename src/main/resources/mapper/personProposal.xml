@@ -9,27 +9,65 @@
         select * from person_proposal_tb
     </select>
 
-    <select id="findAllWithPostAndCInfoByPInfoId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto">
-        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title, jpt.deadline, ct.name
+    <resultMap id ="PersonProposalList" type="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto">
+        <id property="id" column="id"/> 
+        <result property="status" column="status"/>
+        <result property="resumeId" column="resume_id"/>
+        <result property="pInfoId" column="p_info_id"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="post" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$PostDto">
+            <id property="id" column="post_id"/>
+            <result property="title" column="title"/>
+            <result property="deadline" column="deadline"/>
+        </association>
+        <association property="company" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$CompanyDto">
+            <id property="id" column="c_info_id"/>
+            <result property="name" column="name"/>
+        </association>
+        <association property="proposalPass" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalListRespDto$ProposalPassDto">
+            <id property="id" column="p_proposal_id"/>
+            <result property="message" column="COMMENT"/>
+        </association>
+    </resultMap>
+    <select id="findAllWithPostAndCInfoByPInfoId" resultMap="PersonProposalList">
+        SELECT *
         FROM PERSON_PROPOSAL_TB ppt
         INNER JOIN JOB_POST_TB jpt
         ON ppt.post_id = jpt.id
         INNER JOIN COMPANY_INFO_TB ct
         ON jpt.c_info_id = ct.id
+        left join proposal_pass_tb pass
+        on ppt.id = pass.p_proposal_id
         where ppt.p_info_id = #{pInfoId}
         order by ppt.status desc;
     </select>
+    
 
-    <select id="findAllWithPostAndResumeAndPInfoByCInfoId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyProposalListRespDto">
-        SELECT ppt.id, ppt.p_info_id, ppt.post_id, ppt.resume_id, ppt.status, ppt.created_at, jpt.title ptitle, jpt.c_info_id, rt.title rtitle, pt.name
+    <resultMap id="CompanyProposalListResp" type="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyGetResumeDto$CompanyProposalListRespDto">
+        <id property="id" column="id"/> 
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="post" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyGetResumeDto$CompanyProposalListRespDto$PostDto">
+            <id property="id" column="post_id"/>
+            <result property="title" column="title"/>
+        </association>
+        <association property="resume" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyGetResumeDto$CompanyProposalListRespDto$ResumeDto">
+            <id property="id" column="resume_id"/>
+            <result property="title" column="title"/>
+            <association property="person" javaType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$CompanyGetResumeDto$CompanyProposalListRespDto$ResumeDto$PersonDto">
+                <id property="id" column="p_info_id"/>
+                <result property="name" column="name"/>
+            </association>
+        </association>
+    </resultMap>
+
+    <select id="findAllWithPostAndResumeAndPInfoByCInfoId" resultMap="CompanyProposalListResp">
+        SELECT ppt.id, ppt.status, ppt.created_at, jpt.id as post_id, jpt.title, rt.id as resume_id, rt.title, p.id as p_info_id, p.name
         FROM PERSON_PROPOSAL_TB ppt
-        inner join job_post_tb jpt
-        on ppt.post_id = jpt.id
-        inner join resume_tb rt
-        on ppt.resume_id = rt.id
-        inner join person_info_tb pt
-        on ppt.p_info_id = pt.id
-        where jpt.c_info_id = #{cInfoId}
+        INNER JOIN job_post_tb jpt ON ppt.post_id = jpt.id
+        INNER JOIN resume_tb rt ON ppt.resume_id = rt.id 
+        INNER JOIN person_info_tb p ON rt.p_info_id = p.id
+        WHERE jpt.c_info_id = #{cInfoId};
     </select>
 
     <select id="findAllWithPostByCInfoIdAndResumeId" resultType="shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp$PersonProposalDetailRespDto">
@@ -44,7 +82,7 @@
         select * from person_proposal_tb where id = #{id}
     </select> 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into person_proposal_tb (p_info_id, post_id, resume_id, status, created_at) 
             values(#{pInfoId}, #{postId}, #{resumeId}, #{status}, now())
     </insert>    

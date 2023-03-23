@@ -14,8 +14,7 @@ public interface ProposalPassRepository {
 
         public List<ProposalPass> findAllByPInfoId(int pInfoId);
 
-        public int insert(@Param("pInfoId") int pInfoId, @Param("pProposalId") int pProposalId,
-                        @Param("comment") String comment);
+        public int insert(ProposalPass proposalPass);
 
         public int updateById(@Param("id") int id, @Param("pInfoId") int pInfoId,
                         @Param("pProposalId") int pProposalId, @Param("comment") String comment,
