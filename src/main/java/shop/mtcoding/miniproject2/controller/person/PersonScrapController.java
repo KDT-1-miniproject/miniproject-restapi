@@ -42,7 +42,7 @@ public class PersonScrapController {
         // model.addAttribute("pScrapList", pScrapList2);
         // model.addAttribute("count", pScrapList.size());
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", pScrapPS),
+        return new ResponseEntity<>(new ResponseDto<>(1, "개인 스크랩 목록", pScrapPS),
                 HttpStatus.OK);
     }
 
@@ -53,7 +53,6 @@ public class PersonScrapController {
         if (principal == null) {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-        System.out.println("테스트 : " + id);
         PersonScrap scrap = personScrapService.insert(id, principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", scrap), HttpStatus.OK);

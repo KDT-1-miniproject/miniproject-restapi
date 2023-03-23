@@ -1,14 +1,16 @@
 package shop.mtcoding.miniproject2.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class User implements Serializable {
+@NoArgsConstructor
+public class User {
     private Integer id;
     private String email;
     private String password;
@@ -17,6 +19,12 @@ public class User implements Serializable {
     private Integer cInfoId; // 마찬가지로 CInfoId
     private Timestamp createdAt;
 
-    public void setUsername(String string) {
+    public User(String email, String password, String salt, Integer pInfoId, Integer cInfoId) {
+        this.email = email;
+        this.password = password;
+        this.salt = salt;
+        this.pInfoId = pInfoId;
+        this.cInfoId = cInfoId;
     }
+
 }

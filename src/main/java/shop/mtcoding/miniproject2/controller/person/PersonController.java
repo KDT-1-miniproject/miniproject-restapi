@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -37,26 +38,19 @@ public class PersonController {
         User principal = (User) session.getAttribute("principal");
         PersonInfoOutDto pInfoDto = personRepository.findByIdWithSkills(principal.getPInfoId());
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "", pInfoDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "person info", pInfoDto), HttpStatus.OK);
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(PersonInfoInDto personInfoInDto) {
+    public ResponseEntity<?> updateInfo(@RequestBody PersonInfoInDto personInfoInDto) {
 
         User principal = (User) session.getAttribute("principal");
         Person PersonPS = personRepository.findById(principal.getPInfoId());
         if (PersonPS == null) {
             throw new CustomApiException("정보를 찾을 수 없습니다!");
         }
-        // 유효성 테스트
 
-        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
-
-        if (!pw.equals(principal.getPassword())) {
-            throw new CustomApiException("비밀번호가 일치하지 않습니다!");
-        }
-
-        personService.update(personInfoInDto, principal.getPInfoId());
+        personService.update(personInfoInDto);
 
         PersonInfoOutDto pInfoDto = personRepository.findByIdWithSkills(principal.getPInfoId());
 

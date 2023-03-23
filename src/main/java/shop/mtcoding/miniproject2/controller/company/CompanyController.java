@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -39,15 +41,14 @@ public class CompanyController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> companyUpdateInfo(CompanyInfoInDto companyInfoInDto)
+    public ResponseEntity<?> companyUpdateInfo(@RequestBody CompanyInfoInDto companyInfoInDto)
             throws IOException {
 
         User principal = (User) session.getAttribute("principal");
-        // 유효성
 
         companyService.updateInfo(companyInfoInDto);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());
-        // post라서 data 필요 없는 거 맞겠지?!
+
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 정보 수정 완료", cInfoDto), HttpStatus.OK);
     }
 
