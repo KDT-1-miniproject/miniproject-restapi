@@ -148,6 +148,6 @@ public class PersonPostController {
         }
         // model.addAttribute("postList", postList);
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "공고 추천", postList), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "개인 공고 추천", postList), HttpStatus.OK);
     }
 }
