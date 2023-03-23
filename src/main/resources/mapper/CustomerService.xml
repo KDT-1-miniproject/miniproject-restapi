@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="shop.mtcoding.miniproject2.model.CustomerServRepository">
+    
+
+    <select id="findAllpersonCS" resultType="shop.mtcoding.miniproject2.dto.customerService.CustomerServDto$PersonCustomerServiceDto">
+        select * from person_customer_service_tb
+    </select>
+
+    <select id="findAllcompanyCS" resultType="shop.mtcoding.miniproject2.dto.customerService.CustomerServDto$CompanyCustomerServiceDto">
+        select * from company_customer_service_tb
+    </select>
+
+</mapper>
