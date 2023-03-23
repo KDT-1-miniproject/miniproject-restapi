@@ -38,7 +38,6 @@ public class PersonProposalController {
         // post아이디는 여기 id! + resumeid는 int selectedResume
         PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
                                                                                                      // 대기중)
-
         return new ResponseEntity<>(new ResponseDto<>(1, "제안 성공", dto), HttpStatus.OK);
     }
 

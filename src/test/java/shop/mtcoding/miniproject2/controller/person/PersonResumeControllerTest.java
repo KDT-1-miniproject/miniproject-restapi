@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller;
+package shop.mtcoding.miniproject2.controller.person;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
