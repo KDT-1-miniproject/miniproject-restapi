@@ -14,6 +14,7 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
@@ -113,13 +114,6 @@ public class ResumeService {
             throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        int result2 = personRepository.updateById(pInfoId, resumeUpdateReqBirthdayTimestampDto.getName(),
-                resumeUpdateReqBirthdayTimestampDto.getPhone(),
-                resumeUpdateReqBirthdayTimestampDto.getAddress(),
-                resumeUpdateReqBirthdayTimestampDto.getBirthday());
-        if (result2 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
         Skill skillPS = skillRepository.findByResumeId(id);
         int result3 = skillRepository.updateById(skillPS.getId(), 0, 0, id,
                 resumeUpdateReqBirthdayTimestampDto.getSkills(),
