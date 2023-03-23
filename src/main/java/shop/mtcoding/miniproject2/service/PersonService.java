@@ -110,11 +110,16 @@ public class PersonService {
     // }
 
     @Transactional
-    public void update(PersonInfoInDto personInfoInDto, int pInfoId) {
+    public void update(PersonInfoInDto personInfoInDto) {
 
         User principal = (User) session.getAttribute("principal");
-        Person personPS = personRepository.findById(pInfoId);
+        Person personPS = personRepository.findById(principal.getPInfoId());
         String password;
+
+        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
+        if (!pw.equals(principal.getPassword())) {
+            throw new CustomApiException("비밀번호가 일치하지 않습니다!");
+        }
 
         if (personInfoInDto.getPassword() == null || personInfoInDto.getPassword().isEmpty()) {
             password = principal.getPassword();
@@ -123,20 +128,21 @@ public class PersonService {
         }
 
         Timestamp birthday = Timestamp.valueOf(personInfoInDto.getBirthday());
-        int result = personRepository.updateById(pInfoId, personInfoInDto.getName(), personInfoInDto.getPhone(),
+        int result = personRepository.updateById(personPS.getId(), personInfoInDto.getName(),
+                personInfoInDto.getPhone(),
                 personInfoInDto.getAddress(), birthday);
 
         if (result != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        Skill skillPS = skillRepository.findByPInfoId(pInfoId);
+        Skill skillPS = skillRepository.findByPInfoId(personPS.getId());
 
         if (skillPS == null) {
             throw new CustomApiException("정보를 찾을 수 없습니다");
         }
 
-        int result2 = skillRepository.updateById(skillPS.getId(), pInfoId, 0, 0, personInfoInDto.getSkills(),
+        int result2 = skillRepository.updateById(skillPS.getId(), personPS.getId(), 0, 0, personInfoInDto.getSkills(),
                 skillPS.getCreatedAt());
 
         if (result2 != 1) {
