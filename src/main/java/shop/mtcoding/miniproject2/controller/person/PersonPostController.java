@@ -17,8 +17,6 @@ import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendInte
 import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonService;
 import shop.mtcoding.miniproject2.service.PostService;
 

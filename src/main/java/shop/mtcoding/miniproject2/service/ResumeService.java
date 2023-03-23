@@ -74,7 +74,7 @@ public class ResumeService {
         Resume resumePS = resumeRepository.findById(id);
 
         if (resumePS.getPInfoId() != pInfoId) {
-            throw new CustomException("이력서 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomApiException("이력서 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
         ResumeUpdateReqBirthdayTimestampDto resumeUpdateReqBirthdayTimestampDto = new ResumeUpdateReqBirthdayTimestampDto(
                 resumeUpdateReqDto.getTitle(),

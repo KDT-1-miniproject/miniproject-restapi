@@ -17,8 +17,6 @@ import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyScrap;
 import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
 import shop.mtcoding.miniproject2.service.CompanyScrapService;

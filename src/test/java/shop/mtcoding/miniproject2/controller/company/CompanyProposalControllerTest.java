@@ -58,7 +58,7 @@ public class CompanyProposalControllerTest {
         // given
         int id = 4;
         CompanyProposalStatusReqDto status = new CompanyProposalStatusReqDto();
-        status.setStatusCode(1);
+        status.setStatusCode("1");
 
         String requestBody = om.writeValueAsString(status);
         // when

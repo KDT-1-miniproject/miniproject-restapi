@@ -20,7 +20,6 @@ import shop.mtcoding.miniproject2.dto.customerService.CustomerServDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CSService;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonService;
@@ -64,7 +63,6 @@ public class IndexController {
 
     @PostMapping("/personJoin")
     public @ResponseBody ResponseEntity<?> personJoin(@Valid @RequestBody JoinPersonReqDto joinPersonReqDto) {
-
 
         JoinPersonRespDto dto = personService.개인회원가입(joinPersonReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", dto),

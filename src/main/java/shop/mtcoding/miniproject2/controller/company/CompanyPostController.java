@@ -26,8 +26,6 @@ import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PostService;
 
 @RequestMapping("/company")
@@ -41,7 +39,6 @@ public class CompanyPostController {
     @GetMapping("/posts")
     public ResponseEntity<?> posts() {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-
 
         List<PostTitleRespDto> postTitleList = postService.기업공고리스트(principal.getCInfoId());
 
@@ -72,7 +69,6 @@ public class CompanyPostController {
     @PostMapping("/posts")
     public ResponseEntity<?> postSave(@Valid @RequestBody PostSaveReqDto postSaveReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-
 
         PostSaveDto post = postService.공고등록(postSaveReqDto, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 등록 완료", post), HttpStatus.CREATED);

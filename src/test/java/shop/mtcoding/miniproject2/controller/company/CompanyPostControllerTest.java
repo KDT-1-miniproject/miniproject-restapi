@@ -61,7 +61,7 @@ public class CompanyPostControllerTest {
 
         PostSaveReqDto postSaveReqDto = new PostSaveReqDto();
         postSaveReqDto.setTitle("title");
-        postSaveReqDto.setCareer(1);
+        postSaveReqDto.setCareer("1");
         postSaveReqDto.setPay("1won");
         postSaveReqDto.setCondition("intern");
         postSaveReqDto.setStartHour("11:00:00");
@@ -90,7 +90,7 @@ public class CompanyPostControllerTest {
         int id = 1;
         PostUpdateReqDto postUpdateReqDto = new PostUpdateReqDto();
         postUpdateReqDto.setTitle("title");
-        postUpdateReqDto.setCareer(1);
+        postUpdateReqDto.setCareer("1");
         postUpdateReqDto.setPay("1won");
         postUpdateReqDto.setCondition("intern");
         postUpdateReqDto.setStartHour("11:00:00");
