@@ -46,8 +46,6 @@ public class CompanyController {
 
         User principal = (User) session.getAttribute("principal");
         // 유효성
-        System.out.println("테스트 1: ");
-        System.out.println("테스트 1: " + companyInfoInDto.getAddress());
 
         companyService.updateInfo(companyInfoInDto);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());

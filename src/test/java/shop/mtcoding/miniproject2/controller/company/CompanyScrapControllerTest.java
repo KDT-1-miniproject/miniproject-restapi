@@ -1,7 +1,10 @@
-package shop.mtcoding.miniproject2.controller;
+package shop.mtcoding.miniproject2.controller.company;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -17,25 +20,18 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.DocumentContext;
-import com.jayway.jsonpath.JsonPath;
-
 import shop.mtcoding.miniproject2.model.User;
 
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class CompanyResumeControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
+public class CompanyScrapControllerTest {
 
     @Autowired
     private MockHttpSession mockSession;
 
     @Autowired
-    private ObjectMapper om;
+    private MockMvc mvc;
 
     @BeforeEach
     public void setUp() {
@@ -53,19 +49,32 @@ public class CompanyResumeControllerTest {
     }
 
     @Test
-    public void recommend_test() throws Exception {
+    public void scrapInsert_test() throws Exception {
+        int resumeId = 2;
 
-        ResultActions resultActions = mvc.perform(get("/company/recommend").session(mockSession));
+        ResultActions resultActions = mvc
+                .perform(post("/company/scrap/" + resumeId).session(mockSession));
 
-        /*
-         * String data = resultActions.andReturn().getResponse().getContentAsString();
-         * String jData = om.writeValueAsString(data);
-         * DocumentContext jsonContext = JsonPath.parse(data);
-         * String rdata = jsonContext.read("$.data").toString();
-         * System.out.println("테스트: " + rdata);
-         */
-        resultActions.andExpect(jsonPath("$.msg").value("기업 인재 추천"));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void scrapDelete_test() throws Exception {
+        int resumeId = 1;
+
+        ResultActions resultActions = mvc
+                .perform(delete("/company/scrap/" + resumeId).session(mockSession));
+
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void scrap_test() throws Exception {
+
+        ResultActions resultActions = mvc
+                .perform(get("/company/scrap/").session(mockSession));
+
         resultActions.andExpect(jsonPath("$.data").exists());
-
+        resultActions.andExpect(jsonPath("$.msg").value("스크랩 목록"));
     }
 }

@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller;
+package shop.mtcoding.miniproject2.controller.company;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -65,7 +65,7 @@ public class CompanyControllerTest {
 
         String requestBody = om.writeValueAsString(cdto); // json으로
 
-        System.out.println("테스트 4:" + requestBody);
+        // System.out.println("테스트 4:" + requestBody);
 
         // when
         ResultActions resultActions = mvc.perform(put("/company/info")
