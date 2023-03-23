@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.controller.company;
 import java.io.IOException;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,7 @@ public class CompanyController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> companyUpdateInfo(@RequestBody CompanyInfoInDto companyInfoInDto)
+    public ResponseEntity<?> companyUpdateInfo(@Valid @RequestBody CompanyInfoInDto companyInfoInDto)
             throws IOException {
 
         User principal = (User) session.getAttribute("principal");

@@ -1,5 +1,6 @@
 package shop.mtcoding.miniproject2.handler;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 // import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomValidationException;
 import shop.mtcoding.miniproject2.util.Script;
 
 // @ControllerAdvice// 파일 요청
@@ -24,6 +26,11 @@ public class CustomExceptionHandler {
     @ExceptionHandler(CustomApiException.class)
     public ResponseEntity<?> CustomApiException(CustomApiException e) {
         // return Script.back(e.getMessage());
-        return new ResponseEntity<>(new ResponseDto<>(1, e.getMessage(), null), e.getStatus());
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), null), e.getStatus());
+    }
+
+    @ExceptionHandler(CustomValidationException.class)
+    public ResponseEntity<?> validationApiException(CustomValidationException e) {
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErroMap()), HttpStatus.BAD_REQUEST);
     }
 }

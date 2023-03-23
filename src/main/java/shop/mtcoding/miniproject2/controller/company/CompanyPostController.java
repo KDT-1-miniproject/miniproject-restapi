@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.controller.company;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,6 @@ import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PostService;
 
@@ -41,7 +41,7 @@ public class CompanyPostController {
     public ResponseEntity<?> posts() {
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
         List<PostTitleRespDto> postTitleList = postService.기업공고리스트(userPS.getCInfoId());
@@ -53,7 +53,7 @@ public class CompanyPostController {
     public ResponseEntity<?> postDetail(@PathVariable int id) {
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
         CompanyPostDetailRespDto post = postService.기업공고디테일(id, userPS.getCInfoId());
@@ -63,7 +63,7 @@ public class CompanyPostController {
 
     @PutMapping("/posts/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdatePost(@PathVariable int id,
-            @RequestBody PostUpdateReqDto postUpdateReqDto) {
+            @Valid @RequestBody PostUpdateReqDto postUpdateReqDto) {
         User userPS = (User) session.getAttribute("principal");
 
         // 유효성 테스트
@@ -74,10 +74,11 @@ public class CompanyPostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<?> postSave(@RequestBody PostSaveReqDto postSaveReqDto) {
+    public ResponseEntity<?> postSave(@Valid @RequestBody PostSaveReqDto postSaveReqDto) {
+
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
-            throw new CustomException("인증이 필요합니다");
+            throw new CustomApiException("인증이 필요합니다");
         }
 
         PostSaveDto post = postService.공고등록(postSaveReqDto, userPS.getCInfoId());

@@ -17,7 +17,6 @@ import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendInte
 import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonService;
 import shop.mtcoding.miniproject2.service.PostService;
@@ -47,7 +46,7 @@ public class PersonPostController {
 
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
+            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
         }
 
         PersonPostDetailResDto post = postService.개인공고디테일(id, userPS.getPInfoId());
