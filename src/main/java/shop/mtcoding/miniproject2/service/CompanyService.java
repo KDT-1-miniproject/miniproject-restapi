@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
@@ -55,7 +56,7 @@ public class CompanyService {
     private final CompanyScrapRepository companyScrapRepository;
 
     @Transactional
-    public JoinCompanyRespDto 기업회원가입(JoinCompanyReqDto joinCompanyReqDto) {
+    public JoinCompanyRespDto 기업회원가입(@RequestBody JoinCompanyReqDto joinCompanyReqDto) {
 
         Company sameCompany = companyRepository.findByCompanyNameAndNumber(joinCompanyReqDto.getName(),
                 joinCompanyReqDto.getNumber());

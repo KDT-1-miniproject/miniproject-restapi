@@ -32,9 +32,11 @@ public class CompanyProposalController {
     private final PersonProposalService personProposalService;
     private final ProposalPassService proposalPassService;
 
+    // 합불
     @PutMapping("/proposal/{id}")
-    public @ResponseBody ResponseEntity<?> companyUpdateResume(@PathVariable int id,
-            @Valid @RequestBody CompanyProposalStatusReqDto statusCode) {
+    public ResponseEntity<?> companyUpdateResume(@PathVariable int id,
+           @Valid @RequestBody CompanyProposalStatusReqDto statusCode) {
+
         User userPS = (User) session.getAttribute("principal");
 
         PersonProposal dto = personProposalService.제안수정하기(id, userPS.getCInfoId(),
@@ -42,6 +44,7 @@ public class CompanyProposalController {
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 확인 완료", dto), HttpStatus.OK);
     }
 
+    // 합격 시 메세지
     @PostMapping("proposalPass/{id}")
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
             @Valid @RequestBody ProposalPassMessageReqDto message) {

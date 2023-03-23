@@ -55,7 +55,6 @@ public class PostReq {
         private String jobIntro;
         // private SkillsDto skill;
         private String skills;
-        private Timestamp createdAt;
 
         // @Getter
         // @Setter
@@ -82,7 +81,7 @@ public class PostReq {
             this.cIntro = post.getCIntro();
             this.jobIntro = post.getJobIntro();
             this.skills = skills;
-            this.createdAt = post.getCreatedAt();
+
         }
 
     }

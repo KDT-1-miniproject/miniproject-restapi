@@ -74,7 +74,8 @@ public class CompanyPostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<?> postSave(@Valid PostSaveReqDto postSaveReqDto) {
+    public ResponseEntity<?> postSave(@Valid @RequestBody PostSaveReqDto postSaveReqDto) {
+
         User userPS = (User) session.getAttribute("principal");
         if (userPS == null) {
             throw new CustomApiException("인증이 필요합니다");
