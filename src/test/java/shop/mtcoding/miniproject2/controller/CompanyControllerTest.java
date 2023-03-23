@@ -1,6 +1,8 @@
 package shop.mtcoding.miniproject2.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -74,4 +77,15 @@ public class CompanyControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Test
+    public void info_test() throws Exception {
+        // given
+        ResultActions resultActions = mvc.perform(get("/company/info").session(mockSession));
+        // resultActions.andReturn().getResponse()
+
+        String data = resultActions.andReturn().getResponse().getContentAsString();
+
+        resultActions.andExpect(jsonPath("$.data").exists());
+
+    }
 }
