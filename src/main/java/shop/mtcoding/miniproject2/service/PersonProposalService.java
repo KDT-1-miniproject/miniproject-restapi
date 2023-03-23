@@ -68,34 +68,41 @@ public class PersonProposalService {
     }
 
     @Transactional
-    public void 지원하기(int pInfoId, int postId, int resumeId, int status) {
+    public PersonProposal 지원하기(int pInfoId, int postId, int resumeId) {
 
         PersonProposal proposal = personProposalRepository.findByPInfoIdAndPostId(pInfoId, postId);
         if (proposal != null) {
-            throw new CustomException("이미 지원한 공고입니다.");
+            throw new CustomApiException("이미 지원한 공고입니다.");
         }
 
         Resume resume = resumeRepository.findById(resumeId);
         if (resume == null) {
-            throw new CustomException("없는 이력서로 지원이 불가합니다.");
+            throw new CustomApiException("없는 이력서로 지원이 불가합니다.");
         }
 
         if (pInfoId != resume.getPInfoId()) {
-            throw new CustomException("나의 이력서로만 지원이 가능합니다.");
+            throw new CustomApiException("나의 이력서로만 지원이 가능합니다.");
         }
 
         Post post = postRepository.findById(postId);
         if (post == null) {
-            throw new CustomException("없는 공고에 지원할 수 없습니다.");
+            throw new CustomApiException("없는 공고에 지원할 수 없습니다.");
         }
 
+        PersonProposal propo = new PersonProposal();
+        propo.setPInfoId(pInfoId);
+        propo.setPostId(postId);
+        propo.setResumeId(resumeId);
+        propo.setStatus(0);
         try {
-            personProposalRepository.insert(pInfoId, postId, resumeId, status);
+            personProposalRepository.insert(propo);
 
         } catch (Exception e) {
-            throw new CustomException("지원에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("지원에 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        PersonProposal dto = personProposalRepository.findById(propo.getId());
 
+        return dto;
     }
 
     public CompanyGetResumeDto 받은이력서보기(int cInfoId) {

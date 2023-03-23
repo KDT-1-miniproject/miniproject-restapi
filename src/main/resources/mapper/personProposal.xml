@@ -82,7 +82,7 @@
         select * from person_proposal_tb where id = #{id}
     </select> 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into person_proposal_tb (p_info_id, post_id, resume_id, status, created_at) 
             values(#{pInfoId}, #{postId}, #{resumeId}, #{status}, now())
     </insert>    

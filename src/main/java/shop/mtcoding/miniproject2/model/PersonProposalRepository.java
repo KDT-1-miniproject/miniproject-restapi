@@ -23,11 +23,7 @@ public interface PersonProposalRepository {
         public List<PersonProposalDetailRespDto> findAllWithPostByCInfoIdAndResumeId(@Param("cInfoId") int cInfoId,
                         @Param("resumeId") int resumeId);
 
-        public int insert(@Param("pInfoId") int pInfoId,
-                        @Param("postId") int postId,
-                        @Param("resumeId") int resumeId,
-                        @Param("status") int status // 0은 대기중, 1은 합격, 2는 불합격
-        );
+        public int insert(PersonProposal proposal);
 
         public int updateById(@Param("id") int id,
                         @Param("pInfoId") int pInfoId,

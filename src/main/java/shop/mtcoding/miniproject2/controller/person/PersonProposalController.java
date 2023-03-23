@@ -1,9 +1,5 @@
 package shop.mtcoding.miniproject2.controller.person;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -19,10 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
-import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalStringListRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.PersonProposalRepository;
-import shop.mtcoding.miniproject2.model.ProposalPass;
 import shop.mtcoding.miniproject2.model.ProposalPassRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
@@ -44,11 +39,11 @@ public class PersonProposalController {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
 
-        int pInfoId = principal.getPInfoId();
         // post아이디는 여기 id! + resumeid는 int selectedResume
-        personProposalService.지원하기(pInfoId, id, selectedResume, 0); // status 합불합격상태(0은 대기중)
+        PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
+                                                                                                     // 대기중)
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "제안 성공", null), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "제안 성공", dto), HttpStatus.OK);
     }
 
     @GetMapping("/history")
@@ -60,5 +55,4 @@ public class PersonProposalController {
 
         return new ResponseEntity<>(new ResponseDto<>(1, "지원이력보기", dto), HttpStatus.OK);
     }
-
 }
