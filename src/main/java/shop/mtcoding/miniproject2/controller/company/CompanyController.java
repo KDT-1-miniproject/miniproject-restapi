@@ -17,8 +17,8 @@ import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyService;
 
 @RequestMapping("/company")
@@ -32,9 +32,11 @@ public class CompanyController {
     // companyMain
     @GetMapping("/info")
     public ResponseEntity<?> info() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+        // System.out.println("테스트 :" + jwt);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());
         // model.addAttribute("companyPS", companyPS);
+        session.invalidate();
         return new ResponseEntity<>(new ResponseDto<>(1, "company info", cInfoDto), HttpStatus.OK);
     }
 
@@ -42,7 +44,7 @@ public class CompanyController {
     public ResponseEntity<?> companyUpdateInfo(@Valid @RequestBody CompanyInfoInDto companyInfoInDto)
             throws IOException {
 
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         companyService.updateInfo(companyInfoInDto);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());

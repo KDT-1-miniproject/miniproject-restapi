@@ -16,6 +16,7 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonService;
@@ -31,7 +32,7 @@ public class PersonPostController {
 
     @GetMapping({ "/main", "/" })
     public ResponseEntity<?> main() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         // 회사로고, 회사이름, 공고이름, 회사 주소, D-day
         // cInfo : 회사로고, 회사이름, 회사주소
@@ -44,22 +45,17 @@ public class PersonPostController {
     @GetMapping("/detail/{id}")
     public ResponseEntity<?> detail(@PathVariable int id) {
 
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
-            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        PersonPostDetailResDto post = postService.개인공고디테일(id, userPS.getPInfoId());
+        PersonPostDetailResDto post = postService.개인공고디테일(id, principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 공고 디테일 보기", post), HttpStatus.OK);
     }
 
     @GetMapping("/recommend")
     public ResponseEntity<?> recommend() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         List<PostRecommendIntegerRespDto> postListDto = personService.recommend();
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 추천", postListDto), HttpStatus.OK);

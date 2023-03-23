@@ -21,10 +21,10 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.ResumeService;
 
 @RequestMapping("/person")
@@ -39,10 +39,8 @@ public class PersonResumeController {
 
     @GetMapping("/resumes")
     public ResponseEntity<?> resumes() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         int pInfoId = principal.getPInfoId();
         List<Resume> resumeAll = resumeRepository.findAllByPInfoId(pInfoId);
 
@@ -51,35 +49,28 @@ public class PersonResumeController {
 
     @DeleteMapping("/resumes/{id}")
     public ResponseEntity<?> resumeDelete(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
-        resumeService.delete(id);
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
+        resumeService.delete(id, principal.getPInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
     @GetMapping("/resumes/{id}")
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
 
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         ResumeDetailDto resumeDetailDto = resumeRepository.findDetailList(id);
         if (resumeDetailDto == null) {
-            throw new CustomApiException("없는 이력서를 수정할 수 없습니다");
+            throw new CustomApiException("이력서가 존재하지 않습니다.");
         }
-
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기", resumeDetailDto), HttpStatus.OK);
     }
 
     @PostMapping("/resumes")
     public ResponseEntity<?> resumeInsert(@Valid @RequestBody ResumeInsertReqDto resumeInsertReqDto) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         // 유효성 테스트
         int pInfoId = principal.getPInfoId();
         Resume dto = resumeService.insertNewResume(pInfoId, resumeInsertReqDto);
@@ -89,10 +80,13 @@ public class PersonResumeController {
     @PutMapping("/resumes/{id}")
     public ResponseEntity<?> resumeUpdate(@PathVariable int id,
             @Valid @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         int pInfoId = principal.getPInfoId();
+
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);
         Resume resumePS = resumeRepository.findById(id);
+
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 수정에 성공하였습니다!", resumePS), HttpStatus.OK);
     }
 

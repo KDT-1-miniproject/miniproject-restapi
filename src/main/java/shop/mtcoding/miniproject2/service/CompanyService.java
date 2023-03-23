@@ -11,23 +11,25 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import shop.mtcoding.miniproject2.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendScrapDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
-
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto.UserDto;
-
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Company;
@@ -41,6 +43,7 @@ import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
+import shop.mtcoding.miniproject2.util.JwtProvider;
 import shop.mtcoding.miniproject2.util.PathUtil;
 
 @Service
@@ -96,12 +99,16 @@ public class CompanyService {
     @Transactional
     public void updateInfo(CompanyInfoInDto companyInfoInDto) {
 
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
 
-        String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), principal.getSalt());
-        if (!pw.equals(principal.getPassword())) {
+        if (companyPS == null) {
+            throw new CustomApiException("정보를 찾을 수 없습니다!");
+        }
+
+        String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), userPS.getSalt());
+        if (!pw.equals(userPS.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");
         }
 
@@ -109,7 +116,7 @@ public class CompanyService {
         if (companyInfoInDto.getPassword() == null || companyInfoInDto.getPassword().isEmpty()) {
             password = userPS.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(companyInfoInDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(companyInfoInDto.getPassword(), userPS.getSalt());
         }
 
         if (companyInfoInDto.getLogo() == null || companyInfoInDto.getLogo().isEmpty()) {
@@ -144,8 +151,8 @@ public class CompanyService {
         }
     }
 
-    @Transactional
-    public User 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
@@ -160,12 +167,26 @@ public class CompanyService {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
 
-        return principal;
+        String jwt = JwtProvider.create(principal);
+
+        // header에 담기
+        ResponseEntity<Object> response = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+                HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(response.getHeaders());
+        headers.add(JwtProvider.HEADER, jwt);
+
+        ResponseEntity<Object> responseEntity = new ResponseEntity<>(response.getBody(), headers,
+                response.getStatusCode());
+
+        return responseEntity;
     }
+
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         List<postIdAndSkillsDto> postAndSkillsList = postRepository.findPostIdAndSkills(principal.getCInfoId());
 

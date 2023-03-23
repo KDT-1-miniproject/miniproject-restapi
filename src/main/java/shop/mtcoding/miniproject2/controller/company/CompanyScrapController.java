@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.companyScrap.CompanyScrapOutDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyScrap;
 import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyScrapService;
 
 @RequestMapping("/company")
@@ -33,10 +33,7 @@ public class CompanyScrapController {
 
     @GetMapping("/scrap")
     public ResponseEntity<?> scrap() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
 
@@ -45,20 +42,16 @@ public class CompanyScrapController {
 
     @DeleteMapping("/scrap/{id}")
     public ResponseEntity<?> scrapDelete(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         companyScrapService.delete(id, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 취소", null), HttpStatus.OK);
     }
 
     @PostMapping("/scrap/{id}")
     public ResponseEntity<?> scrapInsert(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         CompanyScrap cScrapPS = companyScrapService.insert(id, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", cScrapPS), HttpStatus.OK);
     }

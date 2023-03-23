@@ -25,7 +25,7 @@ public class PersonScrapService {
         Post postPS = postRepository.findById(postId);
 
         if (postPS == null) {
-            throw new CustomApiException("존재하지 않는 공고입니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("존재하지 않는 공고입니다");
         }
 
         PersonScrap ps = new PersonScrap(postId, pInfoId);
@@ -48,7 +48,7 @@ public class PersonScrapService {
         }
 
         if (pScrap.getPInfoId() != pInfoId) {
-            throw new CustomApiException("스크랩 취소 권한이 없습니다!");
+            throw new CustomApiException("스크랩 취소 권한이 없습니다!", HttpStatus.FORBIDDEN);
         }
 
         int result = personScrapRepository.deleteById(pScrap.getId());

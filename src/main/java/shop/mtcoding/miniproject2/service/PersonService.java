@@ -11,11 +11,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
@@ -24,6 +27,7 @@ import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.Ski
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.UserDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -39,6 +43,7 @@ import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
+import shop.mtcoding.miniproject2.util.JwtProvider;
 
 @RequiredArgsConstructor
 @Service
@@ -94,14 +99,15 @@ public class PersonService {
         return dto;
     }
 
-    @Transactional
-    public User 개인로그인(LoginPersonReqDto loginPersonReqDto) {
+    @Transactional(readOnly = true)
+    public ResponseEntity<Object> 개인로그인(LoginPersonReqDto loginPersonReqDto) {
         User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
         if (userCheck == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
+
         // DB Salt + 입력된 password 해싱
         loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
@@ -109,26 +115,46 @@ public class PersonService {
         if (principal == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
+        // jwt 생성
+        String jwt = JwtProvider.create(principal);
 
-        return principal;
+        // header에 담기
+        ResponseEntity<Object> response = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+                HttpStatus.OK);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(response.getHeaders());
+        headers.add(JwtProvider.HEADER, jwt);
+
+        ResponseEntity<Object> responseEntity = new ResponseEntity<>(response.getBody(), headers,
+                response.getStatusCode());
+
+        return responseEntity;
     }
 
     @Transactional
     public void update(PersonInfoInDto personInfoInDto) {
 
-        User principal = (User) session.getAttribute("principal");
-        Person personPS = personRepository.findById(principal.getPInfoId());
-        String password;
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
-        if (!pw.equals(principal.getPassword())) {
+        User userPs = userRepository.findById(principal.getId());
+
+        Person personPS = personRepository.findById(principal.getPInfoId());
+
+        if (personPS == null) {
+            throw new CustomApiException("정보를 찾을 수 없습니다!");
+        }
+
+        String password;
+        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), userPs.getSalt());
+        if (!pw.equals(userPs.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");
         }
 
         if (personInfoInDto.getPassword() == null || personInfoInDto.getPassword().isEmpty()) {
-            password = principal.getPassword();
+            password = userPs.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(personInfoInDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(personInfoInDto.getPassword(), userPs.getSalt());
         }
 
         Timestamp birthday = Timestamp.valueOf(personInfoInDto.getBirthday());
@@ -153,9 +179,9 @@ public class PersonService {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        int result3 = userRepository.updateById(principal.getId(), principal.getEmail(), password,
-                principal.getPInfoId(),
-                principal.getCInfoId(), personPS.getCreatedAt());
+        int result3 = userRepository.updateById(userPs.getId(), userPs.getEmail(), password,
+                userPs.getPInfoId(),
+                userPs.getCInfoId(), userPs.getCreatedAt());
 
         if (result3 != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -164,7 +190,7 @@ public class PersonService {
 
     @Transactional(readOnly = true)
     public List<PostRecommendIntegerRespDto> recommend() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         Skill principalSkills = skillRepository.findByPInfoId(principal.getPInfoId());
 
         String[] principalSKillArr = principalSkills.getSkills().split(",");
@@ -225,7 +251,7 @@ public class PersonService {
 
                 postList.add(p2);
             } catch (Exception e) {
-                throw new CustomApiException("실패");
+                throw new CustomApiException("추천 공고 불러오기 실패");
             }
         }
 
