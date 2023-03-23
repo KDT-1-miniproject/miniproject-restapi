@@ -18,12 +18,12 @@ INSERT INTO company_info_tb(logo, name, number, boss_name, address, manager_name
 INSERT INTO company_info_tb(logo, name, number,  boss_name, address, manager_name, manager_phone, size,cyear,created_at) 
                 values('/images/google.png','구글', '7482165982', '구글사장', 'Amphitheatre Parkway in Mountain View, California', '구글', '01081659232',200,1998, now());
 
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('성실한 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-04 00:00:00','좋은직장','위대한직장',now());
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('멋진 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-15 00:00:00','좋은직장','위대한직장',now());
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('열심히하는 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-07 00:00:00','좋은직장','위대한직장',now());
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('백엔드 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-10 00:00:00','좋은직장','위대한직장',now());
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('프론트 개발자 구합니다.',2,3,'4000만원','정규직', '09:00:00','18:00:00','2023-03-20 00:00:00','좋은직장','위대한직장',now());
-INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('프론트 개발자 구합니다.',3,3,'4000만원','정규직', '09:00:00','18:00:00','2023-03-20 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('성실한 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-20 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('멋진 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-25 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('열심히하는 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-28 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('백엔드 개발자 구합니다.',1,0,'3000만원','계약직', '09:00:00','18:00:00','2023-03-30 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('프론트 개발자 구합니다.',2,3,'4000만원','정규직', '09:00:00','18:00:00','2023-04-20 00:00:00','좋은직장','위대한직장',now());
+INSERT INTO job_post_tb(title,c_info_id,career,pay,condition,start_hour,end_hour,deadline,c_intro,job_intro,created_at) values('프론트 개발자 구합니다.',3,3,'4000만원','정규직', '09:00:00','18:00:00','2023-04-20 00:00:00','좋은직장','위대한직장',now());
 
 INSERT INTO resume_tb(p_info_id,profile,title,publish,portfolio,self_intro,created_at) values(1,'/images/profile1.jpg','성실한 지원자입니다',true,'https://naver.com','저는성실해요',now());
 INSERT INTO resume_tb(p_info_id,profile,title,publish,portfolio,self_intro,created_at) values(1,'/images/profile1.jpg','멋있는 지원자입니다',false,'https://naver.com','저는성실해요',now());

@@ -37,15 +37,18 @@ public class CompanyScrapService {
         }
     }
 
-    public void insert(int id, int cInfoId) {
-        Resume resumePS = resumeRepository.findById(id);
+    public CompanyScrap insert(int resumeId, int cInfoId) {
+        Resume resumePS = resumeRepository.findById(resumeId);
         if (resumePS == null) {
             throw new CustomApiException("존재하지 않는 이력서입니다", HttpStatus.UNAUTHORIZED);
         }
 
-        int result = companyScrapRepository.insert(cInfoId, id);
+        CompanyScrap cs = new CompanyScrap(resumeId, cInfoId);
+        int result = companyScrapRepository.insert(cs);
         if (result != 1) {
             throw new CustomApiException("서버 에러!", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        CompanyScrap cs2 = companyScrapRepository.findById(cs.getId());
+        return cs2;
     }
 }

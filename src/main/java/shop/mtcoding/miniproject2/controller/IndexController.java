@@ -17,6 +17,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.customerService.CustomerServDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
@@ -54,7 +55,7 @@ public class IndexController {
 
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
@@ -63,7 +64,7 @@ public class IndexController {
         User principal = userRepository.findCompanyByEmailAndPassword(loginCompanyReqDto.getEmail(),
                 loginCompanyReqDto.getPassword());
         if (principal == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
 
         session.setAttribute("principal", principal);
@@ -81,7 +82,22 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
+        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+        }
+        // DB Salt 값
+        String salt = userCheck.getSalt();
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
+        // System.out.println(loginPersonReqDto.getPassword());
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
 
+        session.setAttribute("principal", principal);
         return new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
                 HttpStatus.OK);
     }

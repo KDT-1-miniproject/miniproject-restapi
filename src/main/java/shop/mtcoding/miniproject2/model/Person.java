@@ -3,10 +3,12 @@ package shop.mtcoding.miniproject2.model;
 import java.sql.Timestamp;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import lombok.ToString;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 
+@NoArgsConstructor
 @ToString
 @Getter
 @Setter
@@ -17,10 +19,6 @@ public class Person {
     private String address;
     private Timestamp birthday;
     private Timestamp createdAt;
-
-    public Person() {
-
-    }
 
     public Person(ResumeUpdateReqDto resumeUpdateReqDto) {
         this.name = resumeUpdateReqDto.getName();

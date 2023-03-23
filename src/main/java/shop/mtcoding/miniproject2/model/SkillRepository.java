@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
+
 @Mapper
 public interface SkillRepository {
 

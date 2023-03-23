@@ -5,6 +5,38 @@
 
 <mapper namespace="shop.mtcoding.miniproject2.model.PersonRepository">
 
+    <resultMap id ="PersonInfoOutDto" type="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="phone" column="phone"/>
+        <result property="address" column="address"/>
+        <result property="birthday" column="birthday"/>
+        <result property="createdAt" column="created_at"/>
+        <association property="skill" javaType="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto$SkillDto">
+            <id property="id" column="id"/>
+            <result property="pInfoId" column="p_info_id"/>
+            <result property="postId" column="post_id"/>
+            <result property="resumeId" column="resume_id"/>
+            <result property="skills" column="skills"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+        <association property="user" javaType="shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+        </association>
+    </resultMap>
+
+    <select id="findByIdWithSkills" resultMap="PersonInfoOutDto">
+        select * 
+        from person_info_tb p
+        join skill_tb s
+        on p.id = s.p_info_id
+        join user_tb ut
+        on p.id = ut.p_info_id
+        where p.id = #{id}
+    </select>
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Person">
         select * from person_info_tb
     </select>
@@ -17,6 +49,7 @@
         insert into person_info_tb (name, created_at) 
             values(#{name}, now())
     </insert>     -->
+
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into person_info_tb (name, created_at) values (#{name}, now())
@@ -31,8 +64,7 @@
         update person_info_tb set name = #{name},
                                    phone = #{phone},
                                    address = #{address},
-                                   birthday = #{birthday},
-                                   created_at = #{createdAt}
+                                   birthday = #{birthday}
                                    where id = #{id} 
     </update>
 
