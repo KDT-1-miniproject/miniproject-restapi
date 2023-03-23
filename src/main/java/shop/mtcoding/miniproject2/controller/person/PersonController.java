@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
@@ -30,7 +31,7 @@ public class PersonController {
 
     @GetMapping("/info")
     public ResponseEntity<?> info() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         PersonInfoOutDto pInfoDto = personRepository.findByIdWithSkills(principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "person info", pInfoDto), HttpStatus.OK);
