@@ -14,45 +14,46 @@ public class JwtTest {
 
     @Test
     public void createJwt_test() {
-        // given
-
-        // when
         String jwt = JWT
                 .create()
-                .withSubject("토큰제목") // token 제목
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // token 만료 시간, 예제는 7일
-                .withClaim("id", "1") // user의 primary key
-                .withClaim("role", "guest") // user의 primary key
-                .sign(Algorithm.HMAC512("heesun"));
-        // ABC(secret: heeesun) -> 1313AB , ABC(secret: hee) -> 5335KD(token)
-        // 이런 식으로 secret (key)을 통해 token을 생성
-        // secret은 key이기 때문에 공개되면 xxx
+                .withSubject("토큰제목")
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
+                .withClaim("id", 1) // user의 primary key
+                .withClaim("cInfoId", 1)
+                .withClaim("pInfoId", 0)
+                .withClaim("email", "init@nate.com")
+                .sign(Algorithm.HMAC512("jjang"));
+
         System.out.println(jwt);
-        // then
 
     }
 
     @Test
     public void verifyJwt_test() {
-        // given
 
         String jwt = JWT
                 .create()
-                .withSubject("토큰제목") // token 제목
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // token 만료 시간, 예제는 7일
+                .withSubject("토큰제목")
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7))
                 .withClaim("id", 1) // user의 primary key
-                .withClaim("role", "guest") // user의 primary key
-                .sign(Algorithm.HMAC512("heesun"));
+                .withClaim("cInfoId", 1)
+                .withClaim("pInfoId", 0)
+                .withClaim("email", "init@nate.com")
+                .sign(Algorithm.HMAC512("jjang"));
 
         // when
         try {
-            DecodedJWT decodeJwt = JWT.require(Algorithm.HMAC512("heesun")).build().verify(jwt);
+            DecodedJWT decodeJwt = JWT.require(Algorithm.HMAC512("jjang")).build().verify(jwt);
 
             int id = decodeJwt.getClaim("id").asInt();
-            String role = decodeJwt.getClaim("role").asString();
+            int cInfoId = decodeJwt.getClaim("cInfoId").asInt();
+            int pInfoId = decodeJwt.getClaim("pInfoId").asInt();
+            String email = decodeJwt.getClaim("email").asString();
 
             System.out.println("id " + id);
-            System.out.println("role " + role);
+            System.out.println("cInfoId " + cInfoId);
+            System.out.println("pInfoId " + pInfoId);
+            System.out.println("email " + email);
 
         } catch (SignatureVerificationException e) {
             System.out.println("검증 실패 " + e.getMessage());

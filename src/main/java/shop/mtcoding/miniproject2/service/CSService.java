@@ -16,7 +16,7 @@ import shop.mtcoding.miniproject2.model.CustomerServRepository;
 public class CSService {
     private final CustomerServRepository customerServRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public CustomerServDto 고객센터() {
 
         // DB에서 고객센터 데이터 조회하기

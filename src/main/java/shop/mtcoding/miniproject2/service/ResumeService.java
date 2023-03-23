@@ -1,7 +1,5 @@
 package shop.mtcoding.miniproject2.service;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +14,6 @@ import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.Skill;
-import shop.mtcoding.miniproject2.model.SkillFilter;
 import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.util.PathUtil;

@@ -18,7 +18,6 @@ import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyService;
 
 @RequestMapping("/company")

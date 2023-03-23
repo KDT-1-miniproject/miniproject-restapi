@@ -161,7 +161,7 @@ public class CompanyService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<?> 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {

@@ -99,7 +99,7 @@ public class PersonService {
         return dto;
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public ResponseEntity<Object> 개인로그인(LoginPersonReqDto loginPersonReqDto) {
         User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
         if (userCheck == null) {
@@ -136,7 +136,9 @@ public class PersonService {
     public void update(PersonInfoInDto personInfoInDto) {
 
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         User userPs = userRepository.findById(principal.getId());
+
         Person personPS = personRepository.findById(principal.getPInfoId());
 
         if (personPS == null) {
@@ -177,9 +179,9 @@ public class PersonService {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        int result3 = userRepository.updateById(principal.getId(), principal.getEmail(), password,
-                principal.getPInfoId(),
-                principal.getCInfoId(), personPS.getCreatedAt());
+        int result3 = userRepository.updateById(userPs.getId(), userPs.getEmail(), password,
+                userPs.getPInfoId(),
+                userPs.getCInfoId(), userPs.getCreatedAt());
 
         if (result3 != 1) {
             throw new CustomApiException("정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -249,7 +251,7 @@ public class PersonService {
 
                 postList.add(p2);
             } catch (Exception e) {
-                throw new CustomApiException("실패");
+                throw new CustomApiException("추천 공고 불러오기 실패");
             }
         }
 

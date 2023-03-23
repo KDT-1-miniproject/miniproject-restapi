@@ -57,7 +57,6 @@ public class PostService {
             throw new CustomApiException("공고 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        System.out.println("테스트" + post.getCreatedAt());
         String[] st = postSaveReqDto.getSkills();
         String skills = "";
         for (String string : st) {
@@ -65,12 +64,6 @@ public class PostService {
                 skills += ",";
             skills += string;
         }
-        // Skill skill = new Skill();
-        // skill.setPInfoId(0);
-        // skill.setResumeId(0);
-        // skill.setPostId(post.getId());
-        // skill.setSkills(skills);
-
         int result1 = skillRepository.insert(0, post.getId(), 0, skills);
         if (result1 != 1) {
             throw new CustomApiException("공고 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -84,8 +77,7 @@ public class PostService {
         }
 
         Post realPost = postRepository.findById(post.getId());
-        // PostSaveDto postDto = new PostSaveDto(
-        // post, new SkillsDto(skill.getId(), skill.getSkills()));
+
         PostSaveDto postDto = new PostSaveDto(
                 realPost, skills);
         return postDto;
@@ -105,10 +97,6 @@ public class PostService {
         if (postPS.getCInfoId() != cInfoId) {
             throw new CustomApiException("게시글을 볼 권한이 없습니다.", HttpStatus.FORBIDDEN);
         }
-
-        // Company companyPS = (Company) companyRepository.findById(cInfoId);
-        // Skill skillPS = (Skill) skillRepository.findByPostId(postId);
-        // StringTokenizer skills = new StringTokenizer(skillPS.getSkills(), ",");
 
         CompanyPostDetailRespDto post = postRepository.findByPostInfoIdDetail(postId);
         return post;
