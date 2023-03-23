@@ -37,9 +37,6 @@ public class PersonScrapController {
 
         List<PersonScrapOutDto> pScrapPS = personScrapRepository.findByIdWithPostAndCompany(principal.getPInfoId());
 
-        // model.addAttribute("pScrapList", pScrapList2);
-        // model.addAttribute("count", pScrapList.size());
-
         return new ResponseEntity<>(new ResponseDto<>(1, "개인 스크랩 목록", pScrapPS),
                 HttpStatus.OK);
     }

@@ -17,10 +17,8 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalReq.CompanyProposalStatusReqDto;
 import shop.mtcoding.miniproject2.dto.proposalPass.ProposalPassReq.ProposalPassMessageReqDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.ProposalPass;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 import shop.mtcoding.miniproject2.service.ProposalPassService;
 
@@ -45,9 +43,6 @@ public class CompanyProposalController {
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
             @RequestBody ProposalPassMessageReqDto message) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-        }
 
         ProposalPass dto = proposalPassService.메시지전달하기(id, principal.getCInfoId(), message.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(1, "메시지 전달 성공", dto), HttpStatus.CREATED);

@@ -32,11 +32,6 @@ public class PersonProposalController {
     public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, int selectedResume) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
-
-        // post아이디는 여기 id! + resumeid는 int selectedResume
         PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
                                                                                                      // 대기중)
 

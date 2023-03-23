@@ -39,9 +39,7 @@ public class PersonResumeController {
     @GetMapping("/resumes")
     public ResponseEntity<?> resumes() {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+
         int pInfoId = principal.getPInfoId();
         List<Resume> resumeAll = resumeRepository.findAllByPInfoId(pInfoId);
 
@@ -52,7 +50,7 @@ public class PersonResumeController {
     public ResponseEntity<?> resumeDelete(@PathVariable int id) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        resumeService.delete(id);
+        resumeService.delete(id, principal.getPInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 삭제 성공", null), HttpStatus.OK);
     }
 
@@ -63,9 +61,8 @@ public class PersonResumeController {
 
         ResumeDetailDto resumeDetailDto = resumeRepository.findDetailList(id);
         if (resumeDetailDto == null) {
-            throw new CustomApiException("없는 이력서를 수정할 수 없습니다");
+            throw new CustomApiException("이력서가 존재하지 않습니다.");
         }
-
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기", resumeDetailDto), HttpStatus.OK);
     }
 
@@ -83,8 +80,10 @@ public class PersonResumeController {
     public ResponseEntity<?> resumeUpdate(@PathVariable int id, @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         int pInfoId = principal.getPInfoId();
+
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);
         Resume resumePS = resumeRepository.findById(id);
+
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 수정에 성공하였습니다!", resumePS), HttpStatus.OK);
     }
 

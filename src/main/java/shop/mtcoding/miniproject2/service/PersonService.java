@@ -138,8 +138,12 @@ public class PersonService {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         User userPs = userRepository.findById(principal.getId());
         Person personPS = personRepository.findById(principal.getPInfoId());
-        String password;
 
+        if (personPS == null) {
+            throw new CustomApiException("정보를 찾을 수 없습니다!");
+        }
+
+        String password;
         String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), userPs.getSalt());
         if (!pw.equals(userPs.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");

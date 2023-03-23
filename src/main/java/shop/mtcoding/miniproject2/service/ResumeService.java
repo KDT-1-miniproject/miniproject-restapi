@@ -1,5 +1,7 @@
 package shop.mtcoding.miniproject2.service;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +16,7 @@ import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.Skill;
+import shop.mtcoding.miniproject2.model.SkillFilter;
 import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.util.PathUtil;
@@ -71,7 +74,11 @@ public class ResumeService {
 
     public void updateById(int id, int pInfoId, ResumeUpdateReqDto resumeUpdateReqDto) {
         String uuidImageName = PathUtil.writeImageFile(resumeUpdateReqDto.getProfile());
+        Resume resumePS = resumeRepository.findById(id);
 
+        if (resumePS.getPInfoId() != pInfoId) {
+            throw new CustomException("이력서 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
         ResumeUpdateReqBirthdayTimestampDto resumeUpdateReqBirthdayTimestampDto = new ResumeUpdateReqBirthdayTimestampDto(
                 resumeUpdateReqDto.getTitle(),
                 resumeUpdateReqDto.getPortfolio(),
@@ -115,7 +122,13 @@ public class ResumeService {
 
     }
 
-    public void delete(int id) {
+    public void delete(int id, int pInfoId) {
+        Resume resumePS = resumeRepository.findById(id);
+
+        if (resumePS.getPInfoId() != pInfoId) {
+            throw new CustomApiException("이력서 삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
         int result = resumeRepository.deleteById(id);
         if (result != 1) {
             throw new CustomApiException("이력서 삭제 실패하였습니다", HttpStatus.INTERNAL_SERVER_ERROR);

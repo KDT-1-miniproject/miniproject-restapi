@@ -18,7 +18,6 @@ import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonService;
 
 @RequestMapping("/person")
@@ -41,11 +40,6 @@ public class PersonController {
     public ResponseEntity<?> updateInfo(@RequestBody PersonInfoInDto personInfoInDto) {
 
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-
-        Person PersonPS = personRepository.findById(principal.getPInfoId());
-        if (PersonPS == null) {
-            throw new CustomApiException("정보를 찾을 수 없습니다!");
-        }
 
         personService.update(personInfoInDto);
 

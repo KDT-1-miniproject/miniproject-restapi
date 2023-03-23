@@ -25,9 +25,6 @@ import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PostService;
 
 @RequestMapping("/company")

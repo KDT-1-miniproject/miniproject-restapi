@@ -17,8 +17,6 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeDetailOutDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 
@@ -43,10 +41,6 @@ public class CompanyResumeController {
     public ResponseEntity<?> resumeDetail(@PathVariable int id) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
-
         ResumeDetailOutDto dto = personProposalService.이력서디테일보기(id, principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 디테일 보기 ", dto), HttpStatus.OK);
@@ -56,12 +50,6 @@ public class CompanyResumeController {
     @GetMapping("/recommend")
     public ResponseEntity<?> recommend() {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
-
-        // 공고 + 스킬 찾기
 
         List<ResumeWithPostInfoRecommendDto> postWithReumseDto = companyService.recommend();
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 인재 추천", postWithReumseDto), HttpStatus.OK);

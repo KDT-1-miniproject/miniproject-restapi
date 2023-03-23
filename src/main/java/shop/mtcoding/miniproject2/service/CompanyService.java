@@ -113,6 +113,10 @@ public class CompanyService {
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
 
+        if (companyPS == null) {
+            throw new CustomApiException("정보를 찾을 수 없습니다!");
+        }
+
         String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), userPS.getSalt());
         if (!pw.equals(userPS.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");

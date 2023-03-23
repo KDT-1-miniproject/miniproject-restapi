@@ -21,7 +21,6 @@ import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.CompanyScrap;
 import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CompanyScrapService;
 
 @RequestMapping("/company")
@@ -36,10 +35,6 @@ public class CompanyScrapController {
     public ResponseEntity<?> scrap() {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
-
         List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 스크랩 목록", cScrapPS), HttpStatus.OK);
@@ -49,9 +44,6 @@ public class CompanyScrapController {
     public ResponseEntity<?> scrapDelete(@PathVariable int id) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
         companyScrapService.delete(id, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 취소", null), HttpStatus.OK);
     }
@@ -60,9 +52,6 @@ public class CompanyScrapController {
     public ResponseEntity<?> scrapInsert(@PathVariable int id) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
         CompanyScrap cScrapPS = companyScrapService.insert(id, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", cScrapPS), HttpStatus.OK);
     }
