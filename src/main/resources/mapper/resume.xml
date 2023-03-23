@@ -19,7 +19,7 @@
 		<result property="title" column="title"/>
 		<result property="publish" column="publish"/>
 		<result property="portfolio" column="portfolio"/>
-		<result property="selfIntro" column="selfIntro"/>
+		<result property="selfIntro" column="self_intro"/>
 	<association property="personDto" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto$PersonDto">
 			<id property="id" column="id"/>
 			<result property="name" column="name"/>
