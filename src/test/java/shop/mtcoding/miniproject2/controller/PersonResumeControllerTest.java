@@ -60,10 +60,6 @@ public class PersonResumeControllerTest {
         resumeInsertReqDto.setProfile("12345");
         resumeInsertReqDto.setTitle("title");
         resumeInsertReqDto.setPortfolio("porfolio");
-        resumeInsertReqDto.setName("name");
-        resumeInsertReqDto.setPhone("phone");
-        resumeInsertReqDto.setAddress("address");
-        resumeInsertReqDto.setBirthday("birthday");
         resumeInsertReqDto.setPublish(true);
         resumeInsertReqDto.setSelfIntro("selfintro");
         resumeInsertReqDto.setSkills("skills");
@@ -88,10 +84,6 @@ public class PersonResumeControllerTest {
         resumeUpdateReqDto.setProfile("12345");
         resumeUpdateReqDto.setTitle("title");
         resumeUpdateReqDto.setPortfolio("porfolio");
-        resumeUpdateReqDto.setName("name");
-        resumeUpdateReqDto.setPhone("phone");
-        resumeUpdateReqDto.setAddress("address");
-        resumeUpdateReqDto.setBirthday("birthday");
         resumeUpdateReqDto.setPublish(true);
         resumeUpdateReqDto.setSelfIntro("selfintro");
         resumeUpdateReqDto.setSkills("skills");

@@ -1,7 +1,5 @@
 package shop.mtcoding.miniproject2.dto.Resume;
 
-import java.sql.Timestamp;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,10 +13,6 @@ public class ResumeReq {
         private String portfolio;
         private boolean publish;
         private String selfIntro;
-        private String name;
-        private String phone;
-        private String address;
-        private String birthday;
         private String skills;
     }
 
@@ -32,23 +26,15 @@ public class ResumeReq {
         private String portfolio;
         private boolean publish;
         private String selfIntro;
-        private String name;
-        private String phone;
-        private String address;
-        private Timestamp birthday;
         private String skills;
 
         public ResumeInsertReqBirthdayTimestampDto(int pInfoId, String title, String portfolio, boolean publish,
-                String selfIntro,
-                String name, String phone, String address, String skills) {
+                String selfIntro, String skills) {
             this.pInfoId = pInfoId;
             this.title = title;
             this.portfolio = portfolio;
             this.publish = publish;
             this.selfIntro = selfIntro;
-            this.name = name;
-            this.phone = phone;
-            this.address = address;
             this.skills = skills;
         }
 
@@ -62,21 +48,14 @@ public class ResumeReq {
         private String portfolio;
         private boolean publish;
         private String selfIntro;
-        private String name;
-        private String phone;
-        private String address;
-        private Timestamp birthday;
         private String skills;
 
         public ResumeUpdateReqBirthdayTimestampDto(String title, String portfolio, boolean publish, String selfIntro,
-                String name, String phone, String address, String skills) {
+                String skills) {
             this.title = title;
             this.portfolio = portfolio;
             this.publish = publish;
             this.selfIntro = selfIntro;
-            this.name = name;
-            this.phone = phone;
-            this.address = address;
             this.skills = skills;
         }
 
@@ -90,10 +69,6 @@ public class ResumeReq {
         private String portfolio;
         private boolean publish;
         private String selfIntro;
-        private String name;
-        private String phone;
-        private String address;
-        private String birthday;
         private String skills;
     }
 }

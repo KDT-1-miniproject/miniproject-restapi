@@ -31,8 +31,6 @@ public class ResumeService {
 
     private final ResumeRepository resumeRepository;
 
-    private final PersonRepository personRepository;
-
     private final SkillRepository skillRepository;
 
     private final SkillFilterRepository skillFilterRepository;
@@ -40,37 +38,24 @@ public class ResumeService {
     public Resume insertNewResume(int pInfoId, ResumeInsertReqDto resumeInsertReqDto) {
 
         String uuidImageName = PathUtil.writeImageFile(resumeInsertReqDto.getProfile());
-        Timestamp birthday = CvTimestamp.convertStringToTimestamp(resumeInsertReqDto.getBirthday());
         ResumeInsertReqBirthdayTimestampDto resumeInsertReqBirthdayTimestampDto = new ResumeInsertReqBirthdayTimestampDto(
                 pInfoId,
                 resumeInsertReqDto.getTitle(),
                 resumeInsertReqDto.getPortfolio(),
                 resumeInsertReqDto.isPublish(),
                 resumeInsertReqDto.getSelfIntro(),
-                resumeInsertReqDto.getName(),
-                resumeInsertReqDto.getPhone(),
-                resumeInsertReqDto.getAddress(),
                 resumeInsertReqDto.getSkills());
         resumeInsertReqBirthdayTimestampDto.setProfile(uuidImageName);
-        resumeInsertReqBirthdayTimestampDto.setBirthday(birthday);
 
         int result1 = resumeRepository.insert(resumeInsertReqBirthdayTimestampDto);
         if (result1 != 1) {
             throw new CustomException("이력서 저장에 문제가 생겼네요1", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         int resumeIdDb = resumeInsertReqBirthdayTimestampDto.getResumeId();
-        // System.out.println("resumeId" + resumeIdDb);
-        int result2 = personRepository.updateById(pInfoId, resumeInsertReqBirthdayTimestampDto.getName(),
-                resumeInsertReqBirthdayTimestampDto.getPhone(),
-                resumeInsertReqBirthdayTimestampDto.getAddress(),
-                resumeInsertReqBirthdayTimestampDto.getBirthday());
-        if (result2 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요2", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
 
-        int result3 = skillRepository.insert(0, 0, resumeIdDb,
+        int result2 = skillRepository.insert(0, 0, resumeIdDb,
                 resumeInsertReqBirthdayTimestampDto.getSkills());
-        if (result3 != 1) {
+        if (result2 != 1) {
             throw new CustomException("이력서 저장에 문제가 생겼네요3", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -92,19 +77,14 @@ public class ResumeService {
 
     public void updateById(int id, int pInfoId, ResumeUpdateReqDto resumeUpdateReqDto) {
         String uuidImageName = PathUtil.writeImageFile(resumeUpdateReqDto.getProfile());
-        Timestamp birthday = CvTimestamp.convertStringToTimestamp(resumeUpdateReqDto.getBirthday());
 
         ResumeUpdateReqBirthdayTimestampDto resumeUpdateReqBirthdayTimestampDto = new ResumeUpdateReqBirthdayTimestampDto(
                 resumeUpdateReqDto.getTitle(),
                 resumeUpdateReqDto.getPortfolio(),
                 resumeUpdateReqDto.isPublish(),
                 resumeUpdateReqDto.getSelfIntro(),
-                resumeUpdateReqDto.getName(),
-                resumeUpdateReqDto.getPhone(),
-                resumeUpdateReqDto.getAddress(),
                 resumeUpdateReqDto.getSkills());
         resumeUpdateReqBirthdayTimestampDto.setProfile(uuidImageName);
-        resumeUpdateReqBirthdayTimestampDto.setBirthday(birthday);
 
         int result1 = resumeRepository.updateById(id, pInfoId,
                 resumeUpdateReqBirthdayTimestampDto.getProfile(), resumeUpdateReqBirthdayTimestampDto.getTitle(),
