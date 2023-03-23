@@ -49,10 +49,8 @@ public class IndexController {
     @PostMapping("/companyLogin")
     public @ResponseBody ResponseEntity<?> companyLogin(LoginCompanyReqDto loginCompanyReqDto) {
 
-        User principal = companyService.기업로그인(loginCompanyReqDto);
-        session.setAttribute("principal", principal);
-        return new ResponseEntity<>(new ResponseDto<>(1, "기업 로그인 완료", principal),
-                HttpStatus.OK);
+        ResponseEntity<?> response = companyService.기업로그인(loginCompanyReqDto);
+        return new ResponseEntity<>(response.getBody(), response.getHeaders(), response.getStatusCode());
     }
 
     @PostMapping("/companyJoin")

@@ -11,20 +11,21 @@ import java.util.Set;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendScrapDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
-
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto.UserDto;
-
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
@@ -39,6 +40,7 @@ import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
+import shop.mtcoding.miniproject2.util.JwtProvider;
 import shop.mtcoding.miniproject2.util.PathUtil;
 
 @Service
@@ -154,9 +156,8 @@ public class CompanyService {
         }
     }
 
-
     @Transactional
-    public User 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
+    public ResponseEntity<?> 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
@@ -171,9 +172,17 @@ public class CompanyService {
             throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
 
-        return principal;
-    }
+        String jwt = JwtProvider.create(principal);
 
+        // header에 담기
+        ResponseEntity<Object> responseEntity = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+                HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(responseEntity.getHeaders());
+        headers.add(JwtProvider.HEADER, jwt);
+        session.setAttribute("jwt", jwt);
+        return responseEntity;
+    }
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {
