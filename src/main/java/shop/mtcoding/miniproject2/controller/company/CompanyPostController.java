@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.controller.company;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PostService;
 
 @RequestMapping("/company")
@@ -38,6 +41,7 @@ public class CompanyPostController {
     @GetMapping("/posts")
     public ResponseEntity<?> posts() {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
 
         List<PostTitleRespDto> postTitleList = postService.기업공고리스트(principal.getCInfoId());
 
@@ -55,7 +59,7 @@ public class CompanyPostController {
 
     @PutMapping("/posts/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdatePost(@PathVariable int id,
-            @RequestBody PostUpdateReqDto postUpdateReqDto) {
+            @Valid @RequestBody PostUpdateReqDto postUpdateReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         // 유효성 테스트
@@ -66,8 +70,9 @@ public class CompanyPostController {
     }
 
     @PostMapping("/posts")
-    public ResponseEntity<?> postSave(PostSaveReqDto postSaveReqDto) {
+    public ResponseEntity<?> postSave(@Valid @RequestBody PostSaveReqDto postSaveReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
 
         PostSaveDto post = postService.공고등록(postSaveReqDto, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 등록 완료", post), HttpStatus.CREATED);

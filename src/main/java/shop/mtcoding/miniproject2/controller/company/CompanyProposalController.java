@@ -1,6 +1,7 @@
 package shop.mtcoding.miniproject2.controller.company;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,19 +31,24 @@ public class CompanyProposalController {
     private final PersonProposalService personProposalService;
     private final ProposalPassService proposalPassService;
 
+    // 합불
     @PutMapping("/proposal/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdateResume(@PathVariable int id,
-            @RequestBody CompanyProposalStatusReqDto statusCode) {
+            @Valid @RequestBody CompanyProposalStatusReqDto statusCode) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        PersonProposal dto = personProposalService.제안수정하기(id, principal.getCInfoId(), statusCode.getStatusCode());
+        PersonProposal dto = personProposalService.제안수정하기(id, userPS.getCInfoId(),
+                Integer.parseInt(statusCode.getStatusCode()));
+
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 확인 완료", dto), HttpStatus.OK);
     }
 
+    // 합격 시 메세지
     @PostMapping("proposalPass/{id}")
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
-            @RequestBody ProposalPassMessageReqDto message) {
+           @Valid @RequestBody ProposalPassMessageReqDto message) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
 
         ProposalPass dto = proposalPassService.메시지전달하기(id, principal.getCInfoId(), message.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(1, "메시지 전달 성공", dto), HttpStatus.CREATED);

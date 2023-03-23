@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.controller.person;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -67,7 +68,7 @@ public class PersonResumeController {
     }
 
     @PostMapping("/resumes")
-    public ResponseEntity<?> resumeInsert(@RequestBody ResumeInsertReqDto resumeInsertReqDto) {
+    public ResponseEntity<?> resumeInsert(@Valid @RequestBody ResumeInsertReqDto resumeInsertReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         // 유효성 테스트
@@ -77,8 +78,10 @@ public class PersonResumeController {
     }
 
     @PutMapping("/resumes/{id}")
-    public ResponseEntity<?> resumeUpdate(@PathVariable int id, @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
+    public ResponseEntity<?> resumeUpdate(@PathVariable int id,
+            @Valid @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         int pInfoId = principal.getPInfoId();
 
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);

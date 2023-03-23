@@ -1,5 +1,7 @@
 package shop.mtcoding.miniproject2.dto.Resume;
 
+import javax.validation.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,12 +10,16 @@ public class ResumeReq {
     @Getter
     @Setter
     public static class ResumeInsertReqDto {
-        private Integer id;
+        @NotEmpty(message = "프로필을 확인해주세요")
         private String profile;
+        @NotEmpty(message = "이력서 이름을 확인해주세요")
         private String title;
+        @NotEmpty(message = "포트폴리오를 확인해주세요")
         private String portfolio;
         private boolean publish;
+        @NotEmpty(message = "자기소개서를 확인해주세요")
         private String selfIntro;
+        @NotEmpty(message = "스킬들을 확인해주세요")
         private String skills;
     }
 
@@ -65,11 +71,16 @@ public class ResumeReq {
     @Getter
     @Setter
     public static class ResumeUpdateReqDto {
+        @NotEmpty(message = "프로필을 확인해주세요")
         private String profile;
+        @NotEmpty(message = "이력서 이름을 확인해주세요")
         private String title;
+        @NotEmpty(message = "포트폴리오를 확인해주세요")
         private String portfolio;
         private boolean publish;
+        @NotEmpty(message = "자기소개서를 확인해주세요")
         private String selfIntro;
+        @NotEmpty(message = "스킬들을 확인해주세요")
         private String skills;
     }
 }

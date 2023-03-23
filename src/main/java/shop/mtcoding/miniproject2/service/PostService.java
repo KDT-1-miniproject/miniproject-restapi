@@ -64,6 +64,7 @@ public class PostService {
                 skills += ",";
             skills += string;
         }
+
         int result1 = skillRepository.insert(0, post.getId(), 0, skills);
         if (result1 != 1) {
             throw new CustomApiException("공고 등록 실패", HttpStatus.INTERNAL_SERVER_ERROR);

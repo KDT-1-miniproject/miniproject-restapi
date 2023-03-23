@@ -16,7 +16,8 @@ import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 
@@ -29,12 +30,15 @@ public class PersonProposalController {
     private final PersonProposalService personProposalService;
 
     @PostMapping("/detail/{id}/resume")
-    public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, int selectedResume) {
+    public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, Integer selectedResume) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-
+        
+        if (selectedResume == null) {
+            throw new CustomApiException("이력서가 선택되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
+   
         PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
                                                                                                      // 대기중)
-
         return new ResponseEntity<>(new ResponseDto<>(1, "제안 성공", dto), HttpStatus.OK);
     }
 

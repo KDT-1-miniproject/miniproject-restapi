@@ -1,6 +1,7 @@
 package shop.mtcoding.miniproject2.controller.person;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class PersonController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(@RequestBody PersonInfoInDto personInfoInDto) {
+    public ResponseEntity<?> updateInfo(@Valid @RequestBody PersonInfoInDto personInfoInDto) {
 
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 

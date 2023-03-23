@@ -29,7 +29,7 @@ import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendInte
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.PersonScrap;
@@ -63,14 +63,14 @@ public class PersonService {
         Person samePerson = personRepository.findByPersonNameAndEmail(joinPersonReqDto.getName(),
                 joinPersonReqDto.getEmail());
         if (samePerson != null) {
-            throw new CustomException("이미 가입되어 있는 회원입니다.");
+            throw new CustomApiException("이미 가입되어 있는 회원입니다.");
         }
 
         Person person = new Person();
         person.setName(joinPersonReqDto.getName());
         int result = personRepository.insert(person); // joinReqDto(인수)를 매핑
         if (result != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // Hash + Salt 다이제스트
         String salt = EncryptionUtils.getSalt();
@@ -81,12 +81,12 @@ public class PersonService {
 
         int result2 = userRepository.insert(user);
         if (result2 != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         int result3 = skillRepository.insert(person.getId(), 0, 0, joinPersonReqDto.getSkills());
         if (result3 != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Person personPS = personRepository.findById(person.getId());
@@ -103,7 +103,7 @@ public class PersonService {
     public ResponseEntity<Object> 개인로그인(LoginPersonReqDto loginPersonReqDto) {
         User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
         if (userCheck == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
@@ -113,7 +113,7 @@ public class PersonService {
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
                 loginPersonReqDto.getPassword());
         if (principal == null) {
-            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
         // jwt 생성
         String jwt = JwtProvider.create(principal);

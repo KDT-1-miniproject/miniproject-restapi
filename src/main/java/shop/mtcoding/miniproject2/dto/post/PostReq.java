@@ -2,6 +2,8 @@ package shop.mtcoding.miniproject2.dto.post;
 
 import java.sql.Timestamp;
 
+import javax.validation.constraints.NotEmpty;
+
 import lombok.Getter;
 import lombok.Setter;
 import shop.mtcoding.miniproject2.model.Post;
@@ -16,15 +18,25 @@ public class PostReq {
     @Getter
     @Setter
     public static class PostSaveReqDto {
+        @NotEmpty(message = "공고 제목을 확인해주세요")
         private String title;
-        private Integer career;
+        @NotEmpty(message = "경력을 확인해주세요")
+        private String career;
+        @NotEmpty(message = "연봉을 확인해주세요")
         private String pay;
+        @NotEmpty(message = "근무조건을 확인해주세요")
         private String condition;
+        @NotEmpty(message = "출근시간을 확인해주세요")
         private String startHour;
+        @NotEmpty(message = "퇴근시간을 확인해주세요")
         private String endHour;
+        @NotEmpty(message = "마감시간을 확인해주세요")
         private String deadline;
+        @NotEmpty(message = "회사소개를 확인해주세요")
         private String cIntro;
+        @NotEmpty(message = "업무소개를 확인해주세요")
         private String jobIntro;
+        @NotEmpty(message = "스킬들을 확인해주세요")
         private String[] skills;
     }
 
@@ -43,7 +55,6 @@ public class PostReq {
         private String jobIntro;
         // private SkillsDto skill;
         private String skills;
-        private Timestamp createdAt;
 
         // @Getter
         // @Setter
@@ -70,7 +81,7 @@ public class PostReq {
             this.cIntro = post.getCIntro();
             this.jobIntro = post.getJobIntro();
             this.skills = skills;
-            this.createdAt = post.getCreatedAt();
+
         }
 
     }
@@ -78,15 +89,25 @@ public class PostReq {
     @Getter
     @Setter
     public static class PostUpdateReqDto {
+        @NotEmpty(message = "공고 제목을 확인해주세요")
         private String title;
-        private Integer career;
+        @NotEmpty(message = "경력을 확인해주세요")
+        private String career;
+        @NotEmpty(message = "연봉을 확인해주세요")
         private String pay;
+        @NotEmpty(message = "근무조건을 확인해주세요")
         private String condition;
+        @NotEmpty(message = "출근시간을 확인해주세요")
         private String startHour;
+        @NotEmpty(message = "퇴근시간을 확인해주세요")
         private String endHour;
+        @NotEmpty(message = "마감시간을 확인해주세요")
         private String deadline;
+        @NotEmpty(message = "회사소개를 확인해주세요")
         private String comIntro;
+        @NotEmpty(message = "업무소개를 확인해주세요")
         private String jobIntro;
+        @NotEmpty(message = "스킬들을 확인해주세요")
         private String skills;
     }
 
