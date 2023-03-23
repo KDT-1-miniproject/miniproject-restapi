@@ -11,11 +11,14 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
@@ -39,6 +42,7 @@ import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
+import shop.mtcoding.miniproject2.util.JwtProvider;
 
 @RequiredArgsConstructor
 @Service
@@ -95,13 +99,14 @@ public class PersonService {
     }
 
     @Transactional
-    public User 개인로그인(LoginPersonReqDto loginPersonReqDto) {
+    public ResponseEntity<Object> 개인로그인(LoginPersonReqDto loginPersonReqDto) {
         User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
         if (userCheck == null) {
             throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
+
         // DB Salt + 입력된 password 해싱
         loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
         User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
@@ -109,8 +114,19 @@ public class PersonService {
         if (principal == null) {
             throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
         }
+        // jwt 생성
+        String jwt = JwtProvider.create(principal);
 
-        return principal;
+        // header에 담기
+        ResponseEntity<Object> responseEntity = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+                HttpStatus.OK);
+        HttpHeaders headers = new HttpHeaders();
+        headers.putAll(responseEntity.getHeaders());
+        headers.add(JwtProvider.HEADER, jwt);
+
+        session.setAttribute("jwt", jwt);
+
+        return responseEntity;
     }
 
     @Transactional

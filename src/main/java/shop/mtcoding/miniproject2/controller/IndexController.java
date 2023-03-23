@@ -49,8 +49,8 @@ public class IndexController {
     @PostMapping("/companyLogin")
     public @ResponseBody ResponseEntity<?> companyLogin(LoginCompanyReqDto loginCompanyReqDto) {
 
-        ResponseEntity<?> response = companyService.기업로그인(loginCompanyReqDto);
-        return new ResponseEntity<>(response.getBody(), response.getHeaders(), response.getStatusCode());
+        ResponseEntity<?> responseEntity = companyService.기업로그인(loginCompanyReqDto);
+        return responseEntity;
     }
 
     @PostMapping("/companyJoin")
@@ -63,11 +63,9 @@ public class IndexController {
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
 
-        User principal = personService.개인로그인(loginPersonReqDto);
+        ResponseEntity<?> response = personService.개인로그인(loginPersonReqDto);
 
-        session.setAttribute("principal", principal);
-        return new ResponseEntity<>(new ResponseDto<>(1, "개인 로그인 완료", principal),
-                HttpStatus.OK);
+        return new ResponseEntity<>(response.getBody(), response.getHeaders(), response.getStatusCode());
     }
 
     @PostMapping("/personJoin")

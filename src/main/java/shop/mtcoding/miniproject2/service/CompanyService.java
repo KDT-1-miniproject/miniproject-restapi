@@ -175,11 +175,15 @@ public class CompanyService {
         String jwt = JwtProvider.create(principal);
 
         // header에 담기
-        ResponseEntity<Object> responseEntity = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+        ResponseEntity<Object> response = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
                 HttpStatus.OK);
+
         HttpHeaders headers = new HttpHeaders();
-        headers.putAll(responseEntity.getHeaders());
+        headers.putAll(response.getHeaders());
         headers.add(JwtProvider.HEADER, jwt);
+
+        ResponseEntity<Object> responseEntity = new ResponseEntity<>(response.getBody(), headers,
+                response.getStatusCode());
         session.setAttribute("jwt", jwt);
         return responseEntity;
     }
