@@ -10,7 +10,7 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.Skill;
@@ -43,14 +43,14 @@ public class ResumeService {
 
         int result1 = resumeRepository.insert(resumeInsertReqBirthdayTimestampDto);
         if (result1 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요1", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요1", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         int resumeIdDb = resumeInsertReqBirthdayTimestampDto.getResumeId();
 
         int result2 = skillRepository.insert(0, 0, resumeIdDb,
                 resumeInsertReqBirthdayTimestampDto.getSkills());
         if (result2 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요3", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요3", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // skill filter 삭제 후 다시 저장
@@ -85,7 +85,7 @@ public class ResumeService {
                 resumeUpdateReqBirthdayTimestampDto.isPublish(), resumeUpdateReqBirthdayTimestampDto.getPortfolio(),
                 resumeUpdateReqBirthdayTimestampDto.getSelfIntro());
         if (result1 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         Skill skillPS = skillRepository.findByResumeId(id);
@@ -93,7 +93,7 @@ public class ResumeService {
                 resumeUpdateReqBirthdayTimestampDto.getSkills(),
                 skillPS.getCreatedAt());
         if (result3 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // skill filter 삭제 후 다시 저장

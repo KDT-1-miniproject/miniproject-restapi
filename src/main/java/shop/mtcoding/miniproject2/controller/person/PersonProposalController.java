@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
@@ -29,12 +29,14 @@ public class PersonProposalController {
     private final PersonProposalService personProposalService;
 
     @PostMapping("/detail/{id}/resume")
-    public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, int selectedResume) {
+    public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, Integer selectedResume) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
-
+        if (selectedResume == null) {
+            throw new CustomApiException("이력서가 선택되지 않았습니다.", HttpStatus.BAD_REQUEST);
+        }
         // post아이디는 여기 id! + resumeid는 int selectedResume
         PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
                                                                                                      // 대기중)

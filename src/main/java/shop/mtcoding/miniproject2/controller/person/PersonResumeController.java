@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.controller.person;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,6 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.User;
@@ -75,10 +75,10 @@ public class PersonResumeController {
     }
 
     @PostMapping("/resumes")
-    public ResponseEntity<?> resumeInsert(@RequestBody ResumeInsertReqDto resumeInsertReqDto) {
+    public ResponseEntity<?> resumeInsert(@Valid @RequestBody ResumeInsertReqDto resumeInsertReqDto) {
         User principal = (User) session.getAttribute("principal");
         if (principal == null) {
-            throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
         // 유효성 테스트
         int pInfoId = principal.getPInfoId();
@@ -87,7 +87,8 @@ public class PersonResumeController {
     }
 
     @PutMapping("/resumes/{id}")
-    public ResponseEntity<?> resumeUpdate(@PathVariable int id, @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
+    public ResponseEntity<?> resumeUpdate(@PathVariable int id,
+            @Valid @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
         User principal = (User) session.getAttribute("principal");
         int pInfoId = principal.getPInfoId();
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);

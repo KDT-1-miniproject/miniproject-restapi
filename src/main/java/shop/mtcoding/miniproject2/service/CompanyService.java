@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendScrapDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
@@ -27,7 +28,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto.
 
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Company;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.CompanyScrap;
@@ -42,28 +43,16 @@ import shop.mtcoding.miniproject2.util.EncryptionUtils;
 import shop.mtcoding.miniproject2.util.PathUtil;
 
 @Service
+@RequiredArgsConstructor
 public class CompanyService {
 
-    @Autowired
-    private CompanyRepository companyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private HttpSession session;
-
-    @Autowired
-    private ResumeRepository resumeRepository;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private SkillFilterRepository skillFilterRepository;
-
-    @Autowired
-    private CompanyScrapRepository companyScrapRepository;
+    private final CompanyRepository companyRepository;
+    private final UserRepository userRepository;
+    private final HttpSession session;
+    private final ResumeRepository resumeRepository;
+    private final PostRepository postRepository;
+    private final SkillFilterRepository skillFilterRepository;
+    private final CompanyScrapRepository companyScrapRepository;
 
     @Transactional
     public JoinCompanyRespDto 기업회원가입(JoinCompanyReqDto joinCompanyReqDto) {
@@ -72,7 +61,7 @@ public class CompanyService {
                 joinCompanyReqDto.getNumber());
 
         if (sameCompany != null) {
-            throw new CustomException("이미 가입되어 있는 기업입니다.");
+            throw new CustomApiException("이미 가입되어 있는 기업입니다.");
         }
         Company company = new Company();
         company.setName(joinCompanyReqDto.getName());
@@ -83,7 +72,7 @@ public class CompanyService {
         int result = companyRepository.insert(company);
 
         if (result != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         String salt = EncryptionUtils.getSalt();
         joinCompanyReqDto
@@ -93,7 +82,7 @@ public class CompanyService {
 
         int result2 = userRepository.insert(user);
         if (result2 != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         User userPS = userRepository.findById(user.getId());
@@ -140,7 +129,7 @@ public class CompanyService {
         int result = companyRepository.updateById(principal.getCInfoId(), companyPS.getLogo(), companyPS.getName(),
                 companyPS.getNumber(), companyInfoInDto.getBossName(), companyInfoInDto.getAddress(),
                 companyInfoInDto.getManagerName(),
-                companyInfoInDto.getManagerPhone(), companyInfoInDto.getSize(), cyear,
+                companyInfoInDto.getManagerPhone(), Integer.parseInt(companyInfoInDto.getSize()), cyear,
                 companyPS.getCreatedAt());
 
         int result2 = userRepository.updateById(principal.getId(), principal.getEmail(), password,
@@ -154,12 +143,11 @@ public class CompanyService {
         }
     }
 
-
     @Transactional
     public User 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
         User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
         if (userCheck == null) {
-            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
         // DB Salt 값
         String salt = userCheck.getSalt();
@@ -168,12 +156,11 @@ public class CompanyService {
         User principal = userRepository.findCompanyByEmailAndPassword(loginCompanyReqDto.getEmail(),
                 loginCompanyReqDto.getPassword());
         if (principal == null) {
-            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다.");
         }
 
         return principal;
     }
-
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {

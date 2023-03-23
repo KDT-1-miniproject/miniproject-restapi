@@ -31,7 +31,7 @@ public class Post {
 
         this.title = postSaveReqDto.getTitle();
         this.cInfoId = cInfoId;
-        this.career = postSaveReqDto.getCareer();
+        this.career = Integer.parseInt(postSaveReqDto.getCareer());
         this.pay = postSaveReqDto.getPay();
         this.condition = postSaveReqDto.getCondition();
         this.startHour = postSaveReqDto.getStartHour();
@@ -45,7 +45,7 @@ public class Post {
     public static Post postSetting(Post postPS, PostUpdateReqDto postUpdateReqDto, int cInfoId) {
         postPS.title = postUpdateReqDto.getTitle();
         postPS.cInfoId = cInfoId;
-        postPS.career = postUpdateReqDto.getCareer();
+        postPS.career = Integer.parseInt(postUpdateReqDto.getCareer());
         postPS.pay = postUpdateReqDto.getPay();
         postPS.condition = postUpdateReqDto.getCondition();
         postPS.startHour = postUpdateReqDto.getStartHour();

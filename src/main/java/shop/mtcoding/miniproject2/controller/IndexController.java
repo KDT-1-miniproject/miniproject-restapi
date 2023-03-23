@@ -1,6 +1,7 @@
 package shop.mtcoding.miniproject2.controller;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,7 +48,7 @@ public class IndexController {
     // personLoginForm, personJoinForm1, personJoinForm2
 
     @PostMapping("/companyLogin")
-    public @ResponseBody ResponseEntity<?> companyLogin(LoginCompanyReqDto loginCompanyReqDto) {
+    public @ResponseBody ResponseEntity<?> companyLogin(@Valid LoginCompanyReqDto loginCompanyReqDto) {
 
         User principal = companyService.기업로그인(loginCompanyReqDto);
         session.setAttribute("principal", principal);
@@ -56,14 +57,14 @@ public class IndexController {
     }
 
     @PostMapping("/companyJoin")
-    public @ResponseBody ResponseEntity<?> companyJoin(JoinCompanyReqDto joinCompanyReqDto) {
+    public @ResponseBody ResponseEntity<?> companyJoin(@Valid JoinCompanyReqDto joinCompanyReqDto) {
         JoinCompanyRespDto dto = companyService.기업회원가입(joinCompanyReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 회원가입 완료", dto),
                 HttpStatus.OK);
     }
 
     @PostMapping("/personLogin")
-    public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
+    public @ResponseBody ResponseEntity<?> personLogin(@Valid LoginPersonReqDto loginPersonReqDto) {
 
         User principal = personService.개인로그인(loginPersonReqDto);
 
@@ -73,7 +74,7 @@ public class IndexController {
     }
 
     @PostMapping("/personJoin")
-    public @ResponseBody ResponseEntity<?> personJoin(JoinPersonReqDto joinPersonReqDto) {
+    public @ResponseBody ResponseEntity<?> personJoin(@Valid JoinPersonReqDto joinPersonReqDto) {
 
         JoinPersonRespDto dto = personService.개인회원가입(joinPersonReqDto);
 
