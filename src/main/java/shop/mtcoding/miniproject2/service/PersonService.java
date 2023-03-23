@@ -48,15 +48,9 @@ public class PersonService {
     private final PersonRepository personRepository;
     private final HttpSession session;
     private final UserRepository userRepository;
-
-    @Autowired
-    private PostRepository postRepository;
-
-    @Autowired
-    private SkillFilterRepository skillFilterRepository;
-
-    @Autowired
-    private PersonScrapRepository personScrapRepository;
+    private final PostRepository postRepository;
+    private final SkillFilterRepository skillFilterRepository;
+    private final PersonScrapRepository personScrapRepository;
 
     @Transactional
     public JoinPersonRespDto 개인회원가입(JoinPersonReqDto joinPersonReqDto) {

@@ -1,30 +1,24 @@
 package shop.mtcoding.miniproject2.service;
 
-import java.sql.Timestamp;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.Person;
-import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.Skill;
 import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
-import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.PathUtil;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class ResumeService {

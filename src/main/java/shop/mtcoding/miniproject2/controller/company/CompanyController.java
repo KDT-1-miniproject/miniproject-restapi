@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,6 @@ import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.User;
-import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.service.CompanyService;
 
 @RequestMapping("/company")
@@ -27,7 +25,6 @@ import shop.mtcoding.miniproject2.service.CompanyService;
 @RestController
 public class CompanyController {
     private final HttpSession session;
-    private final UserRepository userRepository;
     private final CompanyRepository companyRepository;
     private final CompanyService companyService;
 

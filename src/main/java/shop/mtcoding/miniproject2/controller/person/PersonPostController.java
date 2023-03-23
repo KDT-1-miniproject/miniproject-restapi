@@ -18,12 +18,6 @@ import shop.mtcoding.miniproject2.dto.post.PostResp.PersonPostDetailResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.CompanyRepository;
-import shop.mtcoding.miniproject2.model.PersonScrapRepository;
-import shop.mtcoding.miniproject2.model.PostRepository;
-import shop.mtcoding.miniproject2.model.ResumeRepository;
-import shop.mtcoding.miniproject2.model.SkillFilterRepository;
-import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonService;
 import shop.mtcoding.miniproject2.service.PostService;
@@ -33,12 +27,6 @@ import shop.mtcoding.miniproject2.service.PostService;
 @RestController
 public class PersonPostController {
     private final HttpSession session;
-    private final ResumeRepository resumeRepository;
-    private final PostRepository postRepository;
-    private final SkillRepository skillRepository;
-    private final CompanyRepository companyRepository;
-    private final SkillFilterRepository skillFilterRepository;
-    private final PersonScrapRepository personScrapRepository;
     private final PostService postService;
     private final PersonService personService;
 
@@ -74,7 +62,6 @@ public class PersonPostController {
             throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.FORBIDDEN);
         }
         List<PostRecommendIntegerRespDto> postListDto = personService.recommend();
-
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 추천", postListDto), HttpStatus.OK);
     }

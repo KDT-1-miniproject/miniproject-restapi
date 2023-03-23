@@ -26,9 +26,6 @@ import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.CompanyRepository;
-import shop.mtcoding.miniproject2.model.PostRepository;
-import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PostService;
 

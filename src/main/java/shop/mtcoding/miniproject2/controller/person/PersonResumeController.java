@@ -22,10 +22,8 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.PersonRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
-import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.ResumeService;
 
@@ -35,8 +33,6 @@ import shop.mtcoding.miniproject2.service.ResumeService;
 public class PersonResumeController {
     private final ResumeRepository resumeRepository;
     private final ResumeService resumeService;
-    private final PersonRepository personRepository;
-    private final SkillRepository skillRepository;
     private final HttpSession session;
 
     // saveResumeForm updateResume

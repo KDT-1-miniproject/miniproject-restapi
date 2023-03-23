@@ -17,11 +17,8 @@ import shop.mtcoding.miniproject2.dto.person.PersonInfoOutDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Person;
 import shop.mtcoding.miniproject2.model.PersonRepository;
-import shop.mtcoding.miniproject2.model.SkillRepository;
 import shop.mtcoding.miniproject2.model.User;
-import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.service.PersonService;
-import shop.mtcoding.miniproject2.util.EncryptionUtils;
 
 @RequestMapping("/person")
 @RequiredArgsConstructor
@@ -30,8 +27,6 @@ public class PersonController {
     private final HttpSession session;
     private final PersonService personService;
     private final PersonRepository personRepository;
-    private final UserRepository userRepository;
-    private final SkillRepository skillRepository;
 
     @GetMapping("/info")
     public ResponseEntity<?> info() {

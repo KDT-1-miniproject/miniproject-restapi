@@ -2,29 +2,23 @@ package shop.mtcoding.miniproject2.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
-import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
-import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
-import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
 import shop.mtcoding.miniproject2.dto.customerService.CustomerServDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
-import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.UserRepository;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
+import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.CSService;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonService;
@@ -33,7 +27,6 @@ import shop.mtcoding.miniproject2.service.PersonService;
 @RestController
 public class IndexController {
 
-    private final UserRepository userRepository;
     private final CSService csService;
     private final HttpSession session;
     private final PersonService personService;

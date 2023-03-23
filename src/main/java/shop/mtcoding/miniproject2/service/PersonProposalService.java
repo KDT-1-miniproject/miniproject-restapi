@@ -1,9 +1,5 @@
 package shop.mtcoding.miniproject2.service;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -18,17 +14,13 @@ import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyG
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto.CompanyProposalListRespDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalDetailRespDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
-import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalStringListRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Company;
 import shop.mtcoding.miniproject2.model.CompanyRepository;
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.PersonProposalRepository;
 import shop.mtcoding.miniproject2.model.Post;
 import shop.mtcoding.miniproject2.model.PostRepository;
-import shop.mtcoding.miniproject2.model.ProposalPass;
-import shop.mtcoding.miniproject2.model.ProposalPassRepository;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 
@@ -41,7 +33,6 @@ public class PersonProposalService {
     private final PostRepository postRepository;
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
-    private final ProposalPassRepository proposalPassRepository;
 
     public PersonProposal 제안수정하기(int proposalId, int cInfoId, int status) {
 

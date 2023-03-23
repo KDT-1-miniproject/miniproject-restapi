@@ -17,8 +17,6 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.PersonProposal;
-import shop.mtcoding.miniproject2.model.PersonProposalRepository;
-import shop.mtcoding.miniproject2.model.ProposalPassRepository;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 
@@ -28,8 +26,6 @@ import shop.mtcoding.miniproject2.service.PersonProposalService;
 public class PersonProposalController {
 
     private final HttpSession session;
-    private final PersonProposalRepository personProposalRepository;
-    private final ProposalPassRepository proposalPassRepository;
     private final PersonProposalService personProposalService;
 
     @PostMapping("/detail/{id}/resume")

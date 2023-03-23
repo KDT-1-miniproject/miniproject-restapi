@@ -1,7 +1,6 @@
 package shop.mtcoding.miniproject2.dto.Resume;
 
 import java.sql.Timestamp;
-import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;

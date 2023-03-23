@@ -1,12 +1,6 @@
 package shop.mtcoding.miniproject2.controller.company;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -20,37 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeDetailOutDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendDto;
-import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecommendScrapDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.model.CompanyScrap;
-import shop.mtcoding.miniproject2.model.CompanyScrapRepository;
-import shop.mtcoding.miniproject2.model.PostRepository;
-import shop.mtcoding.miniproject2.model.ResumeRepository;
-import shop.mtcoding.miniproject2.model.SkillFilter;
-import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.User;
-
-import shop.mtcoding.miniproject2.service.PersonProposalService;
-import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.service.CompanyService;
-
+import shop.mtcoding.miniproject2.service.PersonProposalService;
 
 @RequestMapping("/company")
 @RequiredArgsConstructor
 @RestController
 public class CompanyResumeController {
     private final HttpSession session;
-    private final PostRepository postRepository;
-    private final ResumeRepository resumeRepository;
-    private final CompanyScrapRepository companyScrapRepository;
-    private final SkillFilterRepository skillFilterRepository;
     private final PersonProposalService personProposalService;
     private final CompanyService companyService;
-
 
     @GetMapping("/resumes")
     public ResponseEntity<?> resume() {

@@ -1,7 +1,6 @@
 package shop.mtcoding.miniproject2.util;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.multipart.MultipartFile;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 
 import java.nio.file.Files;

@@ -2,7 +2,6 @@ package shop.mtcoding.miniproject2.model;
 
 import java.sql.Timestamp;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
