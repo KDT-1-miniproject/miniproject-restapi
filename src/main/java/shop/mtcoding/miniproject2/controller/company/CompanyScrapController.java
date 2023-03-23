@@ -37,9 +37,9 @@ public class CompanyScrapController {
         if (principal == null) {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
+
         List<CompanyScrapOutDto> cScrapPS = companyScrapRepository.findByIdResumeAndSkillFilter(principal.getCInfoId());
 
-        // model.addAttribute("scrapList", cScrapArrList);
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 스크랩 목록", cScrapPS), HttpStatus.OK);
     }
 
@@ -60,7 +60,6 @@ public class CompanyScrapController {
             throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
         CompanyScrap cScrapPS = companyScrapService.insert(id, principal.getCInfoId());
-
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", cScrapPS), HttpStatus.OK);
     }
 }

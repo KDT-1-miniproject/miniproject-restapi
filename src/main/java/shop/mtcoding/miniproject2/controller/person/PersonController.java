@@ -49,15 +49,8 @@ public class PersonController {
         if (PersonPS == null) {
             throw new CustomApiException("정보를 찾을 수 없습니다!");
         }
-        // 유효성 테스트
 
-        System.out.println("테스트1 : " + personInfoInDto);
-        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
-        if (!pw.equals(principal.getPassword())) {
-            throw new CustomApiException("비밀번호가 일치하지 않습니다!");
-        }
-
-        personService.update(personInfoInDto, principal.getPInfoId());
+        personService.update(personInfoInDto);
 
         PersonInfoOutDto pInfoDto = personRepository.findByIdWithSkills(principal.getPInfoId());
 

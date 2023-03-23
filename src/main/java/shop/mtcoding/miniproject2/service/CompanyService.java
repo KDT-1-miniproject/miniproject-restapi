@@ -67,8 +67,12 @@ public class CompanyService {
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
 
-        String password;
+        String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), principal.getSalt());
+        if (!pw.equals(principal.getPassword())) {
+            throw new CustomApiException("비밀번호가 일치하지 않습니다!");
+        }
 
+        String password;
         if (companyInfoInDto.getPassword() == null || companyInfoInDto.getPassword().isEmpty()) {
             password = userPS.getPassword();
         } else {
