@@ -127,7 +127,6 @@ public class PersonService {
 
         ResponseEntity<Object> responseEntity = new ResponseEntity<>(response.getBody(), headers,
                 response.getStatusCode());
-        session.setAttribute("jwt", jwt);
 
         return responseEntity;
     }

@@ -30,6 +30,7 @@ public class CompanyInfoOutDto {
         private String email;
         @JsonIgnore
         private String password;
+        @JsonIgnore
         private String salt;
         private Integer pInfoId;
         private Integer cInfoId;
