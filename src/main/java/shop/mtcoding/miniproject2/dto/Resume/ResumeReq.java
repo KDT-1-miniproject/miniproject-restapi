@@ -8,6 +8,7 @@ public class ResumeReq {
     @Getter
     @Setter
     public static class ResumeInsertReqDto {
+        private Integer id;
         private String profile;
         private String title;
         private String portfolio;

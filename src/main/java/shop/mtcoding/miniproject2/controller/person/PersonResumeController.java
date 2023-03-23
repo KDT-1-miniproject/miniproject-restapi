@@ -91,7 +91,7 @@ public class PersonResumeController {
     }
 
     @PutMapping("/resumes/{id}")
-    public ResponseEntity<?> resumeUpdate(@PathVariable int id, ResumeUpdateReqDto resumeUpdateReqDto) {
+    public ResponseEntity<?> resumeUpdate(@PathVariable int id, @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
         User principal = (User) session.getAttribute("principal");
         int pInfoId = principal.getPInfoId();
         resumeService.updateById(id, pInfoId, resumeUpdateReqDto);

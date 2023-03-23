@@ -1,6 +1,7 @@
 package shop.mtcoding.miniproject2.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -91,7 +92,7 @@ public class PersonResumeControllerTest {
         // x-www-url-encoded -> Json
         String requestBody = om.writeValueAsString(resumeUpdateReqDto);
         ResultActions resultActions = mvc
-                .perform(post("/person/resumes")
+                .perform(put("/person/resumes/1")
                         .content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)
                         .session(mockSession));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
