@@ -17,6 +17,8 @@ import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalReq.CompanyProposalStatusReqDto;
 import shop.mtcoding.miniproject2.dto.proposalPass.ProposalPassReq.ProposalPassMessageReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
+import shop.mtcoding.miniproject2.model.PersonProposal;
+import shop.mtcoding.miniproject2.model.ProposalPass;
 import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 import shop.mtcoding.miniproject2.service.ProposalPassService;
@@ -29,16 +31,16 @@ public class CompanyProposalController {
     private final PersonProposalService personProposalService;
     private final ProposalPassService proposalPassService;
 
-    @PutMapping("/company/proposal/{id}")
+    @PutMapping("/proposal/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdateResume(@PathVariable int id,
             @RequestBody CompanyProposalStatusReqDto statusCode) {
         User userPS = (User) session.getAttribute("principal");
 
-        personProposalService.제안수정하기(id, userPS.getCInfoId(), statusCode.getStatusCode());
-        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 확인 완료", null), HttpStatus.OK);
+        PersonProposal dto = personProposalService.제안수정하기(id, userPS.getCInfoId(), statusCode.getStatusCode());
+        return new ResponseEntity<>(new ResponseDto<>(1, "이력서 확인 완료", dto), HttpStatus.OK);
     }
 
-    @PostMapping("/company/proposalPass/{id}")
+    @PostMapping("proposalPass/{id}")
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
             @RequestBody ProposalPassMessageReqDto message) {
         User userPS = (User) session.getAttribute("principal");
@@ -46,7 +48,7 @@ public class CompanyProposalController {
             throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        proposalPassService.메시지전달하기(id, userPS.getCInfoId(), message.getMessage());
-        return new ResponseEntity<>(new ResponseDto<>(1, "메시지 전달 성공", null), HttpStatus.CREATED);
+        ProposalPass dto = proposalPassService.메시지전달하기(id, userPS.getCInfoId(), message.getMessage());
+        return new ResponseEntity<>(new ResponseDto<>(1, "메시지 전달 성공", dto), HttpStatus.CREATED);
     }
 }

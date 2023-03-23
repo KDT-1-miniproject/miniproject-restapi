@@ -17,7 +17,7 @@
         select * from proposal_pass_tb where p_info_id = #{pInfoId}
     </select> 
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into proposal_pass_tb (p_info_id, p_proposal_id, comment, created_at) 
             values(#{pInfoId}, #{pProposalId}, #{comment},now())
     </insert>    

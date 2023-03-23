@@ -34,7 +34,7 @@ public class PersonProposalService {
     private final ResumeRepository resumeRepository;
     private final CompanyRepository companyRepository;
 
-    public void 제안수정하기(int proposalId, int cInfoId, int status) {
+    public PersonProposal 제안수정하기(int proposalId, int cInfoId, int status) {
 
         PersonProposal proposal = personProposalRepository.findById(proposalId);
         if (proposal == null) {
@@ -54,6 +54,8 @@ public class PersonProposalService {
         } catch (Exception e) {
             throw new CustomApiException("공고 수정할 수 없습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        PersonProposal dto = personProposalRepository.findById(proposalId);
+        return dto;
     }
 
     @Transactional
