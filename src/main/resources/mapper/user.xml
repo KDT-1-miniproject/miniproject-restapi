@@ -33,7 +33,7 @@
         select * from user_tb where email = #{email} and password = #{password} and p_info_id = 0
     </select>
 
-    <insert id="insert">
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         insert into user_tb (email, password, salt, p_info_id, c_info_id, created_at) values(#{email}, #{password}, #{salt}, #{pInfoId},  #{cInfoId}, now())
     </insert>
 

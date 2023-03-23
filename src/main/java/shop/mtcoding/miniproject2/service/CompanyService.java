@@ -20,6 +20,11 @@ import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeRecomme
 import shop.mtcoding.miniproject2.dto.Resume.ResumeRecommendOutDto.ResumeWithPostInfoRecommendDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyReq.JoinCompanyReqDto;
+
+import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
+import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
+import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto.UserDto;
+
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
@@ -61,7 +66,7 @@ public class CompanyService {
     private CompanyScrapRepository companyScrapRepository;
 
     @Transactional
-    public void join(JoinCompanyReqDto joinCompanyReqDto) {
+    public JoinCompanyRespDto 기업회원가입(JoinCompanyReqDto joinCompanyReqDto) {
 
         Company sameCompany = companyRepository.findByCompanyNameAndNumber(joinCompanyReqDto.getName(),
                 joinCompanyReqDto.getNumber());
@@ -83,11 +88,19 @@ public class CompanyService {
         String salt = EncryptionUtils.getSalt();
         joinCompanyReqDto
                 .setPassword(EncryptionUtils.encrypt(joinCompanyReqDto.getPassword(), salt));
-        int result2 = userRepository.insert(joinCompanyReqDto.getEmail(), joinCompanyReqDto.getPassword(), salt, 0,
-                company.getId());
+
+        User user = new User(joinCompanyReqDto.getEmail(), joinCompanyReqDto.getPassword(), salt, 0, company.getId());
+
+        int result2 = userRepository.insert(user);
         if (result2 != 1) {
             throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        User userPS = userRepository.findById(user.getId());
+        UserDto userdto = new UserDto(userPS.getId(), userPS.getEmail(), userPS.getCreatedAt());
+        JoinCompanyRespDto dto = new JoinCompanyRespDto(company, userdto);
+
+        return dto;
     }
 
     @Transactional
@@ -140,6 +153,27 @@ public class CompanyService {
             throw new CustomApiException("기업 정보 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @Transactional
+    public User 기업로그인(LoginCompanyReqDto loginCompanyReqDto) {
+        User userCheck = userRepository.findByEmail(loginCompanyReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
+        }
+        // DB Salt 값
+        String salt = userCheck.getSalt();
+        // DB Salt + 입력된 password 해싱
+        loginCompanyReqDto.setPassword(EncryptionUtils.encrypt(loginCompanyReqDto.getPassword(), salt));
+        User principal = userRepository.findCompanyByEmailAndPassword(loginCompanyReqDto.getEmail(),
+                loginCompanyReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomApiException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
+
+        return principal;
+    }
+
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {

@@ -11,13 +11,17 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.person.PersonInfoInDto;
 import shop.mtcoding.miniproject2.dto.person.PersonReq.JoinPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonReq.LoginPersonReqDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.SkillDto;
+import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.UserDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
@@ -36,21 +40,14 @@ import shop.mtcoding.miniproject2.model.UserRepository;
 import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.EncryptionUtils;
 
+@RequiredArgsConstructor
 @Service
 public class PersonService {
 
-    @Autowired
-    private SkillRepository skillRepository;
-
-    @Autowired
-    private PersonRepository personRepository;
-
-    @Autowired
-
-    private HttpSession session;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final SkillRepository skillRepository;
+    private final PersonRepository personRepository;
+    private final HttpSession session;
+    private final UserRepository userRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -62,7 +59,7 @@ public class PersonService {
     private PersonScrapRepository personScrapRepository;
 
     @Transactional
-    public int join(JoinPersonReqDto joinPersonReqDto) {
+    public JoinPersonRespDto 개인회원가입(JoinPersonReqDto joinPersonReqDto) {
         // System.out.println(salt);
         Person samePerson = personRepository.findByPersonNameAndEmail(joinPersonReqDto.getName(),
                 joinPersonReqDto.getEmail());
@@ -80,34 +77,47 @@ public class PersonService {
         String salt = EncryptionUtils.getSalt();
         joinPersonReqDto
                 .setPassword(EncryptionUtils.encrypt(joinPersonReqDto.getPassword(), salt));
-        int result2 = userRepository.insert(joinPersonReqDto.getEmail(),
-                joinPersonReqDto.getPassword(), salt, person.getId(),
-                0);
+
+        User user = new User(joinPersonReqDto.getEmail(), joinPersonReqDto.getPassword(), salt, person.getId(), 0);
+
+        int result2 = userRepository.insert(user);
         if (result2 != 1) {
             throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return person.getId();
+        int result3 = skillRepository.insert(person.getId(), 0, 0, joinPersonReqDto.getSkills());
+        if (result3 != 1) {
+            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Person personPS = personRepository.findById(person.getId());
+        User userPS = userRepository.findById(user.getId());
+        Skill skillPS = skillRepository.findByPInfoId(person.getId());
+        JoinPersonRespDto dto = new JoinPersonRespDto(personPS.getId(), personPS.getName(),
+                new UserDto(userPS.getId(), userPS.getEmail(), userPS.getCreatedAt()),
+                new SkillDto(skillPS.getId(), skillPS.getSkills()));
+
+        return dto;
     }
 
     @Transactional
-    public void join2(String skills, int pInfoId) {
-        int result = skillRepository.insert(pInfoId, 0, 0, skills);
-        if (result != 1) {
-            throw new CustomException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+    public User 개인로그인(LoginPersonReqDto loginPersonReqDto) {
+        User userCheck = userRepository.findByEmail(loginPersonReqDto.getEmail());
+        if (userCheck == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다1.");
         }
+        // DB Salt 값
+        String salt = userCheck.getSalt();
+        // DB Salt + 입력된 password 해싱
+        loginPersonReqDto.setPassword(EncryptionUtils.encrypt(loginPersonReqDto.getPassword(), salt));
+        User principal = userRepository.findPersonByEmailAndPassword(loginPersonReqDto.getEmail(),
+                loginPersonReqDto.getPassword());
+        if (principal == null) {
+            throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다2.");
+        }
+
+        return principal;
     }
-
-    // public User 로그인(LoginReqPersonDto loginReqPersonDto) {
-    // User principal =
-    // personRepository.findByEmailAndPassword(loginReqPersonDto.getEmail(),
-    // loginReqPersonDto.getPassword());
-
-    // if (principal == null) {
-    // throw new CustomException("이메일 혹은 패스워드가 잘못입력되었습니다.");
-    // }
-    // return principal;
-    // }
 
     @Transactional
     public void update(PersonInfoInDto personInfoInDto) {
