@@ -1,7 +1,9 @@
 package shop.mtcoding.miniproject2.controller.company;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -19,7 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostSaveReqDto;
@@ -111,4 +112,17 @@ public class CompanyPostControllerTest {
         resultActions.andExpect(status().is2xxSuccessful());
     }
 
+    @Test
+    public void deletePost_test() throws Exception {
+        // given
+        int id = 1;
+
+        // when
+        ResultActions resultActions = mvc.perform(delete("/company/posts/" + id)
+                .session(mockSession));
+
+        // then
+        resultActions.andExpect(jsonPath("$.msg").value("공고 삭제 성공"));
+        resultActions.andExpect(status().isOk());
+    }
 }
