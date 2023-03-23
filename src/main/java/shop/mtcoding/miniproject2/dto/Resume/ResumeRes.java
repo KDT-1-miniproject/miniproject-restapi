@@ -27,6 +27,14 @@ public class ResumeRes {
             private String phone;
             private String address;
             private Timestamp birthday;
+            private UserDto userDto;
+
+            @Getter
+            @Setter
+            public static class UserDto {
+                private Integer id;
+                private String email;
+            }
         }
 
         @Getter

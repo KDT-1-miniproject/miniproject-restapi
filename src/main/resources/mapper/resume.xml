@@ -26,6 +26,10 @@
 			<result property="phone" column="phone"/>
 			<result property="address" column="address"/>
 			<result property="birthday" column="birthday"/>
+            <association property="userDto" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto$PersonDto$UserDto">
+			    <id property="id" column="p_info_id"/>
+			    <result property="email" column="email"/>
+	        </association>
 	</association>
 	<association property="skillDto" javaType="shop.mtcoding.miniproject2.dto.Resume.ResumeRes$ResumeDetailDto$SkillDto">
 			<id property="id" column="id"/>
@@ -39,6 +43,8 @@
         on rt.id = st.resume_id
         inner join person_info_tb pt 
         on rt.p_info_id = pt.id
+        inner join user_tb u
+        on u.p_info_id = pt.id
         where rt.id = #{id}
     </select>
 

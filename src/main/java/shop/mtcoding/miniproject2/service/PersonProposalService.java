@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeDetailOutDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeRes.ResumeDetailDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto.CompanyDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.CompanyGetResumeDto.CompanyProposalListRespDto;
+import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalDetailRespDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Company;
@@ -97,6 +100,25 @@ public class PersonProposalService {
         Company company = companyRepository.findById(cInfoId);
         CompanyGetResumeDto dto = new CompanyGetResumeDto(companyProposalList,
                 new CompanyDto(company.getId(), company.getName()));
+
+        return dto;
+    }
+
+    public ResumeDetailOutDto 이력서디테일보기(int resumeId, int cInfoId) {
+        Resume resumePS = resumeRepository.findById(resumeId);
+        if (resumePS == null) {
+            throw new CustomApiException("없는 이력서엔 접근할 수 없습니다.");
+        }
+
+        List<PersonProposalDetailRespDto> proposalList = personProposalRepository
+                .findAllWithPostByCInfoIdAndResumeId(cInfoId, resumeId);
+        if (proposalList.size() > 0) {
+            // 해당 이력서로 같은회사 다른 공고에 지원했을 수도 있음.
+            proposalList.get(0).getPostId(); // postId를 이용해서 어케 해보자...
+        }
+
+        ResumeDetailDto resumeDetailDto = resumeRepository.findDetailList(resumeId);
+        ResumeDetailOutDto dto = new ResumeDetailOutDto(resumeDetailDto, proposalList);
 
         return dto;
     }
