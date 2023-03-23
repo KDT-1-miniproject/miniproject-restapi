@@ -65,11 +65,6 @@ public class PostService {
                 skills += ",";
             skills += string;
         }
-        // Skill skill = new Skill();
-        // skill.setPInfoId(0);
-        // skill.setResumeId(0);
-        // skill.setPostId(post.getId());
-        // skill.setSkills(skills);
 
         int result1 = skillRepository.insert(0, post.getId(), 0, skills);
         if (result1 != 1) {
