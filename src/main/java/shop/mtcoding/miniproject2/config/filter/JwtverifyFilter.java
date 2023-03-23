@@ -11,11 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.http.HttpStatus;
+
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.util.JwtProvider;
 
 public class JwtverifyFilter implements Filter {
@@ -44,13 +47,9 @@ public class JwtverifyFilter implements Filter {
             chain.doFilter(req, resp);
 
         } catch (SignatureVerificationException e) {
-            resp.setStatus(401);
-            response.setContentType("text/plain; charset=utf-8");
-            response.getWriter().println("로그인 실패");
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         } catch (TokenExpiredException e2) {
-            resp.setStatus(401);
-            response.setContentType("text/plain; charset=utf-8");
-            response.getWriter().println("로그인 실패");
+            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
 
         }
     }

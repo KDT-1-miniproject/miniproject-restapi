@@ -24,6 +24,7 @@ import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateDto;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.User;
@@ -39,24 +40,18 @@ public class CompanyPostController {
 
     @GetMapping("/posts")
     public ResponseEntity<?> posts() {
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        List<PostTitleRespDto> postTitleList = postService.기업공고리스트(userPS.getCInfoId());
+        List<PostTitleRespDto> postTitleList = postService.기업공고리스트(principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 공고 리스트 보기", postTitleList), HttpStatus.OK);
     }
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<?> postDetail(@PathVariable int id) {
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
-            throw new CustomException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        CompanyPostDetailRespDto post = postService.기업공고디테일(id, userPS.getCInfoId());
+        CompanyPostDetailRespDto post = postService.기업공고디테일(id, principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 디테일 보기", post), HttpStatus.OK);
     }
@@ -64,34 +59,28 @@ public class CompanyPostController {
     @PutMapping("/posts/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdatePost(@PathVariable int id,
             @RequestBody PostUpdateReqDto postUpdateReqDto) {
-        User userPS = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         // 유효성 테스트
 
-        PostUpdateDto post = postService.공고수정하기(postUpdateReqDto, id, userPS.getCInfoId());
+        PostUpdateDto post = postService.공고수정하기(postUpdateReqDto, id, principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 수정 성공", post), HttpStatus.CREATED);
     }
 
     @PostMapping("/posts")
     public ResponseEntity<?> postSave(PostSaveReqDto postSaveReqDto) {
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
-            throw new CustomException("인증이 필요합니다");
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        PostSaveDto post = postService.공고등록(postSaveReqDto, userPS.getCInfoId());
+        PostSaveDto post = postService.공고등록(postSaveReqDto, principal.getCInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 등록 완료", post), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/posts/{id}")
     public @ResponseBody ResponseEntity<?> companyDeletePost(@PathVariable int id) {
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
-            throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        postService.공고삭제하기(id, userPS.getCInfoId());
+        postService.공고삭제하기(id, principal.getCInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "공고 삭제 성공", null), HttpStatus.OK);
     }

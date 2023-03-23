@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalResp.PersonProposalListRespDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.PersonProposal;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonProposalService;
 
 @RequestMapping("/person")
@@ -30,7 +30,8 @@ public class PersonProposalController {
 
     @PostMapping("/detail/{id}/resume")
     public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, int selectedResume) {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         if (principal == null) {
             throw new CustomException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
         }
@@ -45,9 +46,9 @@ public class PersonProposalController {
     @GetMapping("/history")
     public ResponseEntity<?> resumeDetail() {
 
-        User principalPS = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        List<PersonProposalListRespDto> dto = personProposalService.지원이력보기(principalPS.getPInfoId());
+        List<PersonProposalListRespDto> dto = personProposalService.지원이력보기(principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "지원이력보기", dto), HttpStatus.OK);
     }

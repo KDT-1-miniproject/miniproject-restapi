@@ -40,7 +40,8 @@ public class PersonController {
     @PutMapping("/info")
     public ResponseEntity<?> updateInfo(@RequestBody PersonInfoInDto personInfoInDto) {
 
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         Person PersonPS = personRepository.findById(principal.getPInfoId());
         if (PersonPS == null) {
             throw new CustomApiException("정보를 찾을 수 없습니다!");

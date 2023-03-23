@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personProposal.PersonProposalReq.CompanyProposalStatusReqDto;
 import shop.mtcoding.miniproject2.dto.proposalPass.ProposalPassReq.ProposalPassMessageReqDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.ProposalPass;
@@ -34,21 +35,21 @@ public class CompanyProposalController {
     @PutMapping("/proposal/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdateResume(@PathVariable int id,
             @RequestBody CompanyProposalStatusReqDto statusCode) {
-        User userPS = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
-        PersonProposal dto = personProposalService.제안수정하기(id, userPS.getCInfoId(), statusCode.getStatusCode());
+        PersonProposal dto = personProposalService.제안수정하기(id, principal.getCInfoId(), statusCode.getStatusCode());
         return new ResponseEntity<>(new ResponseDto<>(1, "이력서 확인 완료", dto), HttpStatus.OK);
     }
 
     @PostMapping("proposalPass/{id}")
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
             @RequestBody ProposalPassMessageReqDto message) {
-        User userPS = (User) session.getAttribute("principal");
-        if (userPS == null) {
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+        if (principal == null) {
             throw new CustomApiException("인증이 되지 않았습니다.", HttpStatus.UNAUTHORIZED);
         }
 
-        ProposalPass dto = proposalPassService.메시지전달하기(id, userPS.getCInfoId(), message.getMessage());
+        ProposalPass dto = proposalPassService.메시지전달하기(id, principal.getCInfoId(), message.getMessage());
         return new ResponseEntity<>(new ResponseDto<>(1, "메시지 전달 성공", dto), HttpStatus.CREATED);
     }
 }

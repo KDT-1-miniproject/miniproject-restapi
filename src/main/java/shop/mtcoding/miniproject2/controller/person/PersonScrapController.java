@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import shop.mtcoding.miniproject2.dto.ResponseDto;
 import shop.mtcoding.miniproject2.dto.personScrap.PersonScrapOutDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.PersonScrap;
 import shop.mtcoding.miniproject2.model.PersonScrapRepository;
-import shop.mtcoding.miniproject2.model.User;
 import shop.mtcoding.miniproject2.service.PersonScrapService;
 
 @RequestMapping("/person")
@@ -33,10 +33,8 @@ public class PersonScrapController {
 
     @GetMapping("/scrap")
     public ResponseEntity<?> personScrap() {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         List<PersonScrapOutDto> pScrapPS = personScrapRepository.findByIdWithPostAndCompany(principal.getPInfoId());
 
         // model.addAttribute("pScrapList", pScrapList2);
@@ -49,10 +47,8 @@ public class PersonScrapController {
     @PostMapping("/scrap/{id}")
     public ResponseEntity<?> scrapInsert(@PathVariable int id) {
         // personMocLogin();
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+
         PersonScrap scrap = personScrapService.insert(id, principal.getPInfoId());
 
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 완료", scrap), HttpStatus.OK);
@@ -60,10 +56,7 @@ public class PersonScrapController {
 
     @DeleteMapping("/scrap/{id}")
     public ResponseEntity<?> scrapDelete(@PathVariable int id) {
-        User principal = (User) session.getAttribute("principal");
-        if (principal == null) {
-            throw new CustomApiException("인증이 되지 않았습니다", HttpStatus.UNAUTHORIZED);
-        }
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         personScrapService.delete(id, principal.getPInfoId());
         return new ResponseEntity<>(new ResponseDto<>(1, "스크랩 취소 완료", null), HttpStatus.OK);

@@ -27,6 +27,7 @@ import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.Ski
 import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto.UserDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendIntegerRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Person;
@@ -134,19 +135,20 @@ public class PersonService {
     @Transactional
     public void update(PersonInfoInDto personInfoInDto) {
 
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
+        User userPs = userRepository.findById(principal.getId());
         Person personPS = personRepository.findById(principal.getPInfoId());
         String password;
 
-        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), principal.getSalt());
-        if (!pw.equals(principal.getPassword())) {
+        String pw = EncryptionUtils.encrypt(personInfoInDto.getOriginPassword(), userPs.getSalt());
+        if (!pw.equals(userPs.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");
         }
 
         if (personInfoInDto.getPassword() == null || personInfoInDto.getPassword().isEmpty()) {
-            password = principal.getPassword();
+            password = userPs.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(personInfoInDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(personInfoInDto.getPassword(), userPs.getSalt());
         }
 
         Timestamp birthday = Timestamp.valueOf(personInfoInDto.getBirthday());
@@ -182,7 +184,7 @@ public class PersonService {
 
     @Transactional(readOnly = true)
     public List<PostRecommendIntegerRespDto> recommend() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         Skill principalSkills = skillRepository.findByPInfoId(principal.getPInfoId());
 
         String[] principalSKillArr = principalSkills.getSkills().split(",");

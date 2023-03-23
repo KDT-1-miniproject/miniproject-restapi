@@ -62,17 +62,13 @@ public class IndexController {
 
     @PostMapping("/personLogin")
     public @ResponseBody ResponseEntity<?> personLogin(LoginPersonReqDto loginPersonReqDto) {
-
         ResponseEntity<?> responseEntity = personService.개인로그인(loginPersonReqDto);
-
         return responseEntity;
     }
 
     @PostMapping("/personJoin")
     public @ResponseBody ResponseEntity<?> personJoin(JoinPersonReqDto joinPersonReqDto) {
-
         JoinPersonRespDto dto = personService.개인회원가입(joinPersonReqDto);
-
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", dto),
                 HttpStatus.OK);
     }
@@ -80,17 +76,14 @@ public class IndexController {
     @GetMapping("/logout")
     public @ResponseBody ResponseEntity<?> logout() {
         session.invalidate();
-
         return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 완료", null),
                 HttpStatus.OK);
     }
 
     @GetMapping("/customerService")
     public @ResponseBody ResponseEntity<?> customerService() {
-
         // 고객센터
         CustomerServDto scDto = csService.고객센터();
-
         return new ResponseEntity<>(new ResponseDto<>(1, "고객센터", scDto),
                 HttpStatus.OK);
     }

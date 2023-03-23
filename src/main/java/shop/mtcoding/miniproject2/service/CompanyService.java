@@ -27,6 +27,7 @@ import shop.mtcoding.miniproject2.dto.company.CompanyReq.LoginCompanyReqDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
 import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto.UserDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.handler.ex.CustomException;
 import shop.mtcoding.miniproject2.model.Company;
@@ -108,12 +109,12 @@ public class CompanyService {
     @Transactional
     public void updateInfo(CompanyInfoInDto companyInfoInDto) {
 
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
         Company companyPS = companyRepository.findById(principal.getCInfoId());
         User userPS = userRepository.findById(principal.getId());
 
-        String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), principal.getSalt());
-        if (!pw.equals(principal.getPassword())) {
+        String pw = EncryptionUtils.encrypt(companyInfoInDto.getOriginPassword(), userPS.getSalt());
+        if (!pw.equals(userPS.getPassword())) {
             throw new CustomApiException("비밀번호가 일치하지 않습니다!");
         }
 
@@ -121,7 +122,7 @@ public class CompanyService {
         if (companyInfoInDto.getPassword() == null || companyInfoInDto.getPassword().isEmpty()) {
             password = userPS.getPassword();
         } else {
-            password = EncryptionUtils.encrypt(companyInfoInDto.getPassword(), principal.getSalt());
+            password = EncryptionUtils.encrypt(companyInfoInDto.getPassword(), userPS.getSalt());
         }
 
         if (companyInfoInDto.getLogo() == null || companyInfoInDto.getLogo().isEmpty()) {
@@ -190,7 +191,7 @@ public class CompanyService {
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {
-        User principal = (User) session.getAttribute("principal");
+        UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         List<postIdAndSkillsDto> postAndSkillsList = postRepository.findPostIdAndSkills(principal.getCInfoId());
 
