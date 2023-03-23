@@ -1,6 +1,7 @@
 package shop.mtcoding.miniproject2.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.sql.Timestamp;
@@ -18,28 +19,21 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import shop.mtcoding.miniproject2.dto.company.CompanyInfoInDto;
 import shop.mtcoding.miniproject2.model.User;
 
 @Transactional
 @AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = WebEnvironment.MOCK)
-public class CompanyControllerTest {
-
-    @Autowired
-    private MockMvc mvc;
+public class CompanyScrapController {
 
     @Autowired
     private MockHttpSession mockSession;
 
     @Autowired
-    private ObjectMapper om;
+    private MockMvc mvc;
 
-    @BeforeEach // Test메서드 실행 직전마다 호출된다
+    @BeforeEach
     public void setUp() {
-        // 임시 세션 생성하기
         User user = new User();
         user.setId(3);
         user.setPassword("ad38f305434fb803fbadb9cf57df1e822bff382352c19dc67b5b13055a049cd6");
@@ -54,24 +48,28 @@ public class CompanyControllerTest {
     }
 
     @Test
-    public void companyUpdateInfo_test() throws Exception {
-        // given
+    public void scrapInsert_test() throws Exception {
+        int resumeId = 2;
+        // String requestBody = "id=" + resumeId;
 
-        CompanyInfoInDto cdto = CompanyInfoInDto.builder().address("부산 남구 00동").bossName("sj")
-                .cyear("2000-10-10").logo("haha").managerName("jhs").managerPhone("01099998888").size(120)
-                .password("1111").originPassword("1234").build();
+        // ResultActions resultActions = mvc
+        // .perform(post("/company/scrap/" +
+        // resumeId).content(requestBody).session(mockSession)
+        // .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
 
-        String requestBody = om.writeValueAsString(cdto); // json으로
-
-        System.out.println("테스트 4:" + requestBody);
-
-        // when
-        ResultActions resultActions = mvc.perform(put("/company/info")
-                .content(requestBody).session(mockSession).contentType(MediaType.APPLICATION_JSON));
-
-        // then
+        ResultActions resultActions = mvc
+                .perform(post("/company/scrap/" + resumeId).session(mockSession));
 
         resultActions.andExpect(status().isOk());
     }
 
+    @Test
+    public void scrapDelete_test() throws Exception {
+        int resumeId = 1;
+
+        ResultActions resultActions = mvc
+                .perform(delete("/company/scrap/" + resumeId).session(mockSession));
+
+        resultActions.andExpect(status().isOk());
+    }
 }
