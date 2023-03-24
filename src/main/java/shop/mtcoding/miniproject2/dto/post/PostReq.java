@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.dto.post;
 import java.sql.Timestamp;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class PostReq {
     @Setter
     public static class PostSaveReqDto {
         @NotEmpty(message = "공고 제목을 확인해주세요")
+        @Size(max = 20, message = "제목은 20글자를 넘을 수 없습니다.")
         private String title;
         @NotEmpty(message = "경력을 확인해주세요")
         private String career;
@@ -33,10 +35,13 @@ public class PostReq {
         @NotEmpty(message = "마감시간을 확인해주세요")
         private String deadline;
         @NotEmpty(message = "회사소개를 확인해주세요")
+        @Size(max = 200, message = "회사소개는 200글자를 넘을 수 없습니다.")
         private String cIntro;
         @NotEmpty(message = "업무소개를 확인해주세요")
+        @Size(max = 200, message = "업무소개는 200글자를 넘을 수 없습니다.")
         private String jobIntro;
         @NotEmpty(message = "스킬들을 확인해주세요")
+        @Size(min = 2, max = 5, message = "스킬의 개수는 2개 이상, 5개 이하여야 합니다")
         private String[] skills;
     }
 
@@ -90,6 +95,7 @@ public class PostReq {
     @Setter
     public static class PostUpdateReqDto {
         @NotEmpty(message = "공고 제목을 확인해주세요")
+        @Size(max = 20, message = "제목은 20글자를 넘을 수 없습니다.")
         private String title;
         @NotEmpty(message = "경력을 확인해주세요")
         private String career;
@@ -104,8 +110,10 @@ public class PostReq {
         @NotEmpty(message = "마감시간을 확인해주세요")
         private String deadline;
         @NotEmpty(message = "회사소개를 확인해주세요")
+        @Size(max = 200, message = "회사 소개는 200글자를 넘을 수 없습니다.")
         private String comIntro;
         @NotEmpty(message = "업무소개를 확인해주세요")
+        @Size(max = 200, message = "업무 소개는 200글자를 넘을 수 없습니다.")
         private String jobIntro;
         @NotEmpty(message = "스킬들을 확인해주세요")
         private String skills;

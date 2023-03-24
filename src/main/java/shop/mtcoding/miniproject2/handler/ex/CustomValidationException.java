@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 public class CustomValidationException extends RuntimeException {
 
-    private Map<String, String> erroMap;
+    private Map<String, String> errorMap;
 
-    public CustomValidationException(String message, Map<String, String> erroMap) {
+    public CustomValidationException(String message, Map<String, String> errorMap) {
         super(message);
-        this.erroMap = erroMap;
+        this.errorMap = errorMap;
     }
 }

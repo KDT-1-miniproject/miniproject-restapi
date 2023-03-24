@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,14 +42,16 @@ public class IndexController {
     }
 
     @PostMapping("/companyLogin")
-    public @ResponseBody ResponseEntity<?> companyLogin(@Valid LoginCompanyReqDto loginCompanyReqDto) {
+    public @ResponseBody ResponseEntity<?> companyLogin(@Valid LoginCompanyReqDto loginCompanyReqDto,
+            BindingResult bindingResult) {
 
         ResponseEntity<?> responseEntity = companyService.기업로그인(loginCompanyReqDto);
         return responseEntity;
     }
 
     @PostMapping("/companyJoin")
-    public @ResponseBody ResponseEntity<?> companyJoin(@Valid @RequestBody JoinCompanyReqDto joinCompanyReqDto) {
+    public @ResponseBody ResponseEntity<?> companyJoin(@Valid @RequestBody JoinCompanyReqDto joinCompanyReqDto,
+            BindingResult bindingResult) {
 
         JoinCompanyRespDto dto = companyService.기업회원가입(joinCompanyReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "기업 회원가입 완료", dto),
@@ -56,13 +59,15 @@ public class IndexController {
     }
 
     @PostMapping("/personLogin")
-    public @ResponseBody ResponseEntity<?> personLogin(@Valid LoginPersonReqDto loginPersonReqDto) {
+    public @ResponseBody ResponseEntity<?> personLogin(@Valid LoginPersonReqDto loginPersonReqDto,
+            BindingResult bindingResult) {
         ResponseEntity<?> responseEntity = personService.개인로그인(loginPersonReqDto);
         return responseEntity;
     }
 
     @PostMapping("/personJoin")
-    public @ResponseBody ResponseEntity<?> personJoin(@Valid @RequestBody JoinPersonReqDto joinPersonReqDto) {
+    public @ResponseBody ResponseEntity<?> personJoin(@Valid @RequestBody JoinPersonReqDto joinPersonReqDto,
+            BindingResult bindingResult) {
 
         JoinPersonRespDto dto = personService.개인회원가입(joinPersonReqDto);
         return new ResponseEntity<>(new ResponseDto<>(1, "회원가입 완료", dto),

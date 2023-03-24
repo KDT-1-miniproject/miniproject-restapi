@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller.person;
+package shop.mtcoding.miniproject2.controller.company.person;
 
 import java.util.List;
 
@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,7 +69,8 @@ public class PersonResumeController {
     }
 
     @PostMapping("/resumes")
-    public ResponseEntity<?> resumeInsert(@Valid @RequestBody ResumeInsertReqDto resumeInsertReqDto) {
+    public ResponseEntity<?> resumeInsert(@Valid @RequestBody ResumeInsertReqDto resumeInsertReqDto,
+            BindingResult bindingResult) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         // 유효성 테스트
@@ -79,7 +81,7 @@ public class PersonResumeController {
 
     @PutMapping("/resumes/{id}")
     public ResponseEntity<?> resumeUpdate(@PathVariable int id,
-            @Valid @RequestBody ResumeUpdateReqDto resumeUpdateReqDto) {
+            @Valid @RequestBody ResumeUpdateReqDto resumeUpdateReqDto, BindingResult bindingResult) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         int pInfoId = principal.getPInfoId();

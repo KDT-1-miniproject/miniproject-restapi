@@ -31,6 +31,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(CustomValidationException.class)
     public ResponseEntity<?> validationApiException(CustomValidationException e) {
-        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErroMap()), HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<>(new ResponseDto<>(-1, e.getMessage(), e.getErrorMap()), HttpStatus.BAD_REQUEST);
     }
 }

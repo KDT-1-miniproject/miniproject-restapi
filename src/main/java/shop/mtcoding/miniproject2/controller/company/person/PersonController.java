@@ -1,10 +1,11 @@
-package shop.mtcoding.miniproject2.controller.person;
+package shop.mtcoding.miniproject2.controller.company.person;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +37,8 @@ public class PersonController {
     }
 
     @PutMapping("/info")
-    public ResponseEntity<?> updateInfo(@Valid @RequestBody PersonInfoInDto personInfoInDto) {
+    public ResponseEntity<?> updateInfo(@Valid @RequestBody PersonInfoInDto personInfoInDto,
+            BindingResult bindingResult) {
 
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
