@@ -5,6 +5,7 @@ import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -34,7 +35,7 @@ public class CompanyProposalController {
     // 합불
     @PutMapping("/proposal/{id}")
     public @ResponseBody ResponseEntity<?> companyUpdateResume(@PathVariable int id,
-            @Valid @RequestBody CompanyProposalStatusReqDto statusCode) {
+            @Valid @RequestBody CompanyProposalStatusReqDto statusCode, BindingResult bindingResult) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         PersonProposal dto = personProposalService.제안수정하기(id, principal.getCInfoId(),
@@ -46,7 +47,7 @@ public class CompanyProposalController {
     // 합격 시 메세지
     @PostMapping("proposalPass/{id}")
     public @ResponseBody ResponseEntity<?> insertProposalPass(@PathVariable int id,
-            @Valid @RequestBody ProposalPassMessageReqDto message) {
+            @Valid @RequestBody ProposalPassMessageReqDto message,BindingResult bindingResult) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
 
         ProposalPass dto = proposalPassService.메시지전달하기(id, principal.getCInfoId(), message.getMessage());

@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller.person;
+package shop.mtcoding.miniproject2.controller.company.person;
 
 import java.util.List;
 
@@ -32,11 +32,11 @@ public class PersonProposalController {
     @PostMapping("/detail/{id}/resume")
     public ResponseEntity<?> resumeSubmit(@PathVariable("id") int id, Integer selectedResume) {
         UserLoginDto principal = (UserLoginDto) session.getAttribute("principal");
-        
+
         if (selectedResume == null) {
             throw new CustomApiException("이력서가 선택되지 않았습니다.", HttpStatus.BAD_REQUEST);
         }
-   
+
         PersonProposal dto = personProposalService.지원하기(principal.getPInfoId(), id, selectedResume); // status 합불합격상태(0은
                                                                                                      // 대기중)
         return new ResponseEntity<>(new ResponseDto<>(1, "제안 성공", dto), HttpStatus.OK);
