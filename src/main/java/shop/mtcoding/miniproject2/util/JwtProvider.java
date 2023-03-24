@@ -12,7 +12,7 @@ import shop.mtcoding.miniproject2.model.User;
 
 public class JwtProvider {
     private static final String SUBJECT = "principal";
-    private static final int EXP = 1000 * 60 * 60 * 24;
+    private static final int EXP = 1000 * 60 * 60;
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String HEADER = "Authorization"; // header는 응답할 때 써야하므로 public
     private static final String SECRET = System.getenv("project_secret"); //
