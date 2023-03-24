@@ -37,7 +37,6 @@ public class CompanyController {
         // System.out.println("테스트 :" + jwt);
         CompanyInfoOutDto cInfoDto = companyRepository.findByIdWithUser(principal.getCInfoId());
         // model.addAttribute("companyPS", companyPS);
-        session.invalidate();
         return new ResponseEntity<>(new ResponseDto<>(1, "company info", cInfoDto), HttpStatus.OK);
     }
 

@@ -1,5 +1,9 @@
 package shop.mtcoding.miniproject2.controller;
 
+import java.util.Enumeration;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
@@ -24,6 +28,7 @@ import shop.mtcoding.miniproject2.dto.person.PersonRespDto.JoinPersonRespDto;
 import shop.mtcoding.miniproject2.service.CSService;
 import shop.mtcoding.miniproject2.service.CompanyService;
 import shop.mtcoding.miniproject2.service.PersonService;
+import shop.mtcoding.miniproject2.util.JwtProvider;
 
 @RequiredArgsConstructor
 @RestController
@@ -75,8 +80,8 @@ public class IndexController {
     }
 
     @GetMapping("/logout")
-    public @ResponseBody ResponseEntity<?> logout() {
-        session.invalidate();
+    public @ResponseBody ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+        // jwt에서는 로그아웃 불가능. 만약 한다면 토큰 두개를 이용해서 토큰의 상태를 관리해주어야한다.
         return new ResponseEntity<>(new ResponseDto<>(1, "로그아웃 완료", null),
                 HttpStatus.OK);
     }
