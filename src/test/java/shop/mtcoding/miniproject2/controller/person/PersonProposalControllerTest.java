@@ -1,14 +1,11 @@
 package shop.mtcoding.miniproject2.controller.person;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Date;
-
-import javax.servlet.http.HttpSession;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +24,6 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
-import shop.mtcoding.miniproject2.model.User;
 
 @Transactional
 @AutoConfigureMockMvc
