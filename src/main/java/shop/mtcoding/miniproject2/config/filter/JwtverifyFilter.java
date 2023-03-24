@@ -45,6 +45,7 @@ public class JwtverifyFilter implements Filter {
 
             session.setAttribute("principal", user);
 
+            // resp.
             chain.doFilter(req, resp);
 
         } catch (SignatureVerificationException e) {
