@@ -29,7 +29,9 @@ public class JwtverifyFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
+
         String prefixJwt = req.getHeader(JwtProvider.HEADER);
+
         String jwt = prefixJwt.replace(JwtProvider.TOKEN_PREFIX, "");
 
         try {

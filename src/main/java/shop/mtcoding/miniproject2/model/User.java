@@ -2,6 +2,8 @@ package shop.mtcoding.miniproject2.model;
 
 import java.sql.Timestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +14,9 @@ import lombok.Setter;
 public class User {
     private Integer id;
     private String email;
+    @JsonIgnore
     private String password;
+    @JsonIgnore
     private String salt;
     private Integer pInfoId; // jsp 에서 el로 접근할 시 .PInfoId 로접근해야함 (이유 모르겟음..)
     private Integer cInfoId; // 마찬가지로 CInfoId

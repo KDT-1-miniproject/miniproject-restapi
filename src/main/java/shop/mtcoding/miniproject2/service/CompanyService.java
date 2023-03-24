@@ -170,7 +170,7 @@ public class CompanyService {
         String jwt = JwtProvider.create(principal);
 
         // header에 담기
-        ResponseEntity<Object> response = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", null),
+        ResponseEntity<Object> response = new ResponseEntity<>(new ResponseDto<>(1, "로그인 완료", principal),
                 HttpStatus.OK);
 
         HttpHeaders headers = new HttpHeaders();
@@ -182,7 +182,6 @@ public class CompanyService {
 
         return responseEntity;
     }
-
 
     @Transactional(readOnly = true)
     public List<ResumeWithPostInfoRecommendDto> recommend() {
