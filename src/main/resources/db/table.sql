@@ -50,7 +50,7 @@ CREATE TABLE job_post_tb(
     start_hour varchar not null,
     end_hour varchar not null,
     deadline timestamp not null,
-    c_intro varchar(200) not null,
+    com_intro varchar(200) not null,
     job_intro varchar(200) not null,    -- skill에     post_id int, 
     created_at timestamp not null
 );

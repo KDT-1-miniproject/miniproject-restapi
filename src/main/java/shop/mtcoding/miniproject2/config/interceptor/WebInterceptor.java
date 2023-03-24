@@ -18,7 +18,7 @@ public class WebInterceptor implements HandlerInterceptor {
 
         HttpSession session = request.getSession();
         UserLoginDto userPS = (UserLoginDto) session.getAttribute("principal");
-        System.out.println("테스트 : " + userPS.getEmail());
+        // System.out.println("테스트 : " + userPS.getEmail());
         session.invalidate();
         // if (session == null || !request.isRequestedSessionIdValid()) {
         // System.out.println("테스트 : 제거됨!");

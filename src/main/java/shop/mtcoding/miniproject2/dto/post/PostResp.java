@@ -68,7 +68,7 @@ public class PostResp {
         private String condition;
         private String startHour;
         private String endHour;
-        private String cIntro;
+        private String comIntro;
         private String jobIntro;
         private Integer scrap;
     }
@@ -177,7 +177,7 @@ public class PostResp {
             this.condition = post.getCondition();
             this.startHour = post.getStartHour();
             this.endHour = post.getEndHour();
-            this.comIntro = post.getCIntro();
+            this.comIntro = post.getComIntro();
             this.jobIntro = post.getJobIntro();
             this.scrap = scrap;
             this.skills = skills;
@@ -199,7 +199,7 @@ public class PostResp {
         private String startHour;
         private String endHour;
         private Timestamp deadline;
-        private String cIntro;
+        private String comIntro;
         private String jobIntro;
         private Timestamp createdAt;
         private SkillDto skills;

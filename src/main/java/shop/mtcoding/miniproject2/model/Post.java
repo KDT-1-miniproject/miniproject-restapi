@@ -19,7 +19,7 @@ public class Post {
     private String startHour;
     private String endHour;
     private Timestamp deadline;
-    private String cIntro;
+    private String comIntro;
     private String jobIntro;
     private Timestamp createdAt;
 
@@ -38,7 +38,7 @@ public class Post {
         this.endHour = postSaveReqDto.getEndHour();
         String deadTime = postSaveReqDto.getDeadline() + " 00:00:00";
         this.deadline = Timestamp.valueOf(deadTime);
-        this.cIntro = postSaveReqDto.getCIntro();
+        this.comIntro = postSaveReqDto.getComIntro();
         this.jobIntro = postSaveReqDto.getJobIntro();
     }
 
@@ -52,7 +52,7 @@ public class Post {
         postPS.endHour = postUpdateReqDto.getEndHour();
         String deadTime = postUpdateReqDto.getDeadline() + " 00:00:00";
         postPS.deadline = Timestamp.valueOf(deadTime);
-        postPS.cIntro = postUpdateReqDto.getComIntro();
+        postPS.comIntro = postUpdateReqDto.getComIntro();
         postPS.jobIntro = postUpdateReqDto.getJobIntro();
         return postPS;
     }
