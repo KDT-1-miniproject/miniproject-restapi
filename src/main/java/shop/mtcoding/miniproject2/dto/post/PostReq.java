@@ -36,7 +36,7 @@ public class PostReq {
         private String deadline;
         @NotEmpty(message = "회사소개를 확인해주세요")
         @Size(max = 200, message = "회사소개는 200글자를 넘을 수 없습니다.")
-        private String cIntro;
+        private String comIntro;
         @NotEmpty(message = "업무소개를 확인해주세요")
         @Size(max = 200, message = "업무소개는 200글자를 넘을 수 없습니다.")
         private String jobIntro;
@@ -56,7 +56,7 @@ public class PostReq {
         private String startHour;
         private String endHour;
         private String deadline;
-        private String cIntro;
+        private String comIntro;
         private String jobIntro;
         // private SkillsDto skill;
         private String skills;
@@ -83,7 +83,7 @@ public class PostReq {
             this.startHour = post.getStartHour();
             this.endHour = post.getEndHour();
             this.deadline = post.getDeadline().toString().split(" ")[0];
-            this.cIntro = post.getCIntro();
+            this.comIntro = post.getComIntro();
             this.jobIntro = post.getJobIntro();
             this.skills = skills;
 
@@ -130,7 +130,7 @@ public class PostReq {
         private String startHour;
         private String endHour;
         private String deadline;
-        private String cIntro;
+        private String comIntro;
         private String jobIntro;
         private String skills;
         private Timestamp createdAt;
@@ -144,7 +144,7 @@ public class PostReq {
             this.startHour = post.getStartHour();
             this.endHour = post.getEndHour();
             this.deadline = post.getDeadline().toString().split(" ")[0];
-            this.cIntro = post.getCIntro();
+            this.comIntro = post.getComIntro();
             this.jobIntro = post.getJobIntro();
             this.skills = skills;
             this.createdAt = post.getCreatedAt();

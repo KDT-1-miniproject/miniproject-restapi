@@ -65,7 +65,7 @@
         <result property="startHour" column="start_hour"/>
         <result property="endHour" column="end_hour"/>
         <result property="deadline" column="deadline"/>
-        <result property="cIntro" column="c_intro"/>
+        <result property="comIntro" column="com_intro"/>
         <result property="jobIntro" column="job_intro"/>
         <result property="createdAt" column="created_at"/>
         <association property="company" javaType="shop.mtcoding.miniproject2.dto.post.PostResp$CompanyPostDetailRespDto$CompanyDto">
@@ -133,8 +133,8 @@
 
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        insert into job_post_tb (title, c_info_id, career, pay, condition, start_hour, end_hour, deadline, c_intro, job_intro, created_at) 
-            values(#{title}, #{cInfoId}, #{career},  #{pay}, #{condition}, #{startHour}, #{endHour}, #{deadline}, #{cIntro}, #{jobIntro}, now())
+        insert into job_post_tb (title, c_info_id, career, pay, condition, start_hour, end_hour, deadline, com_intro, job_intro, created_at) 
+            values(#{title}, #{cInfoId}, #{career},  #{pay}, #{condition}, #{startHour}, #{endHour}, #{deadline}, #{comIntro}, #{jobIntro}, now())
     </insert>
 
     <delete id="deleteById">
@@ -150,7 +150,7 @@
                                 start_hour = #{startHour},
                                 end_hour = #{endHour},
                                 deadline = #{deadline},
-                                c_intro = #{comIntro},
+                                com_intro = #{comIntro},
                                 job_intro = #{jobIntro},
                                 created_at = #{createdAt}
                                 where id = #{id} 

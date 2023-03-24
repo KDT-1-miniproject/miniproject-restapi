@@ -79,7 +79,7 @@ public class CompanyPostControllerTest {
         postSaveReqDto.setStartHour("11:00:00");
         postSaveReqDto.setEndHour("15:00:00");
         postSaveReqDto.setDeadline("2023-03-30");
-        postSaveReqDto.setCIntro("hi");
+        postSaveReqDto.setComIntro("hi");
         postSaveReqDto.setJobIntro("hello?");
         String[] skill = { "Java", "Sql" };
         postSaveReqDto.setSkills(skill);

@@ -114,7 +114,7 @@ public class PostService {
             postRepository.updateById(postPS.getId(), postPS.getTitle(), postPS.getCInfoId(),
                     postPS.getCareer(), postPS.getPay(), postPS.getCondition(), postPS.getStartHour(),
                     postPS.getEndHour(),
-                    postPS.getDeadline(), postPS.getCIntro(), postPS.getJobIntro(), postPS.getCreatedAt());
+                    postPS.getDeadline(), postPS.getComIntro(), postPS.getJobIntro(), postPS.getCreatedAt());
         } catch (Exception e) {
             e.printStackTrace();
             throw new CustomApiException("공고 수정할 수 없습니다.1", HttpStatus.INTERNAL_SERVER_ERROR);
