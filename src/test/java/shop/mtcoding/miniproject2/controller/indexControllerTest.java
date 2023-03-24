@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +65,24 @@ public class indexControllerTest {
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void personLogin_test() throws Exception {
+        String requestBody = "email=ssar@nate.com&password=1234";
+
+        ResultActions resultActions = mvc.perform(post("/personLogin").content(requestBody)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void companyLogin_test() throws Exception {
+        String requestBody = "email=init@nate.com&password=1234";
+
+        ResultActions resultActions = mvc.perform(post("/companyLogin").content(requestBody)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
         resultActions.andExpect(status().isOk());
     }
 

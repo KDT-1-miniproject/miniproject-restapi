@@ -6,8 +6,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,11 +20,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostSaveReqDto;
 import shop.mtcoding.miniproject2.dto.post.PostReq.PostUpdateReqDto;
-import shop.mtcoding.miniproject2.model.User;
+import shop.mtcoding.miniproject2.dto.user.UserLoginDto;
 
 @Transactional
 @AutoConfigureMockMvc
@@ -40,16 +41,27 @@ public class CompanyPostControllerTest {
     @Autowired
     private ObjectMapper om;
 
-    @BeforeEach
+    public String jwt() {
+        String jwt = JWT
+                .create()
+                .withSubject("principal")
+                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .withClaim("id", 3) // user의 primary key
+                .withClaim("cInfoId", 1)
+                .withClaim("pInfoId", 0)
+                .withClaim("email", "init@nate.com")
+                .sign(Algorithm.HMAC512(System.getenv("project_secret")));
+        return jwt;
+    }
+
+    @BeforeEach // Test메서드 실행 직전마다 호출된다
     public void setUp() {
-        User user = new User();
+        // 임시 세션 생성하기
+        UserLoginDto user = new UserLoginDto();
         user.setId(3);
-        user.setPassword("ad38f305434fb803fbadb9cf57df1e822bff382352c19dc67b5b13055a049cd6");
         user.setEmail("init@nate.com");
-        user.setSalt("cat");
         user.setPInfoId(0);
         user.setCInfoId(1);
-        user.setCreatedAt(Timestamp.valueOf(LocalDateTime.now()));
 
         mockSession = new MockHttpSession();
         mockSession.setAttribute("principal", user);
@@ -76,7 +88,7 @@ public class CompanyPostControllerTest {
         String requestBody = om.writeValueAsString(postSaveReqDto);
         ResultActions resultActions = mvc
                 .perform(post("/company/posts")
-                        .content(requestBody).contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody).contentType(MediaType.APPLICATION_JSON).header("Authorization", jwt())
                         .session(mockSession));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 :" + responseBody);
@@ -105,7 +117,7 @@ public class CompanyPostControllerTest {
         ResultActions resultActions = mvc
                 .perform(put("/company/posts/" + id)
                         .content(requestBody).contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .session(mockSession));
+                        .session(mockSession).header("Authorization", jwt()));
         String responseBody = resultActions.andReturn().getResponse().getContentAsString();
         System.out.println("테스트 :" + responseBody);
         // then
@@ -119,7 +131,7 @@ public class CompanyPostControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(delete("/company/posts/" + id)
-                .session(mockSession));
+                .session(mockSession).header("Authorization", jwt()));
 
         // then
         resultActions.andExpect(jsonPath("$.msg").value("공고 삭제 성공"));
