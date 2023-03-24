@@ -1,4 +1,4 @@
-package shop.mtcoding.miniproject2.controller.company.person;
+package shop.mtcoding.miniproject2.controller.person;
 
 import java.util.List;
 
