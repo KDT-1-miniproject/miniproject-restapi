@@ -68,4 +68,22 @@ public class indexControllerTest {
         resultActions.andExpect(status().isOk());
     }
 
+    @Test
+    public void personLogin_test() throws Exception {
+        String requestBody = "email=ssar@nate.com&password=1234";
+
+        ResultActions resultActions = mvc.perform(post("/personLogin").content(requestBody)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        resultActions.andExpect(status().isOk());
+    }
+
+    @Test
+    public void companyLogin_test() throws Exception {
+        String requestBody = "email=init@nate.com&password=1234";
+
+        ResultActions resultActions = mvc.perform(post("/companyLogin").content(requestBody)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
+        resultActions.andExpect(status().isOk());
+    }
+
 }

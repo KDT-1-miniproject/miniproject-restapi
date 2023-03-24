@@ -56,6 +56,6 @@ public class PersonPostController {
 
         List<PostRecommendIntegerRespDto> postListDto = personService.recommend();
 
-        return new ResponseEntity<>(new ResponseDto<>(1, "공고 추천", postListDto), HttpStatus.OK);
+        return new ResponseEntity<>(new ResponseDto<>(1, "개인 공고 추천", postListDto), HttpStatus.OK);
     }
 }
