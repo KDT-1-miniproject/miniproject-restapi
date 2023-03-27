@@ -14,10 +14,8 @@ public class JwtProvider {
     private static final String SUBJECT = "principal";
     private static final int EXP = 1000 * 60 * 60;
     public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String HEADER = "Authorization"; // header는 응답할 때 써야하므로 public
-    private static final String SECRET = System.getenv("project_secret"); //
-    // secret은 실제 사용할 땐 os 환경변수로 빼기
-    // private static final String SECRET = "hee"; // secret은 실제 사용할 땐 os 환경변수로 빼기
+    public static final String HEADER = "Authorization";
+    private static final String SECRET = System.getenv("project_secret");
 
     public static String create(User user) {
 

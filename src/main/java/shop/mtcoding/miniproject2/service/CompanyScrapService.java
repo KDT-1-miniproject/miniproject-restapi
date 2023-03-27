@@ -43,7 +43,7 @@ public class CompanyScrapService {
             throw new CustomApiException("존재하지 않는 이력서입니다", HttpStatus.UNAUTHORIZED);
         }
 
-        CompanyScrap cs = new CompanyScrap(resumeId, cInfoId);
+        CompanyScrap cs = new CompanyScrap(cInfoId, resumeId);
         int result = companyScrapRepository.insert(cs);
         if (result != 1) {
             throw new CustomApiException("서버 에러!", HttpStatus.INTERNAL_SERVER_ERROR);

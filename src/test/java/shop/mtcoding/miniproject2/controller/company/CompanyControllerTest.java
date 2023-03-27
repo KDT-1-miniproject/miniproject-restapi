@@ -55,7 +55,6 @@ public class CompanyControllerTest {
 
     @BeforeEach // Test메서드 실행 직전마다 호출된다
     public void setUp() {
-        // 임시 세션 생성하기
         UserLoginDto user = new UserLoginDto();
         user.setId(3);
         user.setEmail("init@nate.com");
@@ -80,11 +79,10 @@ public class CompanyControllerTest {
 
         // when
         ResultActions resultActions = mvc.perform(put("/company/info")
-                .content(requestBody).session(mockSession).header("Authorization", jwt())
+                .content(requestBody).header("Authorization", jwt())
                 .contentType(MediaType.APPLICATION_JSON));
 
         // then
-
         resultActions.andExpect(status().isOk());
     }
 

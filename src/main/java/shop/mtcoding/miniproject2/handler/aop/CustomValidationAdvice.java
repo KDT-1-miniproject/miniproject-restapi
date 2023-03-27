@@ -25,9 +25,9 @@ public class CustomValidationAdvice {
     public void putMapping() {
     }
 
-    @Around("postMapping() || putMapping()") // joinPoint의 전후 제어
+    @Around("postMapping() || putMapping()")
     public Object validationAdvice(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
-        Object[] args = proceedingJoinPoint.getArgs(); // joinPoint의 매개변수
+        Object[] args = proceedingJoinPoint.getArgs();
         for (Object arg : args) {
             if (arg instanceof BindingResult) {
                 BindingResult bindingResult = (BindingResult) arg;
@@ -42,7 +42,7 @@ public class CustomValidationAdvice {
                 }
             }
         }
-        return proceedingJoinPoint.proceed(); // 정상적으로 해당 메서드를 실행해라!!
+        return proceedingJoinPoint.proceed();
     }
 }
 
