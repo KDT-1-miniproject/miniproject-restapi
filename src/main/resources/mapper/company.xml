@@ -37,6 +37,26 @@
         where c.id = #{id}
     </select>
 
+    <resultMap id ="CompanyJoinOutDto" type="shop.mtcoding.miniproject2.dto.company.CompanyRespDto$JoinCompanyRespDto">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="number" column="number"/>
+        <result property="address" column="address"/>
+        <result property="managerName" column="manager_name"/>
+        <association property="user" javaType="shop.mtcoding.miniproject2.dto.company.CompanyRespDto$JoinCompanyRespDto$UserDto">
+            <id property="id" column="id"/>
+            <result property="email" column="email"/>
+            <result property="createdAt" column="created_at"/>
+        </association>
+    </resultMap>
+    <select id="findByIdWithUserJoin" resultMap="CompanyJoinOutDto">
+        select * 
+        from company_info_tb c
+        inner join user_tb u
+        on c.id = u.c_info_id 
+        where c.id = #{id}
+    </select>
+
     <select id="findAll" resultType="shop.mtcoding.miniproject2.model.Company">
         select * from company_info_tb
     </select>

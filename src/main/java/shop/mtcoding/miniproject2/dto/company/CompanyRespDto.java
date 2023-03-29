@@ -3,6 +3,7 @@ package shop.mtcoding.miniproject2.dto.company;
 import java.sql.Timestamp;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import shop.mtcoding.miniproject2.model.Company;
 
@@ -10,6 +11,7 @@ public class CompanyRespDto {
 
     @Getter
     @Setter
+    @NoArgsConstructor
     public static class JoinCompanyRespDto {
         private Integer id;
         private String name;
@@ -30,6 +32,7 @@ public class CompanyRespDto {
 
         @Getter
         @Setter
+        @NoArgsConstructor
         public static class UserDto {
             private Integer id;
             private String email;

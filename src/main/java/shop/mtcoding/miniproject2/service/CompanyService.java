@@ -89,10 +89,11 @@ public class CompanyService {
             throw new CustomApiException("회원가입 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        User userPS = userRepository.findById(user.getId());
-        UserDto userdto = new UserDto(userPS.getId(), userPS.getEmail(), userPS.getCreatedAt());
-        JoinCompanyRespDto dto = new JoinCompanyRespDto(company, userdto);
-
+        // User userPS = userRepository.findById(user.getId());
+        // UserDto userdto = new UserDto(userPS.getId(), userPS.getEmail(),
+        // userPS.getCreatedAt());
+        // JoinCompanyRespDto dto = new JoinCompanyRespDto(company, userdto);
+        JoinCompanyRespDto dto = companyRepository.findByIdWithUserJoin(user.getCInfoId());
         return dto;
     }
 
