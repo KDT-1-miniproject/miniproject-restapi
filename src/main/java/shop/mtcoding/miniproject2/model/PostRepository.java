@@ -6,8 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.post.PostResp.CompanyPostDetailRespDto;
+import shop.mtcoding.miniproject2.dto.post.PostRecommendOutDto.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostMainRespDto;
-import shop.mtcoding.miniproject2.dto.post.PostResp.PostRecommendTimeStampResDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.PostTitleRespDto;
 import shop.mtcoding.miniproject2.dto.post.PostResp.postIdAndSkillsDto;
 
@@ -21,9 +22,11 @@ public interface PostRepository {
 
         public List<postIdAndSkillsDto> findPostIdAndSkills(int cInfoid);
 
-        public List<PostMainRespDto> findAllWithCInfo();
+        public List<PostMainRespDto> findAllWithScrapAndCompany(int pInfoId);
 
         public PostRecommendTimeStampResDto findByPostIdToRecmmend(int postId);
+
+        public CompanyPostDetailRespDto findByPostInfoIdDetail(int postId);
 
         public int insert(Post post);
         // @Param("title") String title, @Param("cInfoId") int cInfoId,
@@ -42,7 +45,7 @@ public interface PostRepository {
                         @Param("pay") String pay, @Param("condition") String condition,
                         @Param("startHour") String startHour,
                         @Param("endHour") String endHour, @Param("deadline") Timestamp deadline,
-                        @Param("cIntro") String cIntro,
+                        @Param("comIntro") String comIntro,
                         @Param("jobIntro") String jobIntro,
                         @Param("createdAt") Timestamp createdAt);
 

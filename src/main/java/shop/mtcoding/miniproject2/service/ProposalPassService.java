@@ -10,6 +10,7 @@ import shop.mtcoding.miniproject2.model.PersonProposal;
 import shop.mtcoding.miniproject2.model.PersonProposalRepository;
 import shop.mtcoding.miniproject2.model.Post;
 import shop.mtcoding.miniproject2.model.PostRepository;
+import shop.mtcoding.miniproject2.model.ProposalPass;
 import shop.mtcoding.miniproject2.model.ProposalPassRepository;
 
 @Service
@@ -23,7 +24,7 @@ public class ProposalPassService {
     @Autowired
     private PostRepository postRepository;
 
-    public void 메시지전달하기(int proposalId, Integer cInfoId, String message) {
+    public ProposalPass 메시지전달하기(int proposalId, Integer cInfoId, String message) {
         PersonProposal proposal = personProposalRepository.findById(proposalId);
         if (proposal == null) {
             throw new CustomApiException("없는 제안을 확인 할 수 없습니다.");
@@ -35,11 +36,17 @@ public class ProposalPassService {
         if (post.getCInfoId() != cInfoId) {
             throw new CustomApiException("본인의 공고가 아니면 제안을 확인 할 수 없습니다.");
         }
+        ProposalPass proposalPass = new ProposalPass();
+        proposalPass.setPInfoId(proposal.getPInfoId());
+        proposalPass.setPProposalId(proposalId);
+        proposalPass.setComment(message);
         try {
-            proposalPassRepository.insert(proposal.getPInfoId(), proposalId, message);
+            proposalPassRepository.insert(proposalPass);
         } catch (Exception e) {
             throw new CustomApiException("메시지 보내기 실패.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        ProposalPass dto = proposalPassRepository.findById(proposalPass.getId());
+        return dto;
     }
 
 }

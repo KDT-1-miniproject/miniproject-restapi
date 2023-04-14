@@ -21,17 +21,23 @@ public class PersonScrapService {
     @Autowired
     private PostRepository postRepository;
 
-    public void insert(int postId, int pInfoId) {
+    public PersonScrap insert(int postId, int pInfoId) {
         Post postPS = postRepository.findById(postId);
 
         if (postPS == null) {
-            throw new CustomApiException("존재하지 않는 공고입니다", HttpStatus.UNAUTHORIZED);
+            throw new CustomApiException("존재하지 않는 공고입니다");
         }
 
-        int result = personScrapRepository.insert(pInfoId, postId);
+        PersonScrap ps = new PersonScrap(postId, pInfoId);
+
+        int result = personScrapRepository.insert(ps);
+
         if (result != 1) {
             throw new CustomApiException("스크랩 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
+        PersonScrap ps2 = personScrapRepository.findById(ps.getId());
+        return ps2;
     }
 
     public void delete(int postId, int pInfoId) {
@@ -42,7 +48,7 @@ public class PersonScrapService {
         }
 
         if (pScrap.getPInfoId() != pInfoId) {
-            throw new CustomApiException("스크랩 취소 권한이 없습니다!");
+            throw new CustomApiException("스크랩 취소 권한이 없습니다!", HttpStatus.FORBIDDEN);
         }
 
         int result = personScrapRepository.deleteById(pScrap.getId());

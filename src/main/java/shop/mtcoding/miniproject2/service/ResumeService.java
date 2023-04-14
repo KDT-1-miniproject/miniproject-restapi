@@ -1,131 +1,131 @@
 package shop.mtcoding.miniproject2.service;
 
-import java.sql.Timestamp;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import lombok.RequiredArgsConstructor;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqBirthdayTimestampDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeInsertReqDto;
+import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqBirthdayTimestampDto;
 import shop.mtcoding.miniproject2.dto.Resume.ResumeReq.ResumeUpdateReqDto;
 import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
-import shop.mtcoding.miniproject2.handler.ex.CustomException;
-import shop.mtcoding.miniproject2.model.Person;
-import shop.mtcoding.miniproject2.model.PersonRepository;
+import shop.mtcoding.miniproject2.handler.ex.CustomApiException;
 import shop.mtcoding.miniproject2.model.Resume;
 import shop.mtcoding.miniproject2.model.ResumeRepository;
 import shop.mtcoding.miniproject2.model.Skill;
 import shop.mtcoding.miniproject2.model.SkillFilterRepository;
 import shop.mtcoding.miniproject2.model.SkillRepository;
-import shop.mtcoding.miniproject2.util.CvTimestamp;
 import shop.mtcoding.miniproject2.util.PathUtil;
 
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class ResumeService {
-    @Autowired
-    private ResumeRepository resumeRepository;
-    @Autowired
-    private PersonRepository personRepository;
-    @Autowired
-    private SkillRepository skillRepository;
-    @Autowired
-    private SkillFilterRepository skillFilterRepository;
 
-    public void insertNewResume(int pInfoId, ResumeUpdateReqDto resumeUpdateReqDto) {
+    private final ResumeRepository resumeRepository;
 
-        String uuidImageName = PathUtil.writeImageFile(resumeUpdateReqDto.getProfile());
-        Timestamp birthday = CvTimestamp.convertStringToTimestamp(resumeUpdateReqDto.getBirthday());
+    private final SkillRepository skillRepository;
 
-        Resume resume = new Resume(resumeUpdateReqDto);
-        resume.setProfile(uuidImageName);
-        resume.setPInfoId(pInfoId);
-        Person person = new Person(resumeUpdateReqDto);
-        person.setBirthday(birthday);
-        Skill skill = new Skill(resumeUpdateReqDto);
+    private final SkillFilterRepository skillFilterRepository;
 
-        int result1 = resumeRepository.insert(resume);
+    public Resume insertNewResume(int pInfoId, ResumeInsertReqDto resumeInsertReqDto) {
+
+        String uuidImageName = PathUtil.writeImageFile(resumeInsertReqDto.getProfile());
+        ResumeInsertReqBirthdayTimestampDto resumeInsertReqBirthdayTimestampDto = new ResumeInsertReqBirthdayTimestampDto(
+                pInfoId,
+                resumeInsertReqDto.getTitle(),
+                resumeInsertReqDto.getPortfolio(),
+                resumeInsertReqDto.isPublish(),
+                resumeInsertReqDto.getSelfIntro(),
+                resumeInsertReqDto.getSkills());
+        resumeInsertReqBirthdayTimestampDto.setProfile(uuidImageName);
+
+        int result1 = resumeRepository.insert(resumeInsertReqBirthdayTimestampDto);
         if (result1 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요1", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        Person personPS = personRepository.findById(resume.getPInfoId());
-        int result2 = personRepository.updateById(resume.getPInfoId(), person.getName(), person.getPhone(),
-                person.getAddress(),
-                person.getBirthday(), personPS.getCreatedAt());
+        int resumeIdDb = resumeInsertReqBirthdayTimestampDto.getResumeId();
+
+        int result2 = skillRepository.insert(0, 0, resumeIdDb,
+                resumeInsertReqBirthdayTimestampDto.getSkills());
         if (result2 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        int result3 = skillRepository.insert(0, 0, resume.getId(), skill.getSkills());
-        if (result3 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        try {
-            String skills = skill.getSkills();
-            String[] skillArr = skills.split(",");
-            for (int i = 0; i < skillArr.length; i++) {
-                skillFilterRepository.insert(skillArr[i], 0, resume.getId());
-            }
-        } catch (Exception e) {
-            throw new CustomException("이력서 등록 실패.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-    }
-
-    public void updateById(int id, int pInfoId, ResumeUpdateReqDto resumeUpdateReqDto) {
-        String uuidImageName = PathUtil.writeImageFile(resumeUpdateReqDto.getProfile());
-        Timestamp birthday = CvTimestamp.convertStringToTimestamp(resumeUpdateReqDto.getBirthday());
-
-        Resume resume = new Resume(resumeUpdateReqDto);
-
-        resume.setProfile(uuidImageName);
-        resume.setPInfoId(pInfoId);
-        Person person = new Person(resumeUpdateReqDto);
-        person.setBirthday(birthday);
-        Skill skill = new Skill(resumeUpdateReqDto);
-
-        Resume resumePS = resumeRepository.findById(id);
-        int result1 = resumeRepository.updateById(id, pInfoId, resume.getProfile(), resume.getTitle(),
-                resume.isPublish(), resume.getPortfolio(), resume.getSelfIntro(), resumePS.getCreatedAt());
-        if (result1 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        Person personPS = personRepository.findById(resume.getPInfoId());
-        int result2 = personRepository.updateById(resume.getPInfoId(), person.getName(), person.getPhone(),
-                person.getAddress(),
-                person.getBirthday(), personPS.getCreatedAt());
-        if (result2 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
-        Skill skillPS = skillRepository.findByPInfoId(resume.getPInfoId());
-        int result3 = skillRepository.updateById(skillPS.getId(), resume.getPInfoId(), 0, 0, skill.getSkills(),
-                skillPS.getCreatedAt());
-        if (result3 != 1) {
-            throw new CustomException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요3", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         // skill filter 삭제 후 다시 저장
 
         try {
-            skillFilterRepository.deleteByResumeId(resumePS.getId());
+            String[] skillArr = resumeInsertReqBirthdayTimestampDto.getSkills().split(",");
+            for (int i = 0; i < skillArr.length; i++) {
+                skillFilterRepository.insert(skillArr[i], 0, resumeIdDb);
+            }
         } catch (Exception e) {
-            throw new CustomException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        Resume dto = resumeRepository.findById(resumeIdDb);
+        // String datacheck = skillRepository.findByResumeId(resumeIdDb).getSkills();
+        // System.out.println(datacheck);
+        return dto;
+    }
+
+    public void updateById(int id, int pInfoId, ResumeUpdateReqDto resumeUpdateReqDto) {
+        String uuidImageName = PathUtil.writeImageFile(resumeUpdateReqDto.getProfile());
+        Resume resumePS = resumeRepository.findById(id);
+
+        if (resumePS.getPInfoId() != pInfoId) {
+            throw new CustomApiException("이력서 수정 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+        ResumeUpdateReqBirthdayTimestampDto resumeUpdateReqBirthdayTimestampDto = new ResumeUpdateReqBirthdayTimestampDto(
+                resumeUpdateReqDto.getTitle(),
+                resumeUpdateReqDto.getPortfolio(),
+                resumeUpdateReqDto.isPublish(),
+                resumeUpdateReqDto.getSelfIntro(),
+                resumeUpdateReqDto.getSkills());
+        resumeUpdateReqBirthdayTimestampDto.setProfile(uuidImageName);
+
+        int result1 = resumeRepository.updateById(id, pInfoId,
+                resumeUpdateReqBirthdayTimestampDto.getProfile(), resumeUpdateReqBirthdayTimestampDto.getTitle(),
+                resumeUpdateReqBirthdayTimestampDto.isPublish(), resumeUpdateReqBirthdayTimestampDto.getPortfolio(),
+                resumeUpdateReqBirthdayTimestampDto.getSelfIntro());
+        if (result1 != 1) {
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Skill skillPS = skillRepository.findByResumeId(id);
+        int result3 = skillRepository.updateById(skillPS.getId(), 0, 0, id,
+                resumeUpdateReqBirthdayTimestampDto.getSkills(),
+                skillPS.getCreatedAt());
+        if (result3 != 1) {
+            throw new CustomApiException("이력서 저장에 문제가 생겼네요", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        // skill filter 삭제 후 다시 저장
+
+        try {
+            skillFilterRepository.deleteByResumeId(id);
+        } catch (Exception e) {
+            throw new CustomApiException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
         try {
             String[] skillArr = skillPS.getSkills().split(",");
             for (int i = 0; i < skillArr.length; i++) {
-                skillFilterRepository.insert(skillArr[i], 0, resumePS.getId());
+                skillFilterRepository.insert(skillArr[i], 0, id);
             }
         } catch (Exception e) {
-            throw new CustomException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CustomApiException("이력서 수정 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
-    public void delete(int id) {
+    public void delete(int id, int pInfoId) {
+        Resume resumePS = resumeRepository.findById(id);
+
+        if (resumePS.getPInfoId() != pInfoId) {
+            throw new CustomApiException("이력서 삭제 권한이 없습니다.", HttpStatus.FORBIDDEN);
+        }
+
         int result = resumeRepository.deleteById(id);
         if (result != 1) {
             throw new CustomApiException("이력서 삭제 실패하였습니다", HttpStatus.INTERNAL_SERVER_ERROR);

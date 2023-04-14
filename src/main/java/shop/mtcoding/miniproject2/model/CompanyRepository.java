@@ -6,6 +6,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import shop.mtcoding.miniproject2.dto.company.CompanyInfoOutDto;
+import shop.mtcoding.miniproject2.dto.company.CompanyRespDto.JoinCompanyRespDto;
+
 @Mapper
 public interface CompanyRepository {
         public List<Company> findAll();
@@ -15,6 +18,7 @@ public interface CompanyRepository {
         // public int insert(@Param("name") String name, @Param("number") String number,
         // @Param("address") String address,
         // @Param("managerName") String managerName);
+        public JoinCompanyRespDto findByIdWithUserJoin(int cInfoId);
 
         public int insert(Company company);
 
@@ -31,6 +35,8 @@ public interface CompanyRepository {
                         @Param("createdAt") Timestamp createdAt);
 
         public int deleteById(int id);
+
+        public CompanyInfoOutDto findByIdWithUser(int id);
 
         public Company findByCompanyNameAndNumber(@Param("name") String name, @Param("number") String number);
 
