@@ -1,6 +1,12 @@
 # 구인구직 프로젝트
 ![image](https://user-images.githubusercontent.com/80329856/232012419-7744ae5a-1870-4be2-892c-e59728d92bfb.png)
 
+## 시연영상 (Post Man)
+https://www.youtube.com/watch?v=2tohSfOL-ms 
+
+## PPT 
+[1조_미니프로젝트2_PPT.pdf](https://github.com/KDT-1-miniproject/miniproject-restapi/files/11340882/1._.2_PPT.pdf)
+
 # 기술스택
 - JDK 11
 - Springboot 2.7.8
@@ -77,10 +83,11 @@ Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값
 ![image](https://user-images.githubusercontent.com/80329856/232014737-9145dee4-8d0b-4f7e-8875-6c7a16025777.png)
 
 ## API문서
+https://suave-roadway-a9f.notion.site/1-API-1de99090da964d95aed22a3ef77086f3
 ![image](https://user-images.githubusercontent.com/80329856/232015144-68f5fc5c-4542-42f5-9e65-8e5c4b950636.png)
 ![image](https://user-images.githubusercontent.com/80329856/232015171-b724b042-4a41-4f94-b6f3-31c79783958c.png)
 ![image](https://user-images.githubusercontent.com/80329856/232015214-f718cb82-e094-40ae-9ba6-d6a637345c49.png)
-https://suave-roadway-a9f.notion.site/1-API-1de99090da964d95aed22a3ef77086f3
+
 
 ## EC2 서버 배포
 - 환경변수를 이용한 비밀키 적용
