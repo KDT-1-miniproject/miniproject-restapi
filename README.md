@@ -1,6 +1,12 @@
 # 구인구직 프로젝트
 ![image](https://user-images.githubusercontent.com/80329856/232012419-7744ae5a-1870-4be2-892c-e59728d92bfb.png)
 
+## 시연영상 (Post Man)
+https://www.youtube.com/watch?v=2tohSfOL-ms 
+
+## PPT 
+[1조_미니프로젝트2_PPT.pdf](https://github.com/KDT-1-miniproject/miniproject-restapi/files/11340882/1._.2_PPT.pdf)
+
 # 기술스택
 - JDK 11
 - Springboot 2.7.8
@@ -75,9 +81,6 @@ Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값
 
 ## Junit 테스트
 ![image](https://user-images.githubusercontent.com/80329856/232014737-9145dee4-8d0b-4f7e-8875-6c7a16025777.png)
-
-## 시연영상 (Post Man)
-https://www.youtube.com/watch?v=2tohSfOL-ms 
 
 ## API문서
 https://suave-roadway-a9f.notion.site/1-API-1de99090da964d95aed22a3ef77086f3
