@@ -76,6 +76,9 @@ Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값
 ## Junit 테스트
 ![image](https://user-images.githubusercontent.com/80329856/232014737-9145dee4-8d0b-4f7e-8875-6c7a16025777.png)
 
+## 시연영상 (Post Man)
+https://www.youtube.com/watch?v=2tohSfOL-ms 
+
 ## API문서
 https://suave-roadway-a9f.notion.site/1-API-1de99090da964d95aed22a3ef77086f3
 ![image](https://user-images.githubusercontent.com/80329856/232015144-68f5fc5c-4542-42f5-9e65-8e5c4b950636.png)
