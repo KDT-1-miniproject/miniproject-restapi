@@ -1,8 +1,8 @@
 # 구인구직 프로젝트
 ![image](https://user-images.githubusercontent.com/80329856/232012419-7744ae5a-1870-4be2-892c-e59728d92bfb.png)
 
-## 시연영상 (Post Man)
-https://www.youtube.com/watch?v=2tohSfOL-ms 
+## 시연영상 (Post Man) : 사진을 클릭하면 유튜브로 이동됩니다.
+[![시연영상](http://img.youtube.com/vi/2tohSfOL-ms/0.jpg)](https://youtu.be/2tohSfOL-ms)
 
 ## PPT 
 [1조_미니프로젝트2_PPT.pdf](https://github.com/KDT-1-miniproject/miniproject-restapi/files/11340882/1._.2_PPT.pdf)
@@ -71,7 +71,8 @@ Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값
 ![image](https://user-images.githubusercontent.com/80329856/232014235-30b115cf-7918-401b-8f09-a2f6b053b66f.png)
 - 세션에 저장된 것은 임시로 사용하는 정보
 - 인터셉터를 이용해서 컨트롤러가 끝날 때, 세션을 초기화 해준다.
-- 
+
+
 ## AOP 유효성 검사
 ![image](https://user-images.githubusercontent.com/80329856/232014619-bb4f02c3-9d48-432e-a02d-54f7dfef94e2.png)
 - 데이터가 들어오는 PostMapping과 PutMapping의 데이터를 검사하도록 함. 
