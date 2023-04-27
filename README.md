@@ -63,8 +63,9 @@
 ### 변환하는 이유
 - RestController로 변경
 - 데이터만 보내고, ajax를 이용하여 화면을 구성하기 위해서
+- Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값을 보내주게된다. 
 ![image](https://user-images.githubusercontent.com/80329856/232013999-1d910cc3-d114-4a94-b8e5-89b913f71d76.png)
-Controller는 서비스만 요청하며, 서비스에서는 DTO로 정리된 값을 보내주게된다. 
+
 
 ## JWT 토큰
 ![image](https://user-images.githubusercontent.com/80329856/232014128-0bf5464f-2880-4123-bb13-57f36b22ed64.png)
